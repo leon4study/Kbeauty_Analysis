@@ -1,0 +1,41 @@
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/bmabey/pyLDAvis@3.4.0/pyLDAvis/js/ldavis.v1.0.0.css">
+
+
+<div id="ldavis_el1561133212181764615650584" style="background-color:white;"></div>
+<script type="text/javascript">
+
+var ldavis_el1561133212181764615650584_data = {"mdsDat": {"x": [0.10807257305663787, -0.13297100851928664, 0.02489843546264872], "y": [-0.06781969307840818, -0.03573107208973959, 0.10355076516814776], "topics": [1, 2, 3], "cluster": [1, 1, 1], "Freq": [53.89176490173679, 23.4321118945447, 22.67612320371851]}, "tinfo": {"Term": ["koreanskincare", "korean", "routine", "vlog", "vlog", "routine", "korean", "koreanskincare", "koreanskincare", "routine", "vlog", "korean", "korean", "koreanskincare", "routine", "vlog"], "Freq": [8.0, 13.0, 13.0, 8.0, 7.003323999133941, 9.799395321263928, 5.901089557265286, 0.4696500300836651, 5.947135641888326, 2.6959585555973433, 0.6120086063230976, 0.8207053108454535, 6.538134478653524, 1.7790130456388455, 0.9036140615117022, 0.5299713917948881], "Total": [8.0, 13.0, 13.0, 8.0, 8.145303997251927, 13.398967938372973, 13.259929346764263, 8.195798717610836, 8.195798717610836, 13.398967938372973, 8.145303997251927, 13.259929346764263, 13.259929346764263, 8.195798717610836, 13.398967938372973, 8.145303997251927], "Category": ["Default", "Default", "Default", "Default", "Topic1", "Topic1", "Topic1", "Topic1", "Topic2", "Topic2", "Topic2", "Topic2", "Topic3", "Topic3", "Topic3", "Topic3"], "logprob": [4.0, 3.0, 2.0, 1.0, -1.1966, -0.8607, -1.3679, -3.8988, -0.5272, -1.3184, -2.8011, -2.5077, -0.3997, -1.7013, -2.3787, -2.9123], "loglift": [4.0, 3.0, 2.0, 1.0, 0.4671, 0.3053, -0.1914, -2.2412, 1.1304, -0.1524, -1.1374, -1.3313, 0.7768, -0.0437, -1.2127, -1.2485]}, "token.table": {"Topic": [1, 2, 3, 2, 3, 1, 2, 3, 1, 2, 3], "Freq": [0.4524910987903674, 0.0754151831317279, 0.5279062819220953, 0.7320824005972006, 0.24402746686573357, 0.7463261384006485, 0.22389784152019457, 0.07463261384006485, 0.8593908836750191, 0.12277012623928846, 0.12277012623928846], "Term": ["korean", "korean", "korean", "koreanskincare", "koreanskincare", "routine", "routine", "routine", "vlog", "vlog", "vlog"]}, "R": 4, "lambda.step": 0.01, "plot.opts": {"xlab": "PC1", "ylab": "PC2"}, "topic.order": [3, 1, 2]};
+
+function LDAvis_load_lib(url, callback){
+  var s = document.createElement('script');
+  s.src = url;
+  s.async = true;
+  s.onreadystatechange = s.onload = callback;
+  s.onerror = function(){console.warn("failed to load library " + url);};
+  document.getElementsByTagName("head")[0].appendChild(s);
+}
+
+if(typeof(LDAvis) !== "undefined"){
+   // already loaded: just create the visualization
+   !function(LDAvis){
+       new LDAvis("#" + "ldavis_el1561133212181764615650584", ldavis_el1561133212181764615650584_data);
+   }(LDAvis);
+}else if(typeof define === "function" && define.amd){
+   // require.js is available: use it to load d3/LDAvis
+   require.config({paths: {d3: "https://d3js.org/d3.v5"}});
+   require(["d3"], function(d3){
+      window.d3 = d3;
+      LDAvis_load_lib("https://cdn.jsdelivr.net/gh/bmabey/pyLDAvis@3.4.0/pyLDAvis/js/ldavis.v3.0.0.js", function(){
+        new LDAvis("#" + "ldavis_el1561133212181764615650584", ldavis_el1561133212181764615650584_data);
+      });
+    });
+}else{
+    // require.js not available: dynamically load d3 & LDAvis
+    LDAvis_load_lib("https://d3js.org/d3.v5.js", function(){
+         LDAvis_load_lib("https://cdn.jsdelivr.net/gh/bmabey/pyLDAvis@3.4.0/pyLDAvis/js/ldavis.v3.0.0.js", function(){
+                 new LDAvis("#" + "ldavis_el1561133212181764615650584", ldavis_el1561133212181764615650584_data);
+            })
+         });
+}
+</script>

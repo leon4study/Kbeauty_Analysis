@@ -1,0 +1,62 @@
+-Target activity-
+You are an intelligent assistant that helps a human analyst to analyze claims against certain entities presented in a text document.
+Here, the claim means that the hypothesis about the expected effect of ingredients in skin care products. You will look up brands, types, ingredients, and after-use effects from skincare product datasets.
+
+-Goal-
+Given a text document that is potentially relevant to this activity, an entity specification, and a claim description, extract all entities that match the entity specification and all claims against those entities.
+
+-Steps-
+1. Extract all named entities that match the predefined entity specification. Entity specification can either be a list of entity names or a list of entity types.
+2. For each entity identified in step 1, extract all claims associated with the entity. Claims need to match the specified claim description, and the entity should be the subject of the claim.
+For each claim, extract the following information:
+- Subject: name of the entity that is subject of the claim, capitalized. The subject entity is one that committed the action described in the claim. Subject needs to be one of the named entities identified in step 1.
+- Object: name of the entity that is object of the claim, capitalized. The object entity is one that either reports/handles or is affected by the action described in the claim. If object entity is unknown, use **NONE**.
+- Claim Type: overall category of the claim, capitalized. Name it in a way that can be repeated across multiple text inputs, so that similar claims share the same claim type.
+- Claim Status: **TRUE**, **FALSE**, or **SUSPECTED**. TRUE means the claim is confirmed, FALSE means the claim is found to be False, SUSPECTED means the claim is not verified.
+- Claim Description: Detailed description explaining the reasoning behind the claim, together with all the related evidence and references.
+- Claim Date: Period (start_date, end_date) when the claim was made. Both start_date and end_date should be in ISO-8601 format. If the claim was made on a single date rather than a date range, set the same date for both start_date and end_date. If date is unknown, return **NONE**.
+- Claim Source Text: List of **all** quotes from the original text that are relevant to the claim.
+
+Format each claim as (<subject_entity>{tuple_delimiter}<object_entity>{tuple_delimiter}<claim_type>{tuple_delimiter}<claim_status>{tuple_delimiter}<claim_start_date>{tuple_delimiter}<claim_end_date>{tuple_delimiter}<claim_description>{tuple_delimiter}<claim_source>)
+
+3. Return output in English as a single list of all the claims identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+
+4. When finished, output {completion_delimiter}
+
+-Examples-
+Example 1:
+Entity specification: Brand, Type, Ingredient, Effect
+Claim description: product effects based on ingredients
+Text: BrandX's Moisturizing Toner contains Hyaluronic Acid and Centella Asiatica Extract, which provide deep hydration and soothe irritation. However, some users reported that it caused breakouts.
+Output:
+
+(BRANDX{tuple_delimiter}MOISTURIZING TONER{tuple_delimiter}TYPE{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}BrandX's Moisturizing Toner is classified as a hydrating toner.{tuple_delimiter}BrandX's Moisturizing Toner contains Hyaluronic Acid and Centella Asiatica Extract.)
+{record_delimiter}
+(MOISTURIZING TONER{tuple_delimiter}HYALURONIC ACID{tuple_delimiter}INGREDIENT{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Hyaluronic Acid is a key ingredient in the Moisturizing Toner, known for deep hydration.{tuple_delimiter}BrandX's Moisturizing Toner contains Hyaluronic Acid and Centella Asiatica Extract.)
+{record_delimiter}
+(MOISTURIZING TONER{tuple_delimiter}CENTELLA ASIATICA EXTRACT{tuple_delimiter}INGREDIENT{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Centella Asiatica Extract helps soothe irritation in the Moisturizing Toner.{tuple_delimiter}BrandX's Moisturizing Toner contains Hyaluronic Acid and Centella Asiatica Extract.)
+{record_delimiter}
+(MOISTURIZING TONER{tuple_delimiter}BREAKOUTS{tuple_delimiter}EFFECT{tuple_delimiter}SUSPECTED{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Some users reported that the Moisturizing Toner caused breakouts.{tuple_delimiter}However, some users reported that it caused breakouts.)
+{completion_delimiter}
+
+Example 2:
+Entity specification: Brand, Type, Ingredient, Effect
+Claim description: product effects based on ingredients
+Text: GlowBeauty's Brightening Serum contains Niacinamide and Vitamin C, which help with brightening and reducing dark spots. However, some users experienced skin irritation.
+Output:
+
+(GLOWBEAUTY{tuple_delimiter}BRIGHTENING SERUM{tuple_delimiter}TYPE{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}GlowBeauty's Brightening Serum is designed to improve skin radiance.{tuple_delimiter}GlowBeauty's Brightening Serum contains Niacinamide and Vitamin C.)
+{record_delimiter}
+(BRIGHTENING SERUM{tuple_delimiter}NIACINAMIDE{tuple_delimiter}INGREDIENT{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Niacinamide is included in the Brightening Serum for its brightening and anti-inflammatory properties.{tuple_delimiter}GlowBeauty's Brightening Serum contains Niacinamide and Vitamin C.)
+{record_delimiter}
+(BRIGHTENING SERUM{tuple_delimiter}VITAMIN C{tuple_delimiter}INGREDIENT{tuple_delimiter}TRUE{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Vitamin C in the Brightening Serum helps reduce dark spots and enhance skin glow.{tuple_delimiter}GlowBeauty's Brightening Serum contains Niacinamide and Vitamin C.)
+{record_delimiter}
+(BRIGHTENING SERUM{tuple_delimiter}SKIN IRRITATION{tuple_delimiter}EFFECT{tuple_delimiter}SUSPECTED{tuple_delimiter}NONE{tuple_delimiter}NONE{tuple_delimiter}Some users experienced skin irritation after using the Brightening Serum.{tuple_delimiter}However, some users experienced skin irritation.)
+{completion_delimiter}
+
+-Real Data-
+Use the following input for your answer.
+Entity specification: {entity_specs}
+Claim description: {claim_description}
+Text: {input_text}
+Output:
