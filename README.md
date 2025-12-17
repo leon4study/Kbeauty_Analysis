@@ -1,164 +1,136 @@
 # K-Beauty 미국 시장 분석 & 데이터 파이프라인 (Kbeauty_Analysis)
 
-**서론**  
-Amazon 리뷰 + TikTok 콘텐츠를 자동 수집·정제·적재하여 TF-IDF/LDA/GraphRAG 기반 분석과 인플루언서 추천·대시보드 연동까지 수행한 엔드투엔드 데이터 파이프라인.
+## 한줄 요약
+
+Amazon 리뷰와 TikTok 콘텐츠를 통합 분석하여 **제품·마케팅 인사이트**와 **인플루언서 시딩 로직**을 도출한 엔드투엔드 데이터 파이프라인 및 분석 레포지토리.
 
 ---
 
-## 🚀 프로젝트 핵심 요약
+## 핵심 요약
 
-- Amazon 리뷰 최대 20,000건 수집
-- TikTok 콘텐츠 기반 참여율(ER)·해시태그·텍스트 분석
-- 모듈형 ETL 파이프라인 구축
-- MySQL 기반 정규화 테이블 + Upsert 처리
-- 배치 상태 Slack 자동 알림
-- TF-IDF / LDA / GraphRAG 기반 텍스트 분석 확장
-
----
-
-## 🔍 문제 정의
-
-- 미국 Amazon에서 잘 팔리는 K-Beauty 제품이 한국과는 다른 소비자 반응 패턴을 보이는 이유는 무엇인가?
-- TikTok 콘텐츠 반응이 실제 제품 관심·구매 전환과 어떻게 연결되는가?
-- 인플루언서 마케팅을 데이터로 구조화할 수 있는가?
+- Amazon 리뷰: 최대 **20,000건**(수집 한계 내) 크롤링/적재
+- TikTok: 해시태그 기반 콘텐츠 수집 및 ER(Engagement Rate) 분석
+- 주요 정량 결과: **k-beauty 태그 사용 시 ERV +8.43%p(유의)** → 1만 뷰당 약 **+843건 참여(약 8.43만원 가치)** 추정, 표본 기준 전체 잠재 가치 약 **15억 원**
+- 텍스트 분석: TF‑IDF, LDA(토픽 수: 20~25 권장, 실제 실험에서 22개 사용), GraphRAG 기반 지식그래프 + LLM 응답 프로토타입
+- DB: MySQL 기반 정규화(제품/리뷰) + Upsert 처리, Slack 알림으로 배치 상태 모니터링
 
 ---
 
-## 🧱 프로젝트 구조
+## 문제 정의 (프로젝트가 답하려는 질문)
+
+1. 미국 Amazon에서 잘 팔리는 K-Beauty 제품과 국내 제품의 **소비자 반응 차이**는 무엇인가?
+2. TikTok의 콘텐츠 반응(조회·참여)이 **실제 구매 고려(Amazon)**로 이어지는 구조는 어떻게 되는가?
+3. 인플루언서 마케팅을 **데이터 기반으로 자동화/선별**할 수 있는가?
+
+---
+
+## 폴더·파일별 역할 (짧고 실용적으로)
+
+레포 내 파일들이 실제 분석·파이프라인에서 **무엇을 하는지** 핵심만 정리.
 
 ```
-Kbeauty_Analysis/
-├── src/
-│   ├── amazon_review_crawler/
-│   │   ├── main.py                # Amazon 크롤링 엔트리포인트
-│   │   ├── items.py               # 제품 데이터 수집
-│   │   ├── reviews.py             # 리뷰 데이터 수집
-│   │   ├── mysql1.py              # MySQL 연결 및 upsert 로직
-│   │   ├── old_version_main.py
-│   │   └── .env
-│   │
-│   ├── graphRAG_gradio/
-│   │   └── graphRAG_gradio.py     # 리뷰/텍스트 기반 GraphRAG 데모
-│   │
-│   └── notebooks/
-│       ├── EDA.ipynb
-│       ├── amazon_tiktok_statistic_analysis.ipynb
-│       └── results/
-│           ├── ldavis_prepared_*.html
+src/
+├── amazon_review_crawler/
+│   ├── main.py           # 크롤링 엔트리: 스크래퍼 실행 제어(파라미터, 로깅)
+│   ├── items.py          # 상품 상세 파서 (상품 메타데이터 추출)
+│   ├── reviews.py        # 리뷰 파서·정제·초기 feature 생성(clean_text 등)
+│   ├── mysql1.py         # MySQL 연결 및 upsert 함수 집합
+│   └── old_version_main.py
 │
-├── data/
-│   ├── amazon/
-│   └── tiktok/
+├── graphRAG_gradio/
+│   └── graphRAG_gradio.py # GraphRAG 데모: 지식그래프 기반 질의응답 프로토타입
 │
-├── docs/
-│   ├── pipeline_overview.md
-│   ├── amazon_crawler.md
-│   ├── tiktok_crawler.md
-│   ├── etl_pipeline.md
-│   └── slack_alert.md
-│
-├── README.md
-└── .gitignore
-
+└── notebooks/
+    ├── EDA.ipynb
+    ├── amazon_tiktok_statistic_analysis.ipynb  # 통합 분석 노트북 (주요 분석 흐름, 의도적 단일 파일)
+    └── results/
+        └── ldavis_prepared_*.html             # LDA 시각화 결과(정적)
 ```
 
----
-
-## 🔄 데이터 파이프라인 개요
-
-1. 데이터 수집
-   - Amazon: Selenium 기반 상세 페이지 크롤링
-   - TikTok: 해시태그 기반 콘텐츠 수집
-2. ETL 처리
-   - 텍스트 정제 및 정규화
-   - 컬럼 스키마 검증
-   - 중복 제거
-   - 키 기반 Upsert
-3. 저장
-   - MySQL (items / reviews 테이블 분리)
-   - 인덱스 기반 성능 최적화
-4. 분석
-   - TF-IDF 기반 키워드 분석
-   - LDA 토픽 모델링 (pyLDAvis 결과 포함)
-   - GraphRAG 기반 리뷰 지식 구조화
-5. 운영
-   - Slack Webhook을 통한 배치 성공/실패 알림
-
----
-
-## 📊 분석 및 활용 예시
-
-- Amazon 리뷰 토픽 → 제품 개선 포인트 도출
-- TikTok 콘텐츠 반응 → 마케팅 메시지 최적화
-- 콘텐츠 유사도 기반 → 브랜드 적합 인플루언서 선별
-- 리뷰 + 콘텐츠 결합 → 시장 반응 조기 탐지
-
----
-
-## 🛠 기술 스택
-
-| 영역     | 사용 기술                       |
-| -------- | ------------------------------- |
-| Crawling | Selenium, BeautifulSoup         |
-| ETL      | Pandas, Regex, Validation Logic |
-| DB       | MySQL, SQLAlchemy               |
-| 분석     | TF-IDF, LDA, GraphRAG           |
-| Alert    | Slack Webhook                   |
-| 환경     | Python 3.10, `.env`             |
-
----
-
-## 📦 문서 바로가기
-
-- [데이터 파이프라인 구조](docs/pipeline_overview.md)
-- [Amazon 크롤러 설명](docs/amazon_crawler.md)
-- [TikTok 크롤러 설명](docs/tiktok_crawler.md)
-- [ETL 처리 구조](docs/etl_pipeline.md)
-- [Slack 알림 연동](docs/slack_alert.md)
-- [DB Schema](docs/db_schema.md)
-
----
-
-## ▶ 아마존 크롤러 실행 방법
-
-### 1) 환경 변수 설정
-
-`.env` 파일 생성:
-
 ```
-ID=xxxx
-PW=xxxx
-DB_SERVER_HOST=xxxx
-DB_USERNAME=xxxx
-DB_PASSWORD=xxxx
-DB_DATABASE=xxxx
-DB_PORT=3306
-SLACK_WEBHOOK_URL=xxxx
+data/
+├── amazon/   # 크롤링 결과 CSV/파케이(원시+정제 버전)
+└── tiktok/   # 수집된 영상 메타/해시태그/계정 지표 CSV
+
+docs/
+- pipeline_overview.md, etl_pipeline.md 등: 설계 문서(아키텍처·스키마·알림)
 ```
 
-### 2) Amazon 크롤러 실행
-
-```
-python src/amazon_review_crawler/main.py
-```
-
-### 3) Slack 알림 자동 도착
-
-- 크롤링 시작
-- 성공적 적재
-- 오류 발생 시 스택트레이스 포함 메시지 전송
+**요약:** `src/.../reviews.py`에서 텍스트 전처리(번역→정규화→토큰화→lemmatize)에 사용되는 함수들을 `notebooks`에서 그대로 호출하거나 복사해 재사용하며, 중간 산출물(TF‑IDF 벡터, LDA 토픽, 토픽별 문서 리스트)을 노트북 내에서 바로 참조해 교차 분석을 수행한다.
 
 ---
 
-## 🏗 향후 확장 계획
+## 데이터 파이프라인(논리 흐름)
 
-- TikTok → Amazon 전환 모델링
-- 인플루언서 추천 알고리즘 고도화
-- Airflow 기반 배치 스케줄링
-- API 기반 실시간 서비스 확장
+1. **수집**: Amazon(Selenium) / TikTok(해시태그 기반) → raw CSV/DB 적재
+   - 주의: TikTok은 CAPTCHA/수동확인으로 완전 자동화 불가(README에 명시)
+2. **정제(ETL)**: clean_text → lemmatize → stopword 제거 → n-gram 생성
+3. **특성 생성**: ER, ERV, log_follower, log_view 등 파생변수
+4. **분석**: TF‑IDF → LDA 토픽 → 토픽별 ER 비교 → 회귀(ERV ~ k_keyword + controls)
+5. **제품/마케팅 인사이트 도출**: TF‑IDF 및 LDA 결과로 강·약점 도출, GraphRAG로 근거 제시
+6. **운영**: MySQL upsert, Slack 알림(성공/실패), 결과 시각화는 Tableau/HTML export
 
 ---
 
-# 📜 License
+## 분석 설계(왜 이렇게 했나)
 
-MIT License
+- **데이터 성격 차이(정성 vs 행동)**을 고려: 리뷰는 ‘사용 경험’(심층), TikTok은 ‘인지·반응’(광범위). 둘을 **토픽·키워드 단위로 연결**하여 상호보완적 인사이트를 얻도록 설계.
+- **단일 Notebook 유지 이유**: 전처리·토픽·교차분석 과정에서 중간 산출물이 반복 참조되므로, 분리 시 컨텍스트 손실과 중복 연산 발생 → 면접·리뷰어에게는 의도적 설계로 설명 가능(README에 명시).
+
+---
+
+## 핵심 결과 요약 (면접용 포인트)
+
+- LDA 토픽(예시): `피부 자극( redness / irritation )`, `흡수/제형( sticky / texture )`, `광채/사용감( glow / smooth )`, `가격/가성비( price )` 등으로 군집화 — 총 20~25 토픽 중 핵심 6~8개가 전략 의사결정 핵심
+- 회귀(ERV 기준): `k_beauty` 태그 사용 계수 **+8.43%p (p < 0.01)** — 실무적으로는 **1만뷰당 약 +843건 참여 → 약 8.43만원 가치**로 환산(보수적 가정 하)
+- 재현성 범위: 분석-모델링 재현 가능(노트북 기반), 원시 데이터 수집은 플랫폼 제약으로 **수동 개입 필요** — README에 반복적으로 명시
+
+---
+
+## GraphRAG의 역할(차별점)
+
+- TF‑IDF/LDA는 **통계적 토픽·키워드 가중치**를 제공하지만, GraphRAG는 **엔티티(성분, 효능, 부작용 등) 간 관계**를 지식그래프로 연결해 LLM 질의응답에 근거를 제공함.
+- 사용 사례: "히알루론산과 함께 쓰기 좋은 성분" 같은 질문에 **리뷰 근거 + 성분연결 정보**를 함께 제시하여 실무적 신뢰성 확보.
+
+---
+
+## 재현성·제약(명확히 알릴 것)
+
+- **TikTok 수집은 반자동**: CAPTCHA, 로그인, 계정 행위 제한 등으로 완전 자동화 불가.
+- **데이터 스키마·샘플 필요**: 분석 재현을 위해 `data/amazon/*.csv`, `data/tiktok/*.csv`의 **동일 스키마** 파일이 필요. 노트북 상단에 요구형식 표기됨.
+- **환경/의존성**: Python 3.10 권장, 주요 라이브러리( pandas, scikit‑learn, gensim, statsmodels, sqlalchemy ) — `requirements.txt`가 있으면 재현성↑(권장).
+
+---
+
+## 담당 역할 (본인 기여 요약)
+
+- 크롤러(아마존) 설계 및 리뷰 파서 구현
+- MySQL 스키마 설계 및 Upsert 로직 구현
+- 텍스트 전처리·TF‑IDF 파이프라인 구현
+- LDA 토픽 모델링 및 pyLDAvis 시각화 생성
+- GraphRAG 프로토타입(지식그래프 + LLM) 데모 구현
+- 분석 통합(리포트, 대시보드 구성요약)
+
+(팀 프로젝트일 경우 각 항목 앞에 `주 담당:` 또는 `공동 담당:`으로 표기 권장)
+
+---
+
+## 빠른 체크리스트 (추가 권장 작업)
+
+- [ ] `requirements.txt` 및 `.env.example` 추가
+- [ ] `docs/db_schema.md`에 SQL DDL 추가
+- [ ] 간단한 유닛테스트(pytest)로 parser/cleaner 검증
+- [ ] Dockerfile + docker-compose (개발용 이미지)
+- [ ] data schema 예시 CSV(샘플 10~100건) 제공 — 노트북 재현용
+
+---
+
+## 마무리(한 문장)
+
+정성적 리뷰와 행동 기반 콘텐츠 신호를 **토픽·키워드 단위로 통합**해 제품/마케팅 의사결정에 직접 연결 가능한 인사이트와 프로토타입(추천 모델, GraphRAG 챗봇, 대시보드)을 제공한 실무형 분석 프로젝트이다.
+
+---
+
+## License
+
+MIT
