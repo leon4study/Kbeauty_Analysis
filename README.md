@@ -110,7 +110,7 @@ docs/
 - [ ] Dockerfile + docker-compose (개발용 이미지)
 - [ ] data schema 예시 CSV(샘플 10~100건) 제공 — 노트북 재현용
 
----
+--- 
 
 ## 마무리
 
