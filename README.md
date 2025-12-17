@@ -29,31 +29,39 @@ Amazon 리뷰와 TikTok 콘텐츠를 통합 분석하여 제품·마케팅 인�
 레포 내 파일들이 실제 분석·파이프라인에서 무엇을 하는지 핵심만 정리.
 
 ```
-src/
-├── amazon_review_crawler/
-│   ├── main.py           # 크롤링 엔트리: 스크래퍼 실행 제어(파라미터, 로깅)
-│   ├── items.py          # 상품 상세 파서 (상품 메타데이터 추출)
-│   ├── reviews.py        # 리뷰 파서·정제·초기 feature 생성(clean_text 등)
-│   ├── mysql1.py         # MySQL 연결 및 upsert 함수 집합
-│   └── old_version_main.py
+Kbeauty_Analysis/
+├── src/
+│   ├── amazon_review_crawler/
+│   │   ├── main.py                # Amazon 크롤링 엔트리포인트
+│   │   ├── items.py               # 제품 메타데이터 파서
+│   │   ├── reviews.py             # 리뷰 파서 및 텍스트 전처리 로직
+│   │   ├── mysql1.py              # MySQL 연결 및 upsert 유틸
+│   │   └── old_version_main.py    # 이전 버전(보관용)
+│   │
+│   └── graphRAG_gradio/
+│       └── graphRAG_gradio.py     # 리뷰 기반 GraphRAG 데모 (지식그래프 + LLM)
 │
-├── graphRAG_gradio/
-│   └── graphRAG_gradio.py # GraphRAG 데모: 지식그래프 기반 질의응답 프로토타입
+├── notebooks/
+│   ├── EDA.ipynb
+│   ├── amazon_tiktok_statistic_analysis.ipynb
+│   │                               # Amazon–TikTok 통합 분석 메인 노트북
+│   └── results/
+│       └── ldavis_prepared_*.html  # LDA 토픽 시각화 결과 (pyLDAvis)
 │
-└── notebooks/
-    ├── EDA.ipynb
-    ├── amazon_tiktok_statistic_analysis.ipynb  # 통합 분석 노트북 (주요 분석 흐름, 의도적 단일 파일)
-    └── results/
-        └── ldavis_prepared_*.html             # LDA 시각화 결과(정적)
-```
+├── data/
+│   ├── amazon/                     # Amazon 리뷰/제품 CSV
+│   └── tiktok/                     # TikTok 콘텐츠/인플루언서 CSV
+│
+├── docs/
+│   ├── pipeline_overview.md        # 전체 파이프라인 개요
+│   ├── amazon_crawler.md           # Amazon 크롤러 설계
+│   ├── tiktok_crawler.md           # TikTok 수집 구조 및 제약
+│   ├── etl_pipeline.md             # 전처리·정규화·upsert 설계
+│   └── slack_alert.md              # Slack 알림 연동
+│
+├── README.md
+└── .gitignore
 
-```
-data/
-├── amazon/   # 크롤링 결과 CSV/파케이(원시+정제 버전)
-└── tiktok/   # 수집된 영상 메타/해시태그/계정 지표 CSV
-
-docs/
-- pipeline_overview.md, etl_pipeline.md 등: 설계 문서(아키텍처·스키마·알림)
 ```
 
 요약: `src/.../reviews.py`에서 텍스트 전처리(번역→정규화→토큰화→lemmatize)에 사용되는 함수들을 `notebooks`에서 그대로 호출하거나 복사해 재사용하며, 중간 산출물(TF‑IDF 벡터, LDA 토픽, 토픽별 문서 리스트)을 노트북 내에서 바로 참조해 교차 분석을 수행한다.
@@ -110,7 +118,7 @@ docs/
 - [ ] Dockerfile + docker-compose (개발용 이미지)
 - [ ] data schema 예시 CSV(샘플 10~100건) 제공 — 노트북 재현용
 
---- 
+---
 
 ## 마무리
 
