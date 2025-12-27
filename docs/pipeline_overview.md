@@ -1,36 +1,24 @@
-# 데이터 파이프라인 구조
+# [←](../README.md) 전체 파이프라인 구조 (Pipeline Overview)
 
-본 프로젝트의 파이프라인은 다음 단계를 포함합니다.
+본 프로젝트는 데이터 수집부터 최종 인사이트 도출까지 4개 단계의 엔드투엔드 흐름을 가집니다.
 
-```
-Crawler → Transform → Validation → Load(MySQL) → Slack 알림
-```
+### 1. 데이터 수집 단계 (Data Collection)
 
-## 1) Crawler
+- **Amazon**: Selenium을 활용하여 제품 메타데이터와 리뷰 텍스트를 수집합니다.
+- **TikTok**: 해시태그 기반으로 조회수, 참여도(좋아요, 댓글, 저장), 인플루언서 정보를 수집합니다. 플랫폼 제약으로 인해 수동 세션 인증을 거친 반자동 수집 방식을 사용합니다.
 
-- Amazon / TikTok 크롤링
-- Selenium + 대량 스크롤 + 상세 페이지 크롤링
-- JSON 형태로 수집
+### 2. 데이터 가공 단계 (ETL & Normalization)
 
-## 2) Transform
+- 수집된 Raw Data를 `src/amazon_review_crawler/reviews.py` 모듈을 통해 정문화합니다.
+- 번역, 형태소 분석, Lemmatization, N-gram 생성을 거쳐 분석 가능한 텍스트 데이터로 변환합니다.
 
-- 텍스트 정제
-- 날짜 포맷 통일
-- 가격/리뷰/평점 형 변환
-- dict 계층화 및 JSON 직렬화
+### 3. 데이터 적재 단계 (Storage)
 
-## 3) Validation
+- SQLAlchemy 유틸리티를 활용하여 MySQL 데이터베이스에 적재합니다.
+- Upsert 로직을 구현하여 중복 수집을 방지하고 최신 성과(조회수 등)를 업데이트합니다.
 
-- 중복 제거
-- 필수 필드 검증
-- 리뷰·제품 스키마 검사
+### 4. 분석 및 서빙 단계 (Analysis & Serving)
 
-## 4) Load(MySQL)
-
-- items 테이블 upsert
-- reviews 테이블 upsert
-- 키 충돌 시 delete 후 insert 처리
-
-## 5) Slack 알림
-
-- 성공/실패/처리 건수 자동 메시지
+- **통계 분석**: ER, ERV 지표를 생성하고 OLS 회귀 분석을 통해 K-Premium을 산출합니다.
+- **NLP 분석**: LDA 토픽 모델링으로 소비자 미충족 수요(Unmet Needs)를 도출하고, GraphRAG로 지식그래프 기반 Q&A 프로토타입을 구동합니다.
+- **모니터링**: Slack Webhook을 연동하여 배치 프로세스의 성공/실패 여부를 실시간으로 알립니다.
