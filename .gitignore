@@ -135,6 +135,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+*.html
 
 # Translations
 *.mo
@@ -377,5 +378,16 @@ fabric.properties
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+
+### Project-specific ###
+__pycache__/
+*.twbx
+AutogluonModels/
+results/
+temp/
+temp.md
+temp*.md
+temp.ipynb
+temp*.ipynb
 
 # End of https://www.toptal.com/developers/gitignore/api/python,java,androidstudio,macos,jupyternotebooks
