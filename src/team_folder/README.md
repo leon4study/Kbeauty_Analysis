@@ -1,6 +1,14 @@
 # team_folder — 팀 작업 흔적
 
-3 명 팀원 (이니셜 S/H/M) 의 작업 노트북 + 발표 자료 + 데이터 모음. 1/15 ~ 1/28 사이의 시점별 분석 진화 흔적.
+3 명 공동 팀원 (이니셜 S/H/M) 의 작업 노트북 + 발표 자료 + 데이터 모음. 1/15 ~ 1/28 사이의 시점별 분석 진화 흔적. 각 폴더는 해당 팀원의 담당 파트별 산출물.
+
+## 팀원별 담당 파트 (노트북 markdown 헤더 + 사용 라이브러리로 추론)
+
+| 팀원 | 담당 파트 | 핵심 분석 |
+|---|---|---|
+| **M** | Amazon 리뷰 분석 + 제품/브랜드 분석 | Sentiment Analysis (TF-IDF), Topic Modeling (LDA), **K-beauty 브랜드 클러스터링**, **성분 기반 제품 속성 분석 (Transformer)** — 0121 노트북 PART 3 ~ PART 4 |
+| **H** | 텍스트 전처리 정교화 + EDA + Skinsort 가격 분석 | Data Overview / Handling Missing Values / Column-wise transformation 체계화, LDA + K-beauty 불용어, 명사 필터링, **Word Cloud**, Skinsort `pay_amount` (가격) 분석 — 0128 노트북 |
+| **S** | TikTok 인플루언서 `info_tag` 수동 정제 | `cleaned_info.xlsx` (1679 rows × name + info_tag) — TikTok 영상 설명 텍스트 정제 결과. 후속 분석의 input |
 
 ## 진화 흐름 (시점 + 팀원별)
 
@@ -48,7 +56,7 @@
 
 | 파일 | 사이즈 | 역할 |
 |---|---|---|
-| `cleaned_info.xlsx` | 172K | TikTok 인플루언서 정제 데이터 (S 팀원의 데이터 정리 기여) |
+| `cleaned_info.xlsx` | 172K | **TikTok 인플루언서 영상 설명 (`info_tag`) 정제본**. 1679 rows × {name, info_tag}. 영상 설명에서 hashtag (`#kbeauty #koreanskincare #wonyoungism` 등) 추출 가능한 형태. 다른 팀원의 후속 분석 (M 의 토픽 모델링, H 의 텍스트 전처리) input 으로 사용됨 |
 
 ## 추천 main
 
