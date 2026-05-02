@@ -159,7 +159,7 @@ Kbeauty_Analysis/
 │   ├── EDA.ipynb                 # 기초 탐색
 │   ├── lemmatized_full_pipeline.ipynb
 │   ├── tiktok/                   # 영상/인플루언서 단위 분석 + 추천 알고리즘
-│   └── amazon_tiktok/            # Amazon × TikTok 결합 통계 분석
+│   └── amazon_tiktok/            # Amazon × TikTok 결합 통계 분석 (main + experiments/)
 ├── data/
 │   ├── amazon/                   # 리뷰·아이템 CSV
 │   ├── tiktok/                   # 영상·인플루언서·해시태그 CSV
@@ -219,7 +219,7 @@ Kbeauty_Analysis/
 - [ ] `.env.example` 환경 변수 관리 표준화
 
 ### 정리
-- [ ] amazon_tiktok 변종 6 개 통폐합 ([notebooks/amazon_tiktok/README.md](./notebooks/amazon_tiktok/README.md))
+- [x] **amazon_tiktok 변종 6 개 통폐합** — main + 발표용은 top-level, 4 진화 흔적은 [`experiments/`](./notebooks/amazon_tiktok/experiments/) 보존 (commit `22d4823`)
 - [ ] team_folder 위치 이동 검토 (notebooks/team/ 또는 data/archive/team/)
 - [ ] team_folder M/ PPTX 2개 (237MB) data/archive/ 이동 검토
 
