@@ -397,3 +397,5 @@ notion_page/
 **/lancedb/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,java,androidstudio,macos,jupyternotebooks
+
+PORTFOLIO_GUIDE.md
