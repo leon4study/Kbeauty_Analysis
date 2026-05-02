@@ -27,6 +27,9 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 **🔍 발견된 인사이트**: 단순 OLS 의 5.02 %p 중 **4.78 %p (95.3%) 가 인플루언서 selection effect** — 즉, K-beauty 키워드를 쓰는 인플루언서들이 *원래부터* ERV 가 높은 인플루언서들이고, 키워드 자체의 추가 효과는 거의 0.
 
+**📈 selection effect 의 일반성 — broad pattern 입증**:
+같은 분석을 9개 토픽 (skincare, asmr, color_makeup 등) 에 적용 → 동일 패턴 발견. 단순 평균 비교에서 보이던 토픽 간 ERV 차이 (asmr 19.13 vs eating 12.19, 약 7%p) 의 **대부분이 within-influencer 통제 시 사라짐** (8개 중 7개 통계적 유의 X, asmr 만 +2.19 marginal p=0.055). → K-keyword 가 아닌 **콘텐츠 metric 전반에서 인플루언서 selection 이 핵심 결정 요인**임. ([cell 160-162](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
+
 **왜 중요한가** — 인과 추론 단계 없이 ① 만 봤다면 잘못된 마케팅 결론 도출:
 - ❌ ① 만 보고 결론: "K-beauty 키워드 추가 → ERV +5 %p, 1 만뷰당 47,642 원 가치" (옛 README)
 - ✅ ③ 까지 가서 도출한 결론: **"K-beauty 키워드 추가 효과는 통계적으로 유의하지 않음. 진짜 효과는 인플루언서 선정에서 나온다"**
@@ -152,13 +155,13 @@ Kbeauty_Analysis/
 - [x] **within-influencer fixed effect 분석** — K-Premium selection effect 95.3% 발견 ([tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell 158-159)
 - [x] **추천 알고리즘 ver.3 강점/한계 깊이 분석** — 6 강점 + 4 한계 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md))
 - [x] **추천 알고리즘 가치 정량화** — ver.3 **Top-10 추천 시 무작위 대비 2.32배 ER%** (97.7 percentile, 10000 부트스트랩). selection effect 발견 (인플루언서 selection 이 핵심) → 그 selection 을 자동화한 알고리즘이 정량적으로 효과 입증. [tiktoker_recommend.ipynb 끝](./notebooks/tiktok/tiktoker_recommend.ipynb)
+- [x] **토픽 × ER within-influencer 분석** — 9 토픽 중 8개 통제 시 통계적 유의 X (asmr 만 +2.19 marginal). selection effect 가 K-keyword 만의 특수 현상이 아닌 **broad pattern** 임을 입증 ([tiktok_statistic_analysis.ipynb cell 160-162](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
 
 ### 후속 분석 (선택)
 - [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
 - [ ] selected 인플루언서 변동 시 ver.3 stability 검증
 - [ ] 인플루언서 segment (nano/micro/middle) 별 FE 효과 차이
 - [ ] 다른 시점/데이터셋으로 K-Premium / selection effect 재현성 검증
-- [ ] 토픽 × ER 분석 (within-influencer)
 - [ ] Amazon × TikTok 매칭 (TikTok 바이럴 → Amazon 매출)
 
 ### 엔지니어링
