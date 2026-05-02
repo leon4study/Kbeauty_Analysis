@@ -90,13 +90,215 @@
 | **Confounder 통제 X** | 브랜드 가격, 출시 연도, Amazon 광고 비용 등 통제 못 함 |
 | **수집 편향** | 수집된 5 브랜드는 사용자 선정. 무작위 sampling 아님 |
 
+## 시계열 lag 분석 (월별, 5 브랜드 합산)
+
+cross-sectional 매칭의 한계 (n=5) 를 보강하기 위해 월별 시계열 데이터로 cross-correlation 분석. 가설: TikTok 영상 활발도가 Amazon 리뷰를 lag 만큼 앞서는가?
+
+### 데이터
+- **Amazon 5 브랜드 리뷰 12,831 건** (2015-11 ~ 2025-01) → 월별 리뷰수 집계
+- **TikTok 1680 영상** (2022-08 ~ 2025-01) → 월별 영상수 / 총 view 집계
+- 매칭 기간: 30 개월 (2022-08 ~ 2025-01)
+
+### 1단계 — 원본 cross-correlation (검증 1)
+
+| lag (월) | TikTok view ↔ Amazon 리뷰 ρ |
+|---:|---:|
+| -3 | 0.714 |
+| -2 | 0.712 |
+| -1 | 0.712 |
+| **0** | **0.715** |
+| +1 | 0.707 |
+| +2 | 0.706 |
+| +3 | 0.688 |
+
+⚠️ **lag profile 이 평탄** (모든 lag 에서 ρ ≈ 0.69~0.72) → 진짜 lag 효과가 아니라 **시간 trend 로 인한 spurious correlation** 의심.
+
+### 2단계 — 시간 trend 진단
+
+| 시계열 | trend slope | R² |
+|---|---:|---:|
+| Amazon 월별 리뷰수 | +38.4/월 | **0.712** ⚠️ |
+| TikTok 월별 영상수 | +9.1/월 | 0.284 |
+| TikTok 월별 총 view | +2.4M/월 | 0.240 |
+
+→ Amazon R² = 0.712 = **강한 시간 trend** (수집 편향 가능성: 수집 시점 가까울수록 더 많이 잡힘 + K-Beauty 시장 성장). 이 trend 가 dominant 하면 cross-correlation 이 spurious.
+
+### 3단계 — Detrended cross-correlation (시간 trend 제거)
+
+선형 trend 제거 후 residual 끼리 cross-correlation:
+
+| lag (월) | Detrended ρ | p | n |
+|---:|---:|---:|---:|
+| **-3** | **0.790** | <0.001 | 27 |
+| -2 | 0.629 | <0.001 | 28 |
+| -1 | 0.593 | 0.001 | 29 |
+| 0 | 0.550 | 0.002 | 30 |
+| +1 | 0.396 | 0.034 | 29 |
+| +2 | 0.165 | 0.402 | 28 |
+| +3 | -0.095 | 0.637 | 27 |
+
+🎯 **lag = -3 가 가장 강함 (ρ=0.79, p<0.001)** — Amazon 이 TikTok 보다 3개월 앞섬!
+
+### 4단계 — First-difference (월별 변화량) cross-correlation
+
+| lag (월) | ΔTikTok view ↔ ΔAmazon ρ | p |
+|---:|---:|---:|
+| -3 | 0.063 | 0.758 |
+| -2 | -0.280 | 0.156 |
+| **-1** | **0.465** | **0.013** ✅ |
+| 0 | -0.080 | 0.680 |
+| +1 | 0.021 | 0.914 |
+| +2 | -0.073 | 0.718 |
+| +3 | -0.109 | 0.595 |
+
+→ ΔTikTok 변화량 ↔ ΔAmazon 변화량의 lag = -1 (Amazon 1달 앞섬) 만 유의. detrend 결과와 일관 — **Amazon 이 선행**.
+
+## 🔍 핵심 발견 — 인과 방향 가설 반박
+
+| 단계 | 결과 | 해석 |
+|---|---|---|
+| 원본 cross-correlation | ρ=0.715, lag profile 평탄 | spurious (시간 trend) |
+| Detrended | lag=-3 의 ρ=0.79 가 최대 | **Amazon 이 3개월 선행** |
+| First-difference | lag=-1 만 유의 (ρ=0.47) | **Amazon 이 1개월 선행** |
+
+→ "**TikTok 화제 → Amazon 매출**" 가설의 **인과 방향 정반대**. Amazon 시장 활동 (리뷰 증가) 이 TikTok 콘텐츠 증가보다 선행.
+
+### 가능한 해석
+
+1. **Amazon 매출 성장 → 인플루언서들이 트렌드 감지 → TikTok 콘텐츠 증가** (인과 방향 역)
+2. **공통 원인 (K-Beauty 시장 성장)** — 둘 다 시장 트렌드 결과, Amazon 이 먼저 시그널
+3. **수집 편향 잔존** — Amazon R² 0.712 라 detrend 후에도 일부 잔존 가능
+
+## Narrative — selection effect 패턴의 4번째 사례
+
+| 분석 | 단순 가정 | 보강 후 진실 |
+|---|---|---|
+| K-keyword (within-influencer FE) | "K-keyword → ERV +5%p" | selection effect 95% |
+| 토픽 (within-influencer FE) | "asmr 가 ERV 1위" | 통제 시 7/8 유의 X |
+| Amazon × TikTok (cross-sectional) | "TikTok 화제 = Amazon 인기" | 음의 상관 -0.80 (양극화) |
+| **Amazon × TikTok (시계열)** | **"TikTok → Amazon"** | **인과 방향 역 (Amazon 선행)** |
+
+→ **단순 분석의 함정** 4번째 사례. 분석 보강 단계마다 진짜 mechanism 드러남.
+
+## 시계열 lag 분석 코드
+
+```python
+import pandas as pd
+import numpy as np
+from scipy.stats import spearmanr, linregress
+
+# ============================================================
+# STEP 1: Amazon 5 브랜드 리뷰 + 날짜 parsing
+# ============================================================
+# Amazon 리뷰 csv 의 date 컬럼 형식: "Reviewed in the United States on January 2, 2025"
+# 정규식으로 "on " 이후 날짜 부분만 추출 + pd.to_datetime
+amazon_path = '/Users/jun/GitStudy/Kbeauty_Analysis/data/amazon/'
+files = ['cosrx_reviews.csv','Dr_jart_reviews.csv','imfrom_reviews.csv','joseon_reviews.csv','purito_reviews.csv']
+az_list = []
+for f in files:
+    sub = pd.read_csv(amazon_path + f)
+    date_col = 'date' if 'date' in sub.columns else 'review_date'
+    sub['date_clean'] = sub[date_col].astype(str).str.replace(r'^.*\bon\s+', '', regex=True)
+    sub['dt'] = pd.to_datetime(sub['date_clean'], errors='coerce')
+    az_list.append(sub[['dt']])
+az = pd.concat(az_list, ignore_index=True).dropna(subset=['dt'])
+az_monthly = az.groupby(az['dt'].dt.to_period('M')).size().reset_index(name='amazon_n_reviews')
+
+# ============================================================
+# STEP 2: TikTok 1680 영상 → 월별 집계 (전체, 5 브랜드 한정 X)
+# ============================================================
+# 5 브랜드 매칭 영상이 30개 정도 — lag 분석 표본 부족
+# → 전체 K-Beauty 영상으로 aggregate 시계열 사용 (Amazon 도 K-Beauty 5 브랜드 합산이라 일관성)
+tk = pd.read_csv('/Users/jun/GitStudy/Kbeauty_Analysis/data/tiktok/tiktoker_final_df_0127.csv')
+tk['ERV'] = (tk['like_cnt']+tk['comment_cnt']+tk['save_cnt']) / tk['view_cnt'] * 100
+tk = tk.dropna(subset=['ERV','view_cnt'])
+tk = tk[(tk['view_cnt']>0) & (tk['ERV']<=tk['ERV'].quantile(0.99))]
+tk['dt'] = pd.to_datetime(tk['upload_date'], errors='coerce')
+tk = tk.dropna(subset=['dt'])
+tk_monthly = tk.groupby(tk['dt'].dt.to_period('M')).agg(
+    tk_n_videos=('view_cnt','count'),
+    tk_total_view=('view_cnt','sum'),
+).reset_index().rename(columns={'dt':'ym'})
+
+# ============================================================
+# STEP 3: 월별 시계열 결합 (full month range, 0 padding)
+# ============================================================
+# 월별 데이터가 없는 기간 (예: 2023-12 의 TikTok=0) 은 0 으로 채움
+# → time series gap 없게 만들어야 lag shift 계산 정확
+all_months = pd.period_range(start='2022-08', end='2025-01', freq='M')
+ts = pd.DataFrame({'ym': all_months})
+ts = ts.merge(tk_monthly, on='ym', how='left').merge(az_monthly, on='ym', how='left').fillna(0)
+ts['t'] = np.arange(len(ts))  # 시간 index (0, 1, 2, ..., n-1)
+
+# ============================================================
+# STEP 4: 시간 trend 진단 (수집 편향 검증)
+# ============================================================
+# 각 시계열의 시간 (t) 에 대한 선형 회귀 — R² 가 높으면 강한 trend
+# Amazon R² > 0.7 = 수집 편향 또는 시장 성장이 dominant 인 강한 시그널
+for col in ['tk_n_videos','tk_total_view','amazon_n_reviews']:
+    slope, intercept, r, p, se = linregress(ts['t'], ts[col])
+    print(f'  {col}: slope={slope:.2f}/월, R²={r**2:.3f}')
+
+# ============================================================
+# STEP 5: Detrend — 선형 trend 제거 후 residual
+# ============================================================
+# 시간 trend 가 spurious correlation 의 주요 원인 → 제거 후 cross-correlation
+def detrend(arr, t):
+    slope, intercept, *_ = linregress(t, arr)
+    return arr - (slope*t + intercept)
+
+ts['tk_view_d'] = detrend(ts['tk_total_view'].values, ts['t'].values)
+ts['az_d']      = detrend(ts['amazon_n_reviews'].values, ts['t'].values)
+
+# ============================================================
+# STEP 6: lag cross-correlation (Spearman, 비모수)
+# ============================================================
+# pd.Series.shift(lag): lag>0 = 과거 값을 현재 위치로 (TikTok 이 lag 만큼 앞섬)
+# lag = -3 → TikTok 이 3개월 미래 = Amazon 이 3개월 앞섬
+# Spearman 사용 이유: 비선형 / 이상치 robust + 작은 표본에 안전
+print('\n=== Detrended cross-correlation ===')
+for lag in range(-3, 4):
+    tk_shift = pd.Series(ts['tk_view_d'].values).shift(lag)
+    valid = pd.Series(ts['az_d'].values).notna() & tk_shift.notna()
+    if valid.sum() > 5:
+        rho, p = spearmanr(tk_shift[valid], ts['az_d'].values[valid])
+        print(f'  lag={lag:+d}: ρ={rho:.3f} (p={p:.3f}, n={valid.sum()})')
+
+# ============================================================
+# STEP 7: First-difference (보조) — 월별 변화량 cross-correlation
+# ============================================================
+# detrend 가 trend 모델링이 잘못되면 잔존 가능 → first-difference 가 더 robust
+# Δx_t = x_t - x_{t-1}, 변화량끼리 상관 → trend 영향 자연스럽게 제거
+ts['tk_dview'] = ts['tk_total_view'].diff()
+ts['az_d2']    = ts['amazon_n_reviews'].diff()
+print('\n=== First-difference cross-correlation ===')
+for lag in range(-3, 4):
+    tk_shift = ts['tk_dview'].shift(lag)
+    valid = ts['az_d2'].notna() & tk_shift.notna()
+    if valid.sum() > 5:
+        rho, p = spearmanr(tk_shift[valid], ts.loc[valid, 'az_d2'])
+        print(f'  lag={lag:+d}: ρ={rho:.3f} (p={p:.3f}, n={valid.sum()})')
+```
+
+## 시계열 분석의 한계 (정직히)
+
+| 한계 | 설명 |
+|---|---|
+| **표본 30 개월** | n=27~30 detrended → 통계 검정력 제한 |
+| **TikTok 시간 편향** | 1680 영상 중 80%+ 가 2024-10~2025-01 — 수집 시점 가까운 영상 위주, 옛 영상 sparse |
+| **Amazon R² 0.712** | 강한 수집 편향 가능성 — 수집 시점 가까운 리뷰가 더 많이 잡힘 |
+| **K-beauty aggregate** | 브랜드 단위 lag 차이 무시. 브랜드 stage 별 (신생 vs established) 분리 못 함 |
+| **공통 원인 통제 X** | K-Beauty 시장 자체의 성장이 둘 다 이끌었을 가능성 — confounder |
+| **단방향 분석** | Amazon → TikTok 만 검정. 양방향 인과 모델 (VAR) 미적용 |
+
 ## 후속 분석 가능성
 
-1. **시계열 매칭**: TikTok 업로드 → 그 이후 Amazon 리뷰 폭증 lag 분석. 진짜 인과 추론 가능
-2. **더 많은 브랜드 매칭**: 30~50 브랜드로 확장 → 통계적 검정력 ↑
-3. **브랜드 stage 통제**: 신생 / 성장 / established 분류 후 stage 별 효과 측정
-4. **TikTok 영상 단위 매칭**: 브랜드 외에 제품명 (ASIN/title) 매칭 → 영상 단위 → Amazon 리뷰 영향
-5. **TikTok ERV ↔ Amazon 평점 +0.745** 의 robust 검증 — 더 큰 샘플로
+1. **VAR (Vector Autoregression)** 모델 — 양방향 인과 추론
+2. **Granger causality test** — formal causality 검정
+3. **브랜드 stage 통제** — 신생/성장/established 분류 후 stage 별 lag 차이
+4. **더 긴 시계열** — Amazon 의 2022-08 이전 데이터 활용
+5. **TikTok 영상 단위 매칭**: 브랜드 외에 제품명 (ASIN/title) 매칭 → 영상 단위 → Amazon 리뷰 영향
+6. **TikTok ERV ↔ Amazon 평점 +0.745** 의 robust 검증 — 더 큰 샘플로
 
 ## 분석 코드 (재현용 + step 별 주석)
 
