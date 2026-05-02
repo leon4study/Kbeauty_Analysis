@@ -120,6 +120,18 @@ jupytext --to py A.ipynb           # ipynb → .py 동기화 (git diff 가능)
 
 이미 외부에 있는 K-beauty 도메인 흔적은 시간 날 때 프로젝트 안 `experiments/` 또는 README 로 통폐합.
 
+### ⚠️ 외부 보존 전 cmp 중복 검증 필수
+
+`legacy_graphrag_kbeauty/` 사례 (2026-05-03 발견) — 외부 보존 5개 파일 중 4개가 이미 프로젝트 안 (`data/model/openaitest_0206/{prompts,input}/`) 에 동일하게 존재. 외부 보존 자체가 거의 무가치였음.
+
+**외부로 빼기 전 반드시**:
+```bash
+# 같은 이름 + 사이즈 파일이 프로젝트 안에 이미 있는지
+find data/ src/ -name "$(basename FILE)" 2>/dev/null
+# 발견되면 cmp 로 동일 여부 확인
+cmp -s OUTSIDE INSIDE && echo "duplicate → 외부 보존 불필요"
+```
+
 ---
 
 ## 7. 실제 적용 사례
