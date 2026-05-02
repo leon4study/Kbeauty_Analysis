@@ -14,32 +14,38 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 ## 2. 핵심 분석 성과 (Key Insights)
 
-### K-Premium: 단순 OLS 5%p → 인플루언서 통제 시 0.24%p (selection effect 95%)
+### Causal Robustness 분석 — selection effect 95% 발견 → "인플루언서 선정 > 키워드 선택"
 
-여러 추정 방법으로 K-beauty 키워드 효과를 검증한 결과 — **인과 추론 보강 단계에서 큰 반전**:
+처음에 단순 회귀로 추정한 K-Beauty 키워드 효과를 단계적으로 인과 보강한 결과, **마케팅 의사결정의 핵심 레버를 키워드 → 인플루언서 선정으로 옮기는 인사이트** 도출:
 
-| 모델 | k_keyword_flag 계수 | p-value | 해석 |
-|---|---:|---:|---|
-| 영상 단위 OLS (단순) | +5.0166 %p | <0.0001 ✅ | 인플루언서 selection 포함 |
-| 영상 단위 OLS Full + PSM ATT (보수적, 1:1 매칭) | +4.7642 %p | <0.01 ✅ | 영상 특성만 매칭 — 인플루언서 selection 미통제 |
-| **+ 인플루언서 Fixed Effect** (LSDV + clustered SE) | **+0.2363 %p** | 0.7464 ❌ | **유의 X** (95% CI [-1.20, 1.67]) |
-| Paired t-test (dual 42명 평균 비교) | +0.5569 %p | 0.4862 ❌ | 보조 검증 — 유의 X |
+| 추정 단계 | 모델 | K-Premium 계수 | p-value | 해석 |
+|---|---|---:|---:|---|
+| ① 영상 단위 OLS | `ERV ~ k_keyword + log_view + log_follower` | +5.0166 %p | <0.0001 ✅ | 일반적으로 보고되는 효과 — 단, 인플루언서 selection 포함 |
+| ② PSM ATT (1:1 매칭) | 영상 특성 매칭 후 ATT 추정 | +4.7642 %p | <0.01 ✅ | 영상 단위 인과 보강 — 인플루언서 selection 은 미통제 |
+| ③ **+ 인플루언서 Fixed Effect** | LSDV + clustered SE (인플루언서별 dummy) | **+0.2363 %p** | 0.7464 | **같은 인플루언서 내 효과 ≈ 0** (95% CI [-1.20, 1.67]) |
+| ④ Paired t-test (dual 42명) | 보조 검증 — within 평균 비교 | +0.5569 %p | 0.4862 | ③ 과 동일 결론 |
 
-→ **단순 OLS 의 5%p 효과 중 약 95% (4.78 %p) 가 인플루언서 selection effect**. 같은 인플루언서가 K-beauty / non-K-beauty 영상을 모두 만든 케이스에서 within-비교하면 K-beauty 키워드 자체의 효과는 통계적으로 유의하지 않음.
+**🔍 발견된 인사이트**: 단순 OLS 의 5.02 %p 중 **4.78 %p (95.3%) 가 인플루언서 selection effect** — 즉, K-beauty 키워드를 쓰는 인플루언서들이 *원래부터* ERV 가 높은 인플루언서들이고, 키워드 자체의 추가 효과는 거의 0.
 
-**비즈니스 시사점 (갱신)**:
-- ❌ "K-beauty 키워드 추가하면 ERV +5%p" — within 비교에서는 성립하지 않음
-- ✅ **K-beauty 키워드를 쓰는 인플루언서들이 원래부터 ERV 가 높음** — selection effect
-- ✅ **인플루언서 선정 > 키워드 선택**: 마케팅 의사결정에서 어떤 인플루언서를 쓸지가 키워드 전략보다 훨씬 중요
+**왜 중요한가** — 인과 추론 단계 없이 ① 만 봤다면 잘못된 마케팅 결론 도출:
+- ❌ ① 만 보고 결론: "K-beauty 키워드 추가 → ERV +5 %p, 1 만뷰당 47,642 원 가치" (옛 README)
+- ✅ ③ 까지 가서 도출한 결론: **"K-beauty 키워드 추가 효과는 통계적으로 유의하지 않음. 진짜 효과는 인플루언서 선정에서 나온다"**
 
-**한계 / 다음 단계**:
-- dual 인플루언서 42명 (전체 56명의 75%) — 표본 작아 검정력 약할 수 있음
+**비즈니스 시사점 (인과적으로 정확한 버전)**:
+- 🎯 **인플루언서 선정 > 키워드 선택**: 마케팅 예산 배분 시 *어떤 인플루언서를 쓸지* 가 *어떤 키워드를 쓸지* 보다 훨씬 중요
+- 🎯 **K-beauty 키워드 사용 인플루언서들의 베이스 ERV 가 높은 이유** 가 진짜 분석 대상 — 채널 컨셉, 팔로워 충성도, 콘텐츠 일관성 등
+- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) 의 가치 ↑ — 인플루언서 단위 추천이 키워드 단위보다 직접적
+
+**분석가 가치 측면**:
+- 단순 OLS 만 보고 결론 내렸다면 5 %p 효과를 그대로 비즈니스에 권고 → 잘못된 의사결정
+- ③ Fixed Effect 까지 진행했기에 selection 과 causal 효과를 분리, 진짜 레버 식별
+- 자세한 결과 + 한계: [tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell idx 158-159
+
+**한계**:
+- dual 인플루언서 42명 (전체 56명의 75%) — 검정력 일부 제한
 - K-beauty 전용 14명 (within variation 없음) 의 효과는 measure 불가
-- 단일 시점·단일 데이터셋 — 다른 기간/집단으로 재현성 검증 필요
-- 인플루언서 segment 별 (nano/micro/middle) 차이 검증 후속 단계
-- 분석 노트북: [tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell idx 158-159 (within-influencer FE 결과)
-
-> **이전 README 의 "잠재 8.47억원" 추정은 단순 OLS 기반이었음 → 인플루언서 selection 통제 후에는 효과 자체가 유의하지 않으므로 잠재 가치 추정도 재고됨.** 표본 안 영상 단위 합산 (옛 노트북 Cell 174) 보다 인플루언서 단위 효과 (FE 결과 ≈ 0) 가 인과적으로 더 정확.
+- 단일 데이터셋 — 다른 기간/집단으로 재현성 검증 필요
+- 후속: 인플루언서 segment 별 (nano/micro/middle) FE 효과 + 다른 시점 데이터 재현
 
 ### 텍스트 분석 및 지식그래프 구축
 
