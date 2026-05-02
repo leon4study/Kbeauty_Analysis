@@ -58,7 +58,8 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 - **데이터 성격 차이 (정성 vs 행동)**: 리뷰는 '사용 경험' (심층), TikTok 은 '인지·반응' (광범위). 둘을 **토픽·키워드 단위로 연결** 하여 상호보완적 인사이트를 얻도록 설계.
 - **단일 Notebook 유지 이유** (`amazon_tiktok_*` 통합 노트북): 전처리 → 토픽 → 교차분석 과정에서 중간 산출물 (TF-IDF 벡터, LDA 토픽, 토픽별 문서 리스트) 이 반복 참조됨. 분리 시 컨텍스트 손실 + 중복 연산 발생 → 의도적 단일 파일 설계.
-- **추천 알고리즘은 점진적 진화**: TF-IDF cosine (v1) → ER% 가중치 (v2) → max(1) 안전장치 (v3) → 회귀분석 가중치 자동 탐색 — 한 노트북 안 셀 단위로 누적. 자세한 진화 흐름은 [docs/refactor/12_tiktok_recommendation_evolution.md](./docs/refactor/12_tiktok_recommendation_evolution.md).
+- **추천 알고리즘은 점진적 진화**: TF-IDF cosine (v1) → ER% 가중치 (v2) → max(1) 안전장치 (v3) → 회귀분석 가중치 자동 탐색 — 한 노트북 안 셀 단위로 누적. ver.3 의 강점 6가지 (콘텐츠+ER% 결합 / selection effect 인코딩 / 도구 절제력 / MinMax 가중치 안정화 / edge case 방어 / overfitting 완화) + 한계 + 개선 방향은 [docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md#-ver3-의-강점--왜-이-선택을-했나-깊이-분석).
+- **현업과 일관**: ver.3 의 ER% 가중치는 selection effect 발견 (위 K-Premium 섹션) 과 동일 방향 — 인플루언서 selection 을 추천 score 에 직접 인코딩. 사용자 직관이 사후 인과 분석으로 검증된 사례.
 
 ### GraphRAG 의 차별점
 

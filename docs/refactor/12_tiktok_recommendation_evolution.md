@@ -47,6 +47,86 @@ K-beauty 인플루언서 (틱톡커) 마케팅에서 "비슷한 인플루언서 
 
 **왜 ER% 가중치를 v2 에서 추가?** ROI 관점 — ER% 높은 인플루언서가 광고 효율 높음 → 그들의 콘텐츠 토픽을 더 중요하게 다뤄야 함.
 
+### 🎯 ver.3 의 강점 — 왜 이 선택을 했나 (깊이 분석)
+
+단순 알고리즘 (cosine 만 / ER% Top-K 만) 보다 ver.3 가 우수한 6가지 이유:
+
+#### 1. **콘텐츠 + ER% 결합 — 현업 의사결정 자동화**
+
+단일 metric 알고리즘의 함정:
+
+| 알고리즘 | 본 것 | 빠뜨린 것 | 위험 |
+|---|---|---|---|
+| ER% Top-K | 효율 | 캠페인 적합성 | skincare 캠페인에 ER% 높은 색조 인플루언서 추천 (부적합) |
+| Cosine 만 | 적합성 | 효율 | 콘텐츠 맞지만 ER% 낮은 인플루언서 추천 (효율 낮음) |
+| **결합 (ver.3)** | 둘 다 | — | — |
+
+→ 현업 마케팅 매니저가 본능적으로 하는 trade-off ("컨셉 맞고 + 반응 좋은") 를 알고리즘으로 자동화. 단일 metric 만 사용한 알고리즘보다 의사결정 모델로서 우수.
+
+#### 2. **인플루언서 selection effect 인코딩 — 사후 검증된 직관**
+
+[`tiktok_statistic_analysis.ipynb`](../../notebooks/tiktok/tiktok_statistic_analysis.ipynb) 의 within-influencer FE 분석 (cell 158-159) 에서 발견:
+- K-Premium 효과 95.3% 가 **인플루언서 selection effect**
+- 단순 OLS 5.02 %p → Fixed Effect 0.24 %p (selection effect 4.78 %p)
+
+ver.3 의 ER% 가중치는 인플루언서 selection 을 추천 score 에 직접 인코딩 — high-ER% 인플루언서들의 콘텐츠 패턴이 vector 에 더 강하게 박힘 → 결과적으로 high-ER% 인플루언서가 추천 score ↑.
+
+> **사용자가 selection effect 발견 *전*에 직관으로 만들었지만, 사후 검증에서 정확한 방향임 입증** — 분석가 직관의 정확성.
+
+#### 3. **TF-IDF + cosine 이 데이터 성격에 적합** — 도구 절제력
+
+추천 input = LDA 토픽 라벨 (`no.1, no.2, no.3`) = 짧은, 이미 의미 압축된 키워드 (sparse 텍스트).
+
+- TF-IDF + cosine = 짧은 sparse 텍스트의 표준 (적합)
+- word2vec / BERT embedding = **over-engineering**
+  - LDA 자체가 이미 semantic compression 결과
+  - 추가 dense embedding 의 marginal gain 작음
+  - 학습 / 인퍼런스 비용 ↑
+
+→ 데이터 성격 보고 적합한 도구 선택 = 강력한 모델 욕심 안 부리는 절제력.
+
+#### 4. **MinMax 정규화로 가중치 폭발 방지** — 의식적 hyperparameter 선택
+
+ER% 자체로 곱했다면 절대값 차이 큼 (예: 1.8% vs 10.1% = **5.6배 차이**) → 가중치 폭발.
+
+MinMax 0~1 = 절대값 대신 **상대 순위** 강조. 노트북 자체 주석:
+> "ER%의 값이 너무 큰 경우(예: 1.8% vs. 10.1%) 가중치 차이가 심해질 수 있으므로 Min-Max Scaling을 적용"
+
+→ Default 가 아닌 의식적 디자인 선택 — face validity (실용 직관) vs robustness 의 trade-off 에서 robustness 쪽으로 결정. 합리적.
+
+#### 5. **`max(1, ...)` edge case 방어** — detail orientation
+
+문제 시나리오: ER% 0 인 인플루언서
+- `int(round(normalized_ER * 3, 0))` = 0
+- 키워드 0번 반복 → TF-IDF vector 에서 사라짐
+- 해당 인플루언서 추천 후보에서 **사실상 임의 배제**
+
+방어: `max(1, ...)` 로 최소 1번 반복 보장 → 후보군에서 임의 배제 방지.
+
+→ edge case 인지 + 명시적 처리. 노트북에 의도까지 주석으로 문서화 ("ER%가 너무 낮으면 가중치 값이 0이 되어 콘텐츠 키워드가 삭제될 위험 있음"). 분석가 detail orientation.
+
+(구현 효과는 별개 — 의도와 효과 분리해서 평가하면 의도는 정확)
+
+#### 6. **selected 다중 인플루언서 평균 유사도** — overfitting 방어
+
+```python
+similarity_scores = cosine_similarity(M, M[selected_indices])
+df['content_similarity'] = similarity_scores.mean(axis=1)
+```
+
+- selected 한 명 기준 = 그 한 명의 noise / 편향에 over-fit
+- 두 명 평균 = 캠페인의 **"유형"** 추정 → noise 완화
+- 캠페인 전략이 "어떤 인플루언서들과 비슷한 그룹을 더 늘리고 싶다" 일 때 적절한 정의
+
+### 한계 (정직하게)
+
+| 한계 | 설명 | 개선 방향 |
+|---|---|---|
+| TF inflation 정보 손실 | `int(round(...))` 로 연속 normalized_ER 정보 일부 잃음 | row-wise vector scaling: `M_weighted = M.multiply(weight[:, None])` |
+| `max(1, ...)` 효과 미작동 가능성 | normalized_ER 분포가 한쪽으로 치우치면 (예: 대부분 0~0.16) 모든 인플루언서가 동일 1번 반복 → 가중치 미작동 | 분포 점검 + 연속 가중치로 전환 |
+| selected 2명만 검증 | `["krystallee2222", "emchu_"]` 만 — 다른 selected 조합으로 generalization 미검증 | 다양한 selected 조합으로 stability 테스트 |
+| Cold-start | 새 인플루언서는 ER% 누적 + LDA 토픽 라벨 후만 추천 가능 | 메타데이터 기반 hybrid (팔로워/지역/카테고리) 보강 |
+
 ### Stage 4: 회귀분석 (가중치 자동 탐색)
 
 ver.1~3 의 가중치 (`no.1*3 + no.2*2 + no.3*1`, ER% scaling 배수) 는 사람이 정한 heuristic. 회귀분석으로 데이터 기반 가중치를 찾는 시도:
