@@ -162,6 +162,39 @@ ver.3 가 실제로 high-ER% 인플루언서를 잘 골라내는가? 후보 54�
 
 분석 위치: [`../../notebooks/tiktok/tiktoker_recommend.ipynb`](../../notebooks/tiktok/tiktoker_recommend.ipynb) 마지막 cell 들 (heading + quant_code + result_md).
 
+### Stability 검증 (2026-05-03 추가) — 정량화 결과의 robustness
+
+위 정량화는 selected `[krystallee2222, emchu_]` **단일 조합** 결과. 다른 selected 였다면? 1540 selected pair 모두 검증:
+
+| 측면 | 결과 | 의미 |
+|---|---|---|
+| 1540 pair 평균 | **15.01 ER%** (vs random 12.02) | **1.25× random** (정량화의 2.32× 와 큰 차이) |
+| 변동성 | std 6.83, range [1.84, 34.15] | selected 에 따라 18배 차이 |
+| selected ER% ↔ 추천 ER% Pearson | **-0.12** (p<0.0001) | ER% 가중치 메커니즘 의도대로 작동 X |
+| 원래 selected 의 분포 위치 | **94.2 percentile** | **2.32× = lucky case** |
+
+**selected size 효과**:
+
+| size | mean | std | > random 비율 |
+|---:|---:|---:|---:|
+| 1 | 15.61 | 8.56 | 57% |
+| 2 | 15.24 | 6.99 | 62% |
+| 3 | 16.68 | 6.82 | 71% |
+| **5** | **17.91** | 6.83 | **77%** |
+
+→ **selected size 5+ 권장**. 단일 selected 조합 결과 보고는 lucky/unlucky 위험.
+
+**자기 비판적 검증의 가치 (포트폴리오)**:
+- 1차 정량화: Top-10 = 2.32× random → "강한 효과" 결론
+- 2차 stability: 1.25× random (평균), 2.32× = lucky case → 한계 인정
+- → 분석가의 **자기 비판적 검증 능력**이 portfolio 의 강점
+
+**ver.4 의 필요성 (정량 입증)**:
+- TEST 2 의 Pearson -0.12 = TF inflation 한계가 실제 결과에 영향 미침을 입증
+- ver.4 구현 가치 ↑ — TF inflation → row-wise vector scaling 으로 ER% 가중치 정확히 적용
+
+분석 위치: [`../../notebooks/tiktok/tiktoker_recommend.ipynb`](../../notebooks/tiktok/tiktoker_recommend.ipynb) 끝 3 cells (stability heading + code + result).
+
 ### Stage 4: 회귀분석 (가중치 자동 탐색)
 
 ver.1~3 의 가중치 (`no.1*3 + no.2*2 + no.3*1`, ER% scaling 배수) 는 사람이 정한 heuristic. 회귀분석으로 데이터 기반 가중치를 찾는 시도:

@@ -51,7 +51,7 @@ selection effect 95% 가 모든 segment 에서 동일한가? 팔로워 규모별
 **비즈니스 시사점 (인과적으로 정확한 버전)**:
 - 🎯 **인플루언서 선정 > 키워드 선택**: 마케팅 예산 배분 시 *어떤 인플루언서를 쓸지* 가 *어떤 키워드를 쓸지* 보다 훨씬 중요
 - 🎯 **K-beauty 키워드 사용 인플루언서들의 베이스 ERV 가 높은 이유** 가 진짜 분석 대상 — 채널 컨셉, 팔로워 충성도, 콘텐츠 일관성 등
-- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) 의 가치 정량 입증 — **ver.3 Top-10 추천 시 무작위 대비 2.32배 ER%** (97.7 percentile, 10000 부트스트랩). selection effect 인사이트와 솔루션의 정량적 일치
+- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) 의 가치 정량 입증 — **ver.3 Top-10 추천 시 무작위 대비 2.32배 ER%** (단일 selected 조합 결과). **Stability 검증** (1540 selected pair) 결과: 평균 1.25× random, 단일 결과는 lucky case (94.2 percentile), **selected size 5+ 권장**. 자기 비판적 검증으로 알고리즘 한계 인정 + ver.4 (TF inflation 제거) 필요성 입증
 
 **분석가 가치 측면**:
 - 단순 OLS 만 보고 결론 내렸다면 5 %p 효과를 그대로 비즈니스에 권고 → 잘못된 의사결정
@@ -173,6 +173,7 @@ Kbeauty_Analysis/
 - [x] **Amazon × TikTok 5 브랜드 매칭 분석** — "TikTok 화제 → Amazon 매출" 가설 반박: 음의 상관 (Spearman -0.80). 신생/성장 브랜드는 TikTok 활발 + Amazon 중간, established (COSRX) 는 Amazon 압도 + TikTok 적음. **본 프로젝트의 통합 데이터 활용 핵심 분석**. 자세히는 [docs/refactor/13](./docs/refactor/13_amazon_tiktok_brand_matching.md)
 - [x] **시계열 lag cross-correlation (30 개월)** — Detrended 후 **lag=-3 의 ρ=0.79 최대** (Amazon 이 TikTok 보다 3 개월 선행). 가설 ("TikTok → Amazon") 의 **인과 방향 정반대**. K-Beauty 시장 성장이 공통 원인 또는 Amazon 이 leading indicator. [docs/refactor/13 시계열 섹션](./docs/refactor/13_amazon_tiktok_brand_matching.md)
 - [x] **Segment 별 within-influencer FE** — selection effect 가 segment 별 매우 다름. **nano (n_dual=3)**: 콘텐츠 효과 +5.31%p (단 표본 한계). **micro/middle (78%)**: selection 90-100% (키워드 무의미). **mega**: selection 17%, 약한 콘텐츠 효과 (작지만 유의). 평균 95% 안에 큰 heterogeneity → **segment 차별 마케팅 전략 필요**. [tiktok_statistic_analysis.ipynb cell 163-165](./notebooks/tiktok/tiktok_statistic_analysis.ipynb)
+- [x] **추천 알고리즘 ver.3 stability 검증** — 1540 selected pair 모두 테스트. 평균 1.25× random (std 6.83), 원래 보고된 2.32× 는 94.2 percentile **lucky case**. selected size 5+ 권장. ER% 가중치 메커니즘 의도대로 작동 X (Pearson -0.12) → ver.4 필요성 정량 입증. [tiktoker_recommend.ipynb 끝 stability cells](./notebooks/tiktok/tiktoker_recommend.ipynb)
 
 ### 후속 분석 (선택)
 - [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
