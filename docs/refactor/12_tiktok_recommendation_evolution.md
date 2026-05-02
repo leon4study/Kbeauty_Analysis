@@ -162,6 +162,66 @@ ver.3 가 실제로 high-ER% 인플루언서를 잘 골라내는가? 후보 54�
 
 분석 위치: [`../../notebooks/tiktok/tiktoker_recommend.ipynb`](../../notebooks/tiktok/tiktoker_recommend.ipynb) 마지막 cell 들 (heading + quant_code + result_md).
 
+### ver.4 — TF Inflation 제거 + Score 단계 ER% 가중치 (2026-05-03 추가)
+
+ver.3 의 stability TEST 2 (Pearson -0.12) 에서 발견된 TF inflation 한계를 직접 해결.
+
+**핵심 변경**:
+```python
+# ver.3 (TF inflation): 단어 N번 반복으로 TF 인플레이션
+df['content_v3'] = (no.1+' ')*round(ER*3) + (no.2+' ')*round(ER*2) + (no.3+' ')*round(ER)
+M = TfidfVectorizer().fit_transform(df['content_v3'])
+score = cosine_similarity(M, M[selected]).mean(axis=1)
+
+# ver.4 (vector scaling at score): 토픽 단순 결합 + score 단계 ER% 곱
+df['content_v4'] = no.1 + ' ' + no.2 + ' ' + no.3
+M = TfidfVectorizer().fit_transform(df['content_v4'])
+sim = cosine_similarity(M, M[selected]).mean(axis=1)
+score = sim * (df['normalized_ER'] + 0.1)  # 연속 가중치 + epsilon
+```
+
+**정량 비교 (1540 selected pair)**:
+
+| Metric | ver.3 | ver.4 | 개선 |
+|---|---:|---:|---:|
+| 1540 pair 평균 ER% | 15.01 | **39.08** | +24.06 |
+| std (변동성) | 6.83 | **4.35** | 안정성↑ |
+| min | 1.84 | **17.94** | +16.10 |
+| × random | 1.25× | **3.25×** | 2.6 배 |
+| > random 비율 | 61.4% | **100%** | 모든 selected 능가 |
+| Spearman (score↔ER%) | +0.087 | **+0.505** | 5.8× |
+| Precision@10 | 20% | **60%** | 3× |
+
+**Paired t-test (v4 - v3)**: t=122.80, p<0.0001 — 같은 selected 에서 평균 **+24.06 %p 개선**.
+
+**ver.4 의 강점 종합**:
+1. **효과 크기 ↑**: 1.25× → 3.25× random
+2. **안정성 ↑**: std 6.83 → 4.35, > random 비율 61% → 100%
+3. **메커니즘 명확**: TF inflation 의 정수 반올림 정보 손실 제거
+4. **selected 의존도 ↓**: 어떤 selected 든 robust
+5. **Ranking 정확도 ↑**: Precision@10 20% → 60% (3 배)
+6. **코드 간결**: 복잡한 `apply + max + int + round` → 단순 곱셈
+
+**ver.4 trade-off (정직히)**:
+- selected ER% ↔ 추천 ER% Pearson **-0.62** (강한 음 상관)
+- ver.4 score = sim × ER% → high-ER% 후보 우선 (selected 의존 ↓)
+- 만약 캠페인 의도가 "selected 와 비슷한 인플루언서 추천" 이라면 ver.4 의 selected 의존도 낮음 = 단점
+- "비슷한 + 효율 높은" 의 곱셈 = trade-off
+- 후속: hybrid (rank fusion) — cosine rank + ER% rank 의 조합
+
+**Narrative — ver.3 → ver.4 진화의 portfolio 가치**:
+
+| 단계 | 분석가 활동 |
+|---|---|
+| 1차 ver.3 설계 | 직관 기반 (TF inflation + max(1) 안전장치) |
+| 자기 검증 (stability test) | 한계 발견 — Pearson -0.12 → TF inflation 메커니즘 작동 X |
+| ver.4 설계 | 한계 직접 해결 — score 단계 vector scaling |
+| 정량 비교 검증 | ver.4 가 모든 metric 에서 압도 |
+
+→ **분석가의 알고리즘 자기 비판 → 개선 → 검증의 closed loop** 입증.
+
+분석 위치: [`../../notebooks/tiktok/tiktoker_recommend.ipynb`](../../notebooks/tiktok/tiktoker_recommend.ipynb) 끝 3 cells (ver.4 heading + code + result).
+
 ### Stability 검증 (2026-05-03 추가) — 정량화 결과의 robustness
 
 위 정량화는 selected `[krystallee2222, emchu_]` **단일 조합** 결과. 다른 selected 였다면? 1540 selected pair 모두 검증:
