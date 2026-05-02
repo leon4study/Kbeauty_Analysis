@@ -64,7 +64,7 @@ selection effect 95% 발견 → 인플루언서 selection 자동화 알고리즘
 | 단계 | 내용 | 결과 |
 |---|---|---|
 | ver.1 → ver.3 | TF-IDF cosine + ER% 가중치 + max(1) 안전장치. 6 강점 분석 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md)) | 단일 selected (`krystallee2222, emchu_`) Top-10 = **2.32× random** (97.7 percentile) |
-| **자기 비판 (stability)** | 1540 selected pair 모두 테스트 | ver.3 평균 **1.25× random** (std 6.83) — 단일 결과는 lucky case. ER% 가중치 mechanism 의도대로 작동 X (Pearson -0.12) |
+| **자기 비판 (stability + mechanism 분석)** | 1540 selected pair 모두 테스트 + ER% 가중치 mechanism 정량 측정 | (1) 평균 **1.25× random** (std 6.83) — 단일 결과는 lucky case. (2) Pearson selected-ER ↔ rec-ER = -0.12 → **ER% 가중치 의도대로 작동 X**. (3) `max(1)` 발동률 **84% (no.1) / 91% (no.2) / 96% (no.3)** — normalized_ER 분포 skewed 라 거의 모든 인플루언서 (1,1,1) 가중치 → **ver.3 ≈ ver.2** |
 | **개선 ver.4** | TF inflation 제거 + score 단계 ER% 가중치 (`score = sim × (normalized_ER + 0.1)`) | 평균 **3.25× random** (std 4.35), **모든 selected 에서 random 능가 (100%)**, Precision@10 **60%** (vs ver.3 20%) |
 | **정량 검증** | Paired t-test (v4 - v3) | **t=122.80, p<0.0001, 평균 +24.06%p** |
 

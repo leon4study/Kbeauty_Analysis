@@ -123,7 +123,7 @@ df['content_similarity'] = similarity_scores.mean(axis=1)
 | 한계 | 설명 | 개선 방향 |
 |---|---|---|
 | TF inflation 정보 손실 | `int(round(...))` 로 연속 normalized_ER 정보 일부 잃음 | row-wise vector scaling: `M_weighted = M.multiply(weight[:, None])` |
-| `max(1, ...)` 효과 미작동 가능성 | normalized_ER 분포가 한쪽으로 치우치면 (예: 대부분 0~0.16) 모든 인플루언서가 동일 1번 반복 → 가중치 미작동 | 분포 점검 + 연속 가중치로 전환 |
+| **`max(1, ...)` 효과 미작동 — 정량 측정됨** | normalized_ER 분포 매우 skewed (median=0.045, 75pct=0.106) → factor 3 (no.1) 가중치=0 인 인플루언서 **47/56 (84%)**, factor 2 (no.2) **91%**, factor 1 (no.3) **96%** 발동. 거의 모든 인플루언서가 (1,1,1) 동일 가중치 → **ver.3 ≈ ver.2 (단순 3/2/1)** 결과 | ver.4 에서 vector scaling (연속 가중치) 으로 해결 |
 | selected 2명만 검증 | `["krystallee2222", "emchu_"]` 만 — 다른 selected 조합으로 generalization 미검증 | 다양한 selected 조합으로 stability 테스트 |
 | Cold-start | 새 인플루언서는 ER% 누적 + LDA 토픽 라벨 후만 추천 가능 | 메타데이터 기반 hybrid (팔로워/지역/카테고리) 보강 |
 
