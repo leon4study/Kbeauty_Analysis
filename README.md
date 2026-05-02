@@ -129,7 +129,7 @@ Kbeauty_Analysis/
 ## 6. 제약 사항 및 재현성
 
 - **수집 제약**: TikTok 데이터는 플랫폼 보안 (CAPTCHA, 로그인, 계정 행위 제한) 으로 완전 자동화 불가 — 반자동 수집 (수동 세션 관리) 방식 채택.
-- **인과 추론**: OLS 계수만으로는 confounder 통제 부족 → PSM 으로 1:1 매칭 후 ATT 산출. 추가로 within-influencer fixed effect 분석 보강 예정.
+- **인과 추론**: OLS → PSM ATT → within-influencer Fixed Effect 단계적 보강 완료. **selection effect 95.3% 발견** — 위 "Causal Robustness 분석" 섹션 참고.
 - **재현성**: 분석 재현을 위해 `data/` 폴더 내 지정 스키마를 준수하는 CSV 필요, Python 3.10 권장.
 - **포터빌리티**: 절대 경로 → `pyproject.toml` + `pip install -e .` 기반 `REPO_ROOT` 패턴. [docs/refactor/02_path_portability.md](./docs/refactor/02_path_portability.md) 참고.
 
@@ -148,8 +148,18 @@ Kbeauty_Analysis/
 
 ## 8. 향후 계획 (Future Works)
 
-- [ ] **within-influencer fixed effect 분석** — K-Premium 추정의 인과성 보강 ([Cell 추가 완료, 코드 placeholder 상태](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
-- [ ] 잠재 가치 추정 within-influencer 결과로 갱신
+### 완료된 분석
+- [x] **within-influencer fixed effect 분석** — K-Premium selection effect 95.3% 발견 ([tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell 158-159)
+- [x] **추천 알고리즘 ver.3 강점/한계 깊이 분석** — 6 강점 + 4 한계 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md))
+
+### 후속 분석 (인과 보강 + 추천 알고리즘 검증)
+- [ ] **추천 알고리즘 가치 정량화** — ver.3 Top-K vs 무작위 vs ceiling ER% 비교 (예비 결과: Top-10 추천 시 무작위 대비 2.32배 ER%)
+- [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
+- [ ] selected 인플루언서 변동 시 ver.3 stability 검증
+- [ ] 인플루언서 segment (nano/micro/middle) 별 FE 효과 차이
+- [ ] 다른 시점/데이터셋으로 K-Premium / selection effect 재현성 검증
+
+### 엔지니어링
 - [ ] 파서 / 클리너 유닛 테스트 (pytest) 추가
 - [ ] Dockerfile + docker-compose (개발용 컨테이너)
 - [ ] 재현용 샘플 데이터셋 (100 건 내외) 추가 제공
