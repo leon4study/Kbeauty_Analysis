@@ -38,7 +38,9 @@ statistic_analysis_without_wonyoung copy  ← 📄 발표/보고용 정제본
 3. **비교 그룹 정밀화**: 그냥 "non-K" 가 아니라 `non_k_skincare = [glassskin, skincareroutine, skintok ...]` 로 **같은 카테고리(스킨케어) 내** 비교 (선택 편향 ↓)
 4. **결과 정제**: `copy` 에서 전처리 부분 제거하고 결과만 추출 — 발표/리뷰용
 
-> ⚠️ 이 노트북들의 OLS 결과는 [`../tiktok/tiktok_marketing_modeling_v2.ipynb`](../tiktok/tiktok_marketing_modeling_v2.ipynb) 에서 PSM ATT 로 인과 보강됨 (4.7642 %p). [`../../docs/refactor/12_tiktok_recommendation_evolution.md`](../../docs/refactor/12_tiktok_recommendation_evolution.md) 와 README 의 K-Premium 항목 참고.
+> ⚠️ **인과 추론 보강 진행 흐름**: 이 노트북들의 OLS 결과 → [`../tiktok/tiktok_marketing_modeling_v2.ipynb`](../tiktok/tiktok_marketing_modeling_v2.ipynb) PSM ATT (4.7642 %p) → [`../tiktok/tiktok_statistic_analysis.ipynb`](../tiktok/tiktok_statistic_analysis.ipynb) within-influencer Fixed Effect (cell 158-159).
+>
+> **최종 발견**: 단순 OLS 의 5%p 효과 중 **95.3% 가 인플루언서 selection effect**. 인플루언서 통제 시 K-beauty 키워드 자체 효과는 통계적으로 유의하지 않음 (0.24 %p, p=0.75). 자세히는 root [`../../README.md`](../../README.md) 의 "Causal Robustness 분석" 섹션 + [`../../docs/refactor/12`](../../docs/refactor/12_tiktok_recommendation_evolution.md).
 
 ## 변종 비교 명령어 (재검증 시)
 

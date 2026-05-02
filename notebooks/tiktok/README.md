@@ -27,7 +27,7 @@ TikTok 영상/인플루언서 데이터 기반의 EDA + 토픽 모델링 + 추�
 | `tiktoker_EDA.ipynb` | 인플루언서 단위 EDA |
 | `tiktoker_topic_modeling.ipynb` | LDA 등으로 인플루언서별 콘텐츠 토픽 추출 |
 | `tiktoker_lableing.ipynb` | 토픽 모델 결과 → 카테고리 라벨링 (color/skincare/hair_body/...) → `tiktoker_top3_modeled_topic.csv` |
-| `tiktoker_recommend.ipynb` | **추천 알고리즘** ver.1 → v2 → v3 + 회귀분석. 자세한 진화는 [docs/refactor/12](../../docs/refactor/12_tiktok_recommendation_evolution.md) |
+| `tiktoker_recommend.ipynb` | **추천 알고리즘** ver.1 → v2 → v3 + 회귀분석. ver.3 강점 6가지 + 한계 분석은 [docs/refactor/12](../../docs/refactor/12_tiktok_recommendation_evolution.md). selection effect 발견과 ER% 가중치의 정합성 — 사후 검증된 직관 |
 
 ## 데이터 위치
 
