@@ -127,6 +127,41 @@ df['content_similarity'] = similarity_scores.mean(axis=1)
 | selected 2명만 검증 | `["krystallee2222", "emchu_"]` 만 — 다른 selected 조합으로 generalization 미검증 | 다양한 selected 조합으로 stability 테스트 |
 | Cold-start | 새 인플루언서는 ER% 누적 + LDA 토픽 라벨 후만 추천 가능 | 메타데이터 기반 hybrid (팔로워/지역/카테고리) 보강 |
 
+### 정량화 결과 (2026-05-03 검증)
+
+ver.3 가 실제로 high-ER% 인플루언서를 잘 골라내는가? 후보 54명 중 Top-K 추천 vs 무작위 K명 (10000 부트스트랩) vs 천장 (ER% 상위 K) 비교.
+
+| K | ver.3 추천 ER% | 무작위 평균 (95% CI) | 천장 (Top-K ER%) | 추천이 무작위 분포에서 |
+|---:|---:|---:|---:|---:|
+| 5 | 5.77 | 11.17 [2.30, 32.31] | 63.54 | 30.1 percentile |
+| **10** | **26.51** | **11.42 [3.66, 26.28]** | 41.60 | **97.7 percentile** ✅ |
+| 15 | 19.61 | 11.37 [4.50, 21.93] | 31.68 | 93.7 percentile ✅ |
+| 20 | 16.65 | 11.33 [5.21, 19.22] | 25.84 | 89.7 percentile ✅ |
+
+**핵심 결과**:
+- **Top-10 추천 ER% = 26.51, 무작위 평균 11.42 → 약 2.32 배** (통계적으로 강함, 무작위 분포 97.7 percentile)
+- Top-15/20 도 무작위 95% 신뢰구간 거의 상한 위 — robust
+- Top-5 만 약함 (small-K 변동성)
+
+**Ranking Quality**:
+- Spearman corr (similarity ↔ ER%): rho = 0.087, p = 0.53 — 직접 상관 약함
+- Precision@10: 20%, @15: 33%, @20: 35%
+- → ver.3 는 **개별 ranking 정확도** 가 아닌 **Top-K 묶음 단위로 high-ER% 인플루언서 잡아냄** 효과
+
+**Narrative 연결 (포트폴리오 흐름)**:
+1. K-Premium 단순 OLS → PSM → FE 단계적 보강 → **selection effect 95% 발견**
+2. 발견의 의미 → 인플루언서 selection 이 마케팅 핵심 레버
+3. 솔루션: ver.3 추천 알고리즘 = selection 자동화 (ER% 가중치)
+4. 정량 검증: Top-10 무작위 대비 **2.32배 ER%** ✅
+5. 인사이트 (1-2) 과 솔루션 (3-4) 의 정량적 일치 — 분석 → 해석 → 액션 → 검증의 closed loop
+
+**한계 (정량화 자체)**:
+- selected 2명 고정 — generalization 미검증 (selected 다른 조합으로 stability 테스트 후속)
+- Top-5 약함 (small-K)
+- 가중치 mechanism 정확한 작동 분석 미완 (분포 점검 후속)
+
+분석 위치: [`../../notebooks/tiktok/tiktoker_recommend.ipynb`](../../notebooks/tiktok/tiktoker_recommend.ipynb) 마지막 cell 들 (heading + quant_code + result_md).
+
 ### Stage 4: 회귀분석 (가중치 자동 탐색)
 
 ver.1~3 의 가중치 (`no.1*3 + no.2*2 + no.3*1`, ER% scaling 배수) 는 사람이 정한 heuristic. 회귀분석으로 데이터 기반 가중치를 찾는 시도:

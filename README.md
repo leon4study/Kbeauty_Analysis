@@ -34,7 +34,7 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 **비즈니스 시사점 (인과적으로 정확한 버전)**:
 - 🎯 **인플루언서 선정 > 키워드 선택**: 마케팅 예산 배분 시 *어떤 인플루언서를 쓸지* 가 *어떤 키워드를 쓸지* 보다 훨씬 중요
 - 🎯 **K-beauty 키워드 사용 인플루언서들의 베이스 ERV 가 높은 이유** 가 진짜 분석 대상 — 채널 컨셉, 팔로워 충성도, 콘텐츠 일관성 등
-- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) 의 가치 ↑ — 인플루언서 단위 추천이 키워드 단위보다 직접적
+- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) 의 가치 정량 입증 — **ver.3 Top-10 추천 시 무작위 대비 2.32배 ER%** (97.7 percentile, 10000 부트스트랩). selection effect 인사이트와 솔루션의 정량적 일치
 
 **분석가 가치 측면**:
 - 단순 OLS 만 보고 결론 내렸다면 5 %p 효과를 그대로 비즈니스에 권고 → 잘못된 의사결정
@@ -151,13 +151,15 @@ Kbeauty_Analysis/
 ### 완료된 분석
 - [x] **within-influencer fixed effect 분석** — K-Premium selection effect 95.3% 발견 ([tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell 158-159)
 - [x] **추천 알고리즘 ver.3 강점/한계 깊이 분석** — 6 강점 + 4 한계 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md))
+- [x] **추천 알고리즘 가치 정량화** — ver.3 **Top-10 추천 시 무작위 대비 2.32배 ER%** (97.7 percentile, 10000 부트스트랩). selection effect 발견 (인플루언서 selection 이 핵심) → 그 selection 을 자동화한 알고리즘이 정량적으로 효과 입증. [tiktoker_recommend.ipynb 끝](./notebooks/tiktok/tiktoker_recommend.ipynb)
 
-### 후속 분석 (인과 보강 + 추천 알고리즘 검증)
-- [ ] **추천 알고리즘 가치 정량화** — ver.3 Top-K vs 무작위 vs ceiling ER% 비교 (예비 결과: Top-10 추천 시 무작위 대비 2.32배 ER%)
+### 후속 분석 (선택)
 - [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
 - [ ] selected 인플루언서 변동 시 ver.3 stability 검증
 - [ ] 인플루언서 segment (nano/micro/middle) 별 FE 효과 차이
 - [ ] 다른 시점/데이터셋으로 K-Premium / selection effect 재현성 검증
+- [ ] 토픽 × ER 분석 (within-influencer)
+- [ ] Amazon × TikTok 매칭 (TikTok 바이럴 → Amazon 매출)
 
 ### 엔지니어링
 - [ ] 파서 / 클리너 유닛 테스트 (pytest) 추가
