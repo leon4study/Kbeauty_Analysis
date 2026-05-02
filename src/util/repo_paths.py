@@ -42,8 +42,6 @@ TIKTOK = DATA / "tiktok"
 MODEL = DATA / "model"
 RESULTS = DATA / "results"
 ARCHIVE = DATA / "archive"
-ADDRESS = DATA / "address"
-BRANDS = DATA / "brands"
 REFERENCES = DATA / "References"
 
 # Frequently-used Autogluon model paths
