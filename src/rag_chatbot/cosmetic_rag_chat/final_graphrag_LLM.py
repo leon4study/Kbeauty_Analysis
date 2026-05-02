@@ -1,14 +1,13 @@
-import gradio as gr
-import pandas as pd
-import networkx as nx
-import matplotlib.pyplot as plt
-from io import BytesIO
-from PIL import Image
-from dotenv import load_dotenv
-import os
-import yaml
 import logging
+import os
+
+import gradio as gr
+import yaml
+from dotenv import load_dotenv
 from graphrag.query.cli import run_global_search, run_local_search
+
+# 그래프 시각화는 같은 패키지의 graphrag_viewer/plot.py 에 위임 — DRY 위해 추출.
+from rag_chatbot.graphrag_viewer.plot import parquet_to_graph, render_graph_image
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -55,43 +54,31 @@ def run_search(method, query, settings):
         raise ValueError("Invalid method")
 
 def apply_parquet_files(parquet_files):
-    """✅ Parquet 데이터를 기반으로 네트워크 그래프 생성"""
+    """업로드된 parquet 파일들을 그래프로 시각화 + 검색용 데이터로 저장.
+
+    UI에서 "적용하기" 누르면 호출되는 핸들러. 각 parquet에서 (1) 네트워크
+    그래프 이미지를 만들어 갤러리에 띄우고 (2) 원본 DataFrame을 ``graph_data``
+    글로벌에 누적 — 이후 ``perform_search`` 가 이 데이터를 검색에 활용.
+
+    실제 그래프 생성/렌더링은 ``rag_chatbot.graphrag_viewer.plot`` 에 위임.
+    """
     global settings, graph_data
-    settings = load_settings()  # 환경 설정 저장
+    settings = load_settings()
 
     if not parquet_files:
         return ["⚠️ Parquet 파일을 먼저 업로드하세요."], "⚠️ Parquet 파일을 먼저 업로드해야 합니다."
 
-    all_graphs = []
-    graph_data = []  # 저장할 데이터
+    all_graphs: list = []
+    graph_data = []  # 검색에서 참조할 DataFrame 누적
 
     for parquet_file in parquet_files:
-        df = pd.read_parquet(parquet_file.name)
-        G = nx.DiGraph()
-
-        if "source" in df.columns and "target" in df.columns:
-            for _, row in df.iterrows():
-                G.add_edge(row["source"], row["target"])
-        elif "id" in df.columns:
-            G.add_nodes_from(df["id"])
-        else:
-            all_graphs.append(f"⚠️ {parquet_file.name}에 'source' 또는 'id' 컬럼이 없습니다.")
+        try:
+            G, df = parquet_to_graph(parquet_file.name)
+        except ValueError as e:
+            all_graphs.append(f"⚠️ {parquet_file.name}: {e}")
             continue
-
-        # 그래프 저장
         graph_data.append(df)
-
-        # 그래프 시각화
-        pos = nx.spring_layout(G, seed=42)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        nx.draw(G, pos, with_labels=True, node_color="skyblue", edge_color="gray", node_size=500, font_size=8, ax=ax)
-
-        # 이미지 변환
-        buf = BytesIO()
-        plt.savefig(buf, format="png")
-        buf.seek(0)
-        img = Image.open(buf)
-        all_graphs.append(img)
+        all_graphs.append(render_graph_image(G))
 
     return all_graphs, "✅ 데이터 적용 완료! 이제 질문을 입력하세요."
 
