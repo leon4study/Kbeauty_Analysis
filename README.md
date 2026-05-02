@@ -14,13 +14,32 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 ## 2. 핵심 분석 성과 (Key Insights)
 
-### K-Premium: 일반 스킨케어 대비 +4.76 ~ 4.86 %p ERV 프리미엄 확인
+### K-Premium: 단순 OLS 5%p → 인플루언서 통제 시 0.24%p (selection effect 95%)
 
-- **회귀 분석 (OLS)**: 일반 스킨케어 대비 K-Beauty 키워드 콘텐츠의 조회수 대비 참여율(ERV) 이 **+4.859 %p** 유의미하게 높음.
-- **인과 보강 (PSM ATT, 보수적)**: 1:1 매칭 후에도 **+4.7642 %p** 유지 — OLS 와 0.1 %p 미만 차이로 robust 한 결과.
-- **경제적 가치 환산**: PSM ATT 기준 **1만 뷰당 약 476 건의 추가 참여, 약 47,642 원 가치** (CPE 100 원 가정).
-- **잠재 가치 (보수적 재계산)**: 표본 안 K-Beauty 키워드 그룹 약 **8.47 억원** 기대효과, 미사용 그룹 약 **3.92 억원 기회비용**. 단 그룹 단위 합산이라 within-influencer 보강 후 갱신 예정 — [tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) Cell 174 + 그 다음 보강 cell 참고.
-- **비즈니스 시사점**: 단순 카테고리 효과를 넘어 'K-Beauty' 라는 브랜드 정체성 자체가 탐색 유저의 반응을 이끌어내는 독립적인 트리거임을 입증.
+여러 추정 방법으로 K-beauty 키워드 효과를 검증한 결과 — **인과 추론 보강 단계에서 큰 반전**:
+
+| 모델 | k_keyword_flag 계수 | p-value | 해석 |
+|---|---:|---:|---|
+| 영상 단위 OLS (단순) | +5.0166 %p | <0.0001 ✅ | 인플루언서 selection 포함 |
+| 영상 단위 OLS Full + PSM ATT (보수적, 1:1 매칭) | +4.7642 %p | <0.01 ✅ | 영상 특성만 매칭 — 인플루언서 selection 미통제 |
+| **+ 인플루언서 Fixed Effect** (LSDV + clustered SE) | **+0.2363 %p** | 0.7464 ❌ | **유의 X** (95% CI [-1.20, 1.67]) |
+| Paired t-test (dual 42명 평균 비교) | +0.5569 %p | 0.4862 ❌ | 보조 검증 — 유의 X |
+
+→ **단순 OLS 의 5%p 효과 중 약 95% (4.78 %p) 가 인플루언서 selection effect**. 같은 인플루언서가 K-beauty / non-K-beauty 영상을 모두 만든 케이스에서 within-비교하면 K-beauty 키워드 자체의 효과는 통계적으로 유의하지 않음.
+
+**비즈니스 시사점 (갱신)**:
+- ❌ "K-beauty 키워드 추가하면 ERV +5%p" — within 비교에서는 성립하지 않음
+- ✅ **K-beauty 키워드를 쓰는 인플루언서들이 원래부터 ERV 가 높음** — selection effect
+- ✅ **인플루언서 선정 > 키워드 선택**: 마케팅 의사결정에서 어떤 인플루언서를 쓸지가 키워드 전략보다 훨씬 중요
+
+**한계 / 다음 단계**:
+- dual 인플루언서 42명 (전체 56명의 75%) — 표본 작아 검정력 약할 수 있음
+- K-beauty 전용 14명 (within variation 없음) 의 효과는 measure 불가
+- 단일 시점·단일 데이터셋 — 다른 기간/집단으로 재현성 검증 필요
+- 인플루언서 segment 별 (nano/micro/middle) 차이 검증 후속 단계
+- 분석 노트북: [tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell idx 158-159 (within-influencer FE 결과)
+
+> **이전 README 의 "잠재 8.47억원" 추정은 단순 OLS 기반이었음 → 인플루언서 selection 통제 후에는 효과 자체가 유의하지 않으므로 잠재 가치 추정도 재고됨.** 표본 안 영상 단위 합산 (옛 노트북 Cell 174) 보다 인플루언서 단위 효과 (FE 결과 ≈ 0) 가 인과적으로 더 정확.
 
 ### 텍스트 분석 및 지식그래프 구축
 
