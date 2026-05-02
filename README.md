@@ -2,6 +2,9 @@
 
 Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행동)을 통합 분석하여, 데이터 기반의 미국 시장 진출 전략 및 인플루언서 마케팅 효율을 도출한 엔드투엔드(End-to-End) 데이터 파이프라인 프로젝트입니다.
 
+> **3-line 요약**:
+> 단순 OLS 가 보여준 "K-beauty 키워드 +5%p ERV" 효과의 **95%가 인플루언서 selection effect** 임을 인과 추론 (PSM → Fixed Effect) 으로 발견. 같은 패턴이 토픽·Amazon×TikTok·시계열에서도 반복 (단순 분석의 함정 4 사례) → **마케팅 핵심 레버를 키워드 → 인플루언서 선정으로 이동**. 그 selection 자동화 알고리즘을 ver.1 → ver.4 자기 비판적 진화 + 정량 검증.
+
 ---
 
 ## 1. 프로젝트 목적 (Problem Definition)
@@ -14,79 +17,92 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 ## 2. 핵심 분석 성과 (Key Insights)
 
-### Causal Robustness 분석 — selection effect 95% 발견 → "인플루언서 선정 > 키워드 선택"
+### A. K-Premium Causal Robustness — selection effect 95% 발견
 
-처음에 단순 회귀로 추정한 K-Beauty 키워드 효과를 단계적으로 인과 보강한 결과, **마케팅 의사결정의 핵심 레버를 키워드 → 인플루언서 선정으로 옮기는 인사이트** 도출:
+처음에 단순 회귀로 추정한 K-Beauty 키워드 효과를 단계적으로 인과 보강 → **마케팅 의사결정의 핵심 레버를 키워드 → 인플루언서 선정으로 이동**:
 
-| 추정 단계 | 모델 | K-Premium 계수 | p-value | 해석 |
+| 추정 단계 | 모델 | K-Premium | p-value | 해석 |
 |---|---|---:|---:|---|
-| ① 영상 단위 OLS | `ERV ~ k_keyword + log_view + log_follower` | +5.0166 %p | <0.0001 ✅ | 일반적으로 보고되는 효과 — 단, 인플루언서 selection 포함 |
-| ② PSM ATT (1:1 매칭) | 영상 특성 매칭 후 ATT 추정 | +4.7642 %p | <0.01 ✅ | 영상 단위 인과 보강 — 인플루언서 selection 은 미통제 |
-| ③ **+ 인플루언서 Fixed Effect** | LSDV + clustered SE (인플루언서별 dummy) | **+0.2363 %p** | 0.7464 | **같은 인플루언서 내 효과 ≈ 0** (95% CI [-1.20, 1.67]) |
-| ④ Paired t-test (dual 42명) | 보조 검증 — within 평균 비교 | +0.5569 %p | 0.4862 | ③ 과 동일 결론 |
+| ① OLS (영상 단위) | `ERV ~ k_keyword + log_view + log_follower` | +5.0166 %p | <0.0001 ✅ | 일반 회귀 — 인플루언서 selection 포함 |
+| ② PSM ATT (1:1 매칭) | 영상 특성 매칭 후 ATT | +4.7642 %p | <0.01 ✅ | 영상 단위 인과 보강 — 인플루언서 selection 미통제 |
+| ③ **+ 인플루언서 Fixed Effect** | LSDV + clustered SE | **+0.2363 %p** | 0.7464 | **같은 인플루언서 내 효과 ≈ 0** (95% CI [-1.20, 1.67]) |
+| ④ Paired t-test (dual 42명) | within 평균 비교 | +0.5569 %p | 0.4862 | ③ 과 동일 결론 |
 
-**🔍 발견된 인사이트**: 단순 OLS 의 5.02 %p 중 **4.78 %p (95.3%) 가 인플루언서 selection effect** — 즉, K-beauty 키워드를 쓰는 인플루언서들이 *원래부터* ERV 가 높은 인플루언서들이고, 키워드 자체의 추가 효과는 거의 0.
+**🔍 발견**: 단순 OLS 의 5.02%p 효과 중 **4.78%p (95.3%) 가 인플루언서 selection effect**. K-beauty 키워드 자체의 추가 효과는 거의 0.
 
-**📈 selection effect 의 일반성 — broad pattern 입증**:
-같은 분석을 9개 토픽 (skincare, asmr, color_makeup 등) 에 적용 → 동일 패턴 발견. 단순 평균 비교에서 보이던 토픽 간 ERV 차이 (asmr 19.13 vs eating 12.19, 약 7%p) 의 **대부분이 within-influencer 통제 시 사라짐** (8개 중 7개 통계적 유의 X, asmr 만 +2.19 marginal p=0.055). → K-keyword 가 아닌 **콘텐츠 metric 전반에서 인플루언서 selection 이 핵심 결정 요인**임. ([cell 160-162](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
+> 단순 OLS 만 보고 "K-beauty 키워드 추가 → ERV +5%p, 1만뷰당 47,642원" 결론 냈다면 잘못된 마케팅 의사결정. ③ Fixed Effect 까지 진행해서 selection 과 causal 효과 분리 → 진짜 레버 식별.
 
-**🔄 Amazon × TikTok 통합 매칭 — 또 다른 가설 반박**:
-본 프로젝트의 핵심 가치 (Amazon 정성 + TikTok 행동 통합) 를 5 K-Beauty 브랜드 매칭으로 검증. 결과: **"TikTok 화제 → Amazon 매출" 가설 반박** — TikTok 총 view ↔ Amazon 인기도 = **Spearman -0.80** (음의 상관). 패턴: **established 브랜드 (COSRX, Amazon 324K rating count) 는 TikTok 의존 ↓, 신생/성장 브랜드 (PURITO, TikTok 18 영상 281만 view) 는 TikTok 활발**. → "TikTok 마케팅 효과 = 신생/성장 브랜드에서 큼" 의 단계별 차별 전략 시사. n=5 한계는 정직히 명시. 자세히는 [docs/refactor/13](./docs/refactor/13_amazon_tiktok_brand_matching.md).
+### B. "단순 분석의 함정" 4 사례 — Robustness 다각 검증
 
-**⏱️ 시계열 lag 분석 — 인과 방향 정반대 발견**:
-30 개월 aggregate 시계열로 cross-correlation 추가 검증. **원본 ρ=0.715 (lag profile 평탄) → 시간 trend 가 dominant 한 spurious correlation** 의심. **Detrended 후 lag=-3 의 ρ=0.79 가 최대** (Amazon 이 TikTok 보다 3 개월 선행), First-difference 도 lag=-1 의 ρ=0.47 만 유의. → "TikTok → Amazon" 가설의 **인과 방향 정반대** — Amazon 시장 활동이 TikTok 콘텐츠 증가보다 선행 (또는 K-Beauty 시장 성장이 공통 원인, Amazon 이 leading indicator). selection effect / cross-sectional 음의 상관 / **이번 시계열 인과 방향 역**까지 = **단순 분석의 함정** 패턴 4번째 사례.
+selection effect 발견 (사례 ①) 이 우연이 아니라 **broad pattern** 임을 3 개 추가 분석으로 입증:
 
-**🎯 Segment 별 selection effect heterogeneity — 평균의 함정**:
-selection effect 95% 가 모든 segment 에서 동일한가? 팔로워 규모별 분해 결과 **3 가지 패턴 양극화**:
-- **micro (10K-100K) / middle (100K-500K)** = 전체의 78% → **selection 90-100%** (키워드 무의미, 인플루언서 선정이 핵심)
-- **mega (>1M)** → selection 17% + 약한 콘텐츠 효과 (FE +0.83%p, p<0.001 유의지만 작음)
-- **nano (<10K)** → 콘텐츠 효과 +5.31%p (FE p<0.001) 가능성. 단 n_dual=3 표본 한계 (검증 필요)
+| 사례 | 단순 분석 결론 | 보강 후 진실 | 발견 |
+|---|---|---|---|
+| **① Cross-sectional OLS vs FE** (메인) | K-keyword +5%p ✅ | within-influencer 0.24%p ❌ | selection effect 95% |
+| **② 토픽 × ER** | asmr 19.13 vs eating 12.19 (7%p 차이) | 9 토픽 중 8 개 within-FE 시 통계적 유의 X (asmr 만 +2.19 marginal) | selection effect 가 K-keyword 만의 현상이 아닌 콘텐츠 metric 전반의 broad pattern |
+| **③ Amazon × TikTok 5-brand 매칭** | "TikTok 화제 → Amazon 매출" (가설) | TikTok 총 view ↔ Amazon 인기도 = **Spearman -0.80** | established (COSRX, 324K rating) 는 TikTok 의존 ↓, 신생/성장 (PURITO, 281만 view) 가 TikTok 활발 → segment 차별 전략 시사 |
+| **④ 시계열 lag (30 개월)** | "TikTok → Amazon" 인과 (원본 ρ=0.715) | Detrended 후 **lag=-3 의 ρ=0.79 최대** (Amazon 이 TikTok 3 개월 선행). FD 도 lag=-1 의 ρ=0.47 만 유의 | **인과 방향 정반대** — Amazon leading indicator. 시간 trend 가 spurious correlation 만든 사례 |
 
-→ **마케팅 차별 전략 시사**: micro/middle 은 인플루언서 선정 캠페인, nano 는 키워드 캠페인 (검증 후), mega 는 ROI 작아 키워드 캠페인 가치 낮음. 평균 95% 뒤에 숨은 heterogeneity 가 segment-specific 의사결정으로 직결.
+→ 4 사례 모두 단순 분석 → 보강 → 결론 뒤집힘 패턴. 분석가 가치는 단순 결과를 신뢰하지 않고 다각 검증한 데서 나옴.
 
-**왜 중요한가** — 인과 추론 단계 없이 ① 만 봤다면 잘못된 마케팅 결론 도출:
-- ❌ ① 만 보고 결론: "K-beauty 키워드 추가 → ERV +5 %p, 1 만뷰당 47,642 원 가치" (옛 README)
-- ✅ ③ 까지 가서 도출한 결론: **"K-beauty 키워드 추가 효과는 통계적으로 유의하지 않음. 진짜 효과는 인플루언서 선정에서 나온다"**
+### C. Segment heterogeneity — 평균 95% 뒤의 다른 패턴
 
-**비즈니스 시사점 (인과적으로 정확한 버전)**:
-- 🎯 **인플루언서 선정 > 키워드 선택**: 마케팅 예산 배분 시 *어떤 인플루언서를 쓸지* 가 *어떤 키워드를 쓸지* 보다 훨씬 중요
-- 🎯 **K-beauty 키워드 사용 인플루언서들의 베이스 ERV 가 높은 이유** 가 진짜 분석 대상 — 채널 컨셉, 팔로워 충성도, 콘텐츠 일관성 등
-- 🎯 **시딩 추천 알고리즘** ([`tiktoker_recommend.ipynb`](./notebooks/tiktok/tiktoker_recommend.ipynb), [`docs/refactor/12`](./docs/refactor/12_tiktok_recommendation_evolution.md)) — ver.3 → 자기 비판적 stability 검증 → 한계 발견 → **ver.4 개선 + 정량 검증** closed loop:
-  - **ver.3** Top-10 = 2.32× random (단일 selected lucky case). 1540 pair stability: 평균 1.25× random, std 6.83
-  - **ver.4** (TF inflation 제거 + score 단계 ER% 가중치): 평균 **3.25× random**, std **4.35**, **모든 selected 에서 random 능가 (100%)**, Precision@10 **60%**
-  - Paired t-test (v4 - v3): t=122.80, p<0.0001 → 같은 selected 에서 평균 +24.06 %p 개선
-  - 자기 비판 → 개선 → 검증의 분석가 closed loop 입증
+selection effect 95% 가 모든 segment 에서 동일한가? 팔로워 규모별 분해:
 
-**분석가 가치 측면**:
-- 단순 OLS 만 보고 결론 내렸다면 5 %p 효과를 그대로 비즈니스에 권고 → 잘못된 의사결정
-- ③ Fixed Effect 까지 진행했기에 selection 과 causal 효과를 분리, 진짜 레버 식별
-- 자세한 결과 + 한계: [tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell idx 158-159
+| Segment | 비중 | selection 비율 | 콘텐츠 효과 (FE) | 마케팅 시사 |
+|---|---:|---:|---|---|
+| micro (10K-100K) + middle (100K-500K) | 78% | **90-100%** | 0 (유의 X) | 인플루언서 선정 캠페인 |
+| mega (>1M) | — | 17% | +0.83%p (p<0.001, 작음) | ROI 작아 키워드 캠페인 가치 낮음 |
+| nano (<10K) | — | — | +5.31%p (p<0.001, n_dual=3 한계) | 키워드 캠페인 가능성 (검증 필요) |
 
-**한계**:
+→ **평균 뒤 segment-specific heterogeneity**. 단일 마케팅 전략이 아닌 **segment 차별 전략** 도출.
+
+### D. 솔루션 — 추천 알고리즘 ver.1 → ver.4 closed loop
+
+selection effect 95% 발견 → 인플루언서 selection 자동화 알고리즘 가치 확인. 그 알고리즘을 자기 비판 → 개선 → 검증의 closed loop 으로 진화:
+
+| 단계 | 내용 | 결과 |
+|---|---|---|
+| ver.1 → ver.3 | TF-IDF cosine + ER% 가중치 + max(1) 안전장치. 6 강점 분석 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md)) | 단일 selected (`krystallee2222, emchu_`) Top-10 = **2.32× random** (97.7 percentile) |
+| **자기 비판 (stability)** | 1540 selected pair 모두 테스트 | ver.3 평균 **1.25× random** (std 6.83) — 단일 결과는 lucky case. ER% 가중치 mechanism 의도대로 작동 X (Pearson -0.12) |
+| **개선 ver.4** | TF inflation 제거 + score 단계 ER% 가중치 (`score = sim × (normalized_ER + 0.1)`) | 평균 **3.25× random** (std 4.35), **모든 selected 에서 random 능가 (100%)**, Precision@10 **60%** (vs ver.3 20%) |
+| **정량 검증** | Paired t-test (v4 - v3) | **t=122.80, p<0.0001, 평균 +24.06%p** |
+
+→ 자기 비판 → 개선 → 검증의 분석가 closed loop. selection effect 인사이트와 솔루션의 정량적 일치.
+
+### 비즈니스 시사점
+
+- 🎯 **인플루언서 선정 > 키워드 선택** (전 segment 평균)
+- 🎯 **Segment 차별 전략** — micro/middle 은 인플루언서 캠페인, nano 는 키워드, mega 는 ROI 작음
+- 🎯 **Amazon × TikTok 단계별 전략** — established 는 Amazon 중심, 신생은 TikTok 중심
+- 🎯 **추천 알고리즘 ver.4** 로 인플루언서 선정 자동화 (Top-K 추천 = 무작위 대비 3.25× ER%)
+
+### 한계
+
 - dual 인플루언서 42명 (전체 56명의 75%) — 검정력 일부 제한
-- K-beauty 전용 14명 (within variation 없음) 의 효과는 measure 불가
-- 단일 데이터셋 — 다른 기간/집단으로 재현성 검증 필요
-- 후속: 인플루언서 segment 별 (nano/micro/middle) FE 효과 + 다른 시점 데이터 재현
+- K-beauty 전용 14명 (within variation 없음) — 측정 불가
+- nano segment n_dual=3 — 검정력 제한
+- Amazon×TikTok 매칭 n=5 brand — 일반화 어려움
+- 단일 시점·단일 데이터셋 — 다른 기간/집단으로 재현성 검증 필요
 
-### 텍스트 분석 및 지식그래프 구축
+### 텍스트 분석 및 지식그래프 (보조)
 
-- **LDA 토픽 모델링**: 총 22 개 토픽 추출 (피부 자극, 흡수/제형, 광채/사용감, 가성비 등). 전략 의사결정에 핵심적인 6 ~ 8 개 테마를 집중 분석하여 제품 개발 및 마케팅 가이드라인 도출.
-- **GraphRAG (지식그래프 + LLM)**: 성분(Ingredients) - 효능 - 부작용 간의 지식그래프를 구축하여 LLM 이 실제 리뷰에 근거한 정교한 답변을 내놓는 프로토타입 구현.
+- **LDA 토픽 모델링**: 22 토픽 추출 (피부 자극, 흡수/제형, 광채/사용감, 가성비 등). 6~8 핵심 테마 집중 분석.
+- **GraphRAG (지식그래프 + LLM)**: 성분-효능-부작용 지식그래프로 LLM 답변에 근거 제공.
 
 ---
 
 ## 3. 분석 설계 (왜 이렇게 했나)
 
-- **데이터 성격 차이 (정성 vs 행동)**: 리뷰는 '사용 경험' (심층), TikTok 은 '인지·반응' (광범위). 둘을 **토픽·키워드 단위로 연결** 하여 상호보완적 인사이트를 얻도록 설계.
-- **단일 Notebook 유지 이유** (`amazon_tiktok_*` 통합 노트북): 전처리 → 토픽 → 교차분석 과정에서 중간 산출물 (TF-IDF 벡터, LDA 토픽, 토픽별 문서 리스트) 이 반복 참조됨. 분리 시 컨텍스트 손실 + 중복 연산 발생 → 의도적 단일 파일 설계.
-- **추천 알고리즘은 점진적 진화**: TF-IDF cosine (v1) → ER% 가중치 (v2) → max(1) 안전장치 (v3) → 회귀분석 가중치 자동 탐색 — 한 노트북 안 셀 단위로 누적. ver.3 의 강점 6가지 (콘텐츠+ER% 결합 / selection effect 인코딩 / 도구 절제력 / MinMax 가중치 안정화 / edge case 방어 / overfitting 완화) + 한계 + 개선 방향은 [docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md#-ver3-의-강점--왜-이-선택을-했나-깊이-분석).
-- **현업과 일관**: ver.3 의 ER% 가중치는 selection effect 발견 (위 K-Premium 섹션) 과 동일 방향 — 인플루언서 selection 을 추천 score 에 직접 인코딩. 사용자 직관이 사후 인과 분석으로 검증된 사례.
+- **데이터 성격 차이 (정성 vs 행동)**: 리뷰 = '사용 경험' (심층), TikTok = '인지·반응' (광범위). 둘을 토픽·키워드 단위로 연결.
+- **단일 Notebook 유지 이유** (`amazon_tiktok_*` 통합 노트북): 전처리 → 토픽 → 교차분석 중간 산출물 (TF-IDF 벡터, LDA 토픽, 토픽별 문서 리스트) 반복 참조 → 의도적 단일 파일.
+- **인과 추론 단계적 보강 (OLS → PSM → FE)**: 각 단계마다 통제 가능한 confounder 가 다름 → 단계 모두 진행해야 selection 과 causal 효과 분리 가능. 한 단계만 보면 §2.A 의 잘못된 결론 위험.
+- **추천 알고리즘 점진적 진화** (한 노트북 안 셀 누적): TF-IDF cosine (v1) → ER% 가중치 (v2) → max(1) (v3) → vector scaling (v4). ver.3 강점 6 + 한계 + ver.4 개선 정량은 [docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md).
+- **현업과 일관**: ver.3 의 ER% 가중치가 selection effect 발견 (사후 검증) 과 동일 방향 — 사용자 직관이 인과 분석으로 검증된 사례.
 
 ### GraphRAG 의 차별점
 
-TF-IDF / LDA 는 **통계적 토픽·키워드 가중치** 를 제공하지만, GraphRAG 는 **엔티티 (성분, 효능, 부작용 등) 간 관계** 를 지식그래프로 연결해 LLM 질의응답에 근거를 제공.
-
-> 예: "히알루론산과 함께 쓰기 좋은 성분" 같은 질문에 **리뷰 근거 + 성분 연결 정보** 를 함께 제시하여 실무적 신뢰성 확보.
+TF-IDF / LDA = 통계적 토픽·키워드 가중치, GraphRAG = 엔티티 (성분, 효능, 부작용) 간 관계 → LLM 답변에 근거. 예: "히알루론산과 함께 쓰기 좋은 성분" 질의 시 리뷰 근거 + 성분 연결 정보 동시 제시.
 
 ---
 
@@ -94,11 +110,11 @@ TF-IDF / LDA 는 **통계적 토픽·키워드 가중치** 를 제공하지만, 
 
 ### 데이터 파이프라인 단계
 
-1. **Collection**: Amazon (Selenium 활용 리뷰 수집) 및 TikTok (해시태그 기반 반자동 수집).
-2. **ETL**: `clean_text` → `lemmatize` → `stopword` 제거 → `n-gram` 생성으로 정규화.
-3. **Feature Engineering**: ER (팔로워 기반), ERV (조회수 기반), log_view, log_follower 등 통계 분석용 파생 변수.
-4. **Analysis**: 통계적 회귀 분석 (OLS, PSM ATT) 및 NLP (LDA, TF-IDF, GraphRAG).
-5. **Serving**: MySQL (SQLAlchemy) Upsert 적재 + Slack 실시간 모니터링 연동.
+1. **Collection**: Amazon (Selenium 리뷰 수집) + TikTok (해시태그 기반 반자동).
+2. **ETL**: `clean_text` → `lemmatize` → `stopword` → `n-gram`.
+3. **Feature Engineering**: ER (팔로워 기반), ERV (조회수 기반), log_view, log_follower 등.
+4. **Analysis**: 회귀 (OLS, PSM ATT, LSDV with clustered SE) + NLP (LDA, TF-IDF, GraphRAG).
+5. **Serving**: MySQL Upsert + Slack 모니터링.
 
 ### 상세 설계 문서
 
@@ -109,10 +125,12 @@ TF-IDF / LDA 는 **통계적 토픽·키워드 가중치** 를 제공하지만, 
 - [DB 스키마 설계](./docs/db_schema.md)
 - [Slack 알림 모듈](./docs/slack_alert.md)
 
-### 정리/리팩터링 history
+### 분석 / 정리 history
 
-- [docs/refactor/](./docs/refactor/) — 정리 토픽별 결정 기록 (변종 정리, 경로 포터빌리티, 구조 평면화 등)
-- [docs/refactor/EXPERIMENTS_PLAYBOOK.md](./docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준 (폴더 우선, 통폐합 패턴, 결정 트리)
+- [docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md) — 추천 알고리즘 ver.1 → ver.4 진화 + 6 강점 + 정량 검증
+- [docs/refactor/13](./docs/refactor/13_amazon_tiktok_brand_matching.md) — Amazon × TikTok 5 brand 매칭 + 시계열 lag
+- [docs/refactor/EXPERIMENTS_PLAYBOOK.md](./docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준
+- [docs/refactor/](./docs/refactor/) 전체 — 정리 토픽별 결정 기록
 
 ---
 
@@ -149,50 +167,52 @@ Kbeauty_Analysis/
 
 ## 6. 제약 사항 및 재현성
 
-- **수집 제약**: TikTok 데이터는 플랫폼 보안 (CAPTCHA, 로그인, 계정 행위 제한) 으로 완전 자동화 불가 — 반자동 수집 (수동 세션 관리) 방식 채택.
-- **인과 추론**: OLS → PSM ATT → within-influencer Fixed Effect 단계적 보강 완료. **selection effect 95.3% 발견** — 위 "Causal Robustness 분석" 섹션 참고.
-- **재현성**: 분석 재현을 위해 `data/` 폴더 내 지정 스키마를 준수하는 CSV 필요, Python 3.10 권장.
-- **포터빌리티**: 절대 경로 → `pyproject.toml` + `pip install -e .` 기반 `REPO_ROOT` 패턴. [docs/refactor/02_path_portability.md](./docs/refactor/02_path_portability.md) 참고.
+- **수집 제약**: TikTok 데이터는 플랫폼 보안 (CAPTCHA, 로그인) 으로 완전 자동화 불가 — 반자동 수집 (수동 세션 관리).
+- **인과 추론**: OLS → PSM ATT → within-influencer Fixed Effect 단계적 보강 완료. selection effect 95.3% 발견 (§2.A).
+- **재현성**: `data/` 지정 스키마 CSV + Python 3.10 권장. 분석 결과는 노트북에 cell 단위로 저장 (실행 시 재현 가능).
+- **포터빌리티**: 절대 경로 → `pyproject.toml` + `pip install -e .` 기반 `REPO_ROOT` 패턴 ([docs/refactor/02](./docs/refactor/02_path_portability.md)).
 
 ---
 
 ## 7. 본인 기여 (담당 역할)
 
-- Amazon 크롤러 설계 및 리뷰 파서 구현
-- MySQL 스키마 설계 및 Upsert 로직 구현
-- 텍스트 전처리 · TF-IDF 파이프라인 구현
-- LDA 토픽 모델링 및 pyLDAvis 시각화 생성
-- GraphRAG 프로토타입 (지식그래프 + LLM) 데모 구현
-- 분석 통합 (리포트, 대시보드 구성요약)
+### 인과 추론 / Robustness 분석
+- OLS → PSM ATT → within-influencer Fixed Effect 단계적 보강 → **selection effect 95% 발견** (§2.A)
+- 다각 검증 4 사례 (토픽, Amazon×TikTok, 시계열 lag) 로 broad pattern 입증 (§2.B)
+- Segment heterogeneity 분석 → segment 차별 마케팅 전략 도출 (§2.C)
+
+### 추천 알고리즘
+- ver.1 → ver.4 점진적 진화 + 자기 비판적 stability 검증 → 개선 → 정량 검증 closed loop (§2.D)
+- 1540 selected pair 비교, paired t-test t=122.8
+
+### 데이터 파이프라인 / 엔지니어링
+- Amazon Selenium 크롤러 설계 + 리뷰 파서 구현
+- MySQL 스키마 설계 + Upsert 로직
+- 텍스트 전처리 · TF-IDF 파이프라인
+- LDA 토픽 모델링 + pyLDAvis 시각화
+
+### 연구 / 프로토타입
+- GraphRAG (지식그래프 + LLM) 데모 — 성분-효능-부작용 entity 관계 + LLM 답변 근거
 
 ---
 
 ## 8. 향후 계획 (Future Works)
 
-### 완료된 분석
-- [x] **within-influencer fixed effect 분석** — K-Premium selection effect 95.3% 발견 ([tiktok_statistic_analysis.ipynb](./notebooks/tiktok/tiktok_statistic_analysis.ipynb) cell 158-159)
-- [x] **추천 알고리즘 ver.3 강점/한계 깊이 분석** — 6 강점 + 4 한계 ([docs/refactor/12](./docs/refactor/12_tiktok_recommendation_evolution.md))
-- [x] **추천 알고리즘 가치 정량화** — ver.3 **Top-10 추천 시 무작위 대비 2.32배 ER%** (97.7 percentile, 10000 부트스트랩). selection effect 발견 (인플루언서 selection 이 핵심) → 그 selection 을 자동화한 알고리즘이 정량적으로 효과 입증. [tiktoker_recommend.ipynb 끝](./notebooks/tiktok/tiktoker_recommend.ipynb)
-- [x] **토픽 × ER within-influencer 분석** — 9 토픽 중 8개 통제 시 통계적 유의 X (asmr 만 +2.19 marginal). selection effect 가 K-keyword 만의 특수 현상이 아닌 **broad pattern** 임을 입증 ([tiktok_statistic_analysis.ipynb cell 160-162](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
-- [x] **Amazon × TikTok 5 브랜드 매칭 분석** — "TikTok 화제 → Amazon 매출" 가설 반박: 음의 상관 (Spearman -0.80). 신생/성장 브랜드는 TikTok 활발 + Amazon 중간, established (COSRX) 는 Amazon 압도 + TikTok 적음. **본 프로젝트의 통합 데이터 활용 핵심 분석**. 자세히는 [docs/refactor/13](./docs/refactor/13_amazon_tiktok_brand_matching.md)
-- [x] **시계열 lag cross-correlation (30 개월)** — Detrended 후 **lag=-3 의 ρ=0.79 최대** (Amazon 이 TikTok 보다 3 개월 선행). 가설 ("TikTok → Amazon") 의 **인과 방향 정반대**. K-Beauty 시장 성장이 공통 원인 또는 Amazon 이 leading indicator. [docs/refactor/13 시계열 섹션](./docs/refactor/13_amazon_tiktok_brand_matching.md)
-- [x] **Segment 별 within-influencer FE** — selection effect 가 segment 별 매우 다름. **nano (n_dual=3)**: 콘텐츠 효과 +5.31%p (단 표본 한계). **micro/middle (78%)**: selection 90-100% (키워드 무의미). **mega**: selection 17%, 약한 콘텐츠 효과 (작지만 유의). 평균 95% 안에 큰 heterogeneity → **segment 차별 마케팅 전략 필요**. [tiktok_statistic_analysis.ipynb cell 163-165](./notebooks/tiktok/tiktok_statistic_analysis.ipynb)
-- [x] **추천 알고리즘 ver.3 stability 검증** — 1540 selected pair 모두 테스트. 평균 1.25× random (std 6.83), 원래 보고된 2.32× 는 94.2 percentile **lucky case**. selected size 5+ 권장. ER% 가중치 메커니즘 의도대로 작동 X (Pearson -0.12) → ver.4 필요성 정량 입증. [tiktoker_recommend.ipynb 끝 stability cells](./notebooks/tiktok/tiktoker_recommend.ipynb)
-- [x] **추천 알고리즘 ver.4 — TF inflation 제거 + score 단계 ER% 가중치**. 1540 selected pair 비교 결과 ver.4 가 모든 metric 에서 ver.3 압도: **평균 39.08 ER% (vs 15.01)**, **3.25× random (vs 1.25×)**, **> random 100% (vs 61.4%)**, std 4.35 (vs 6.83), Precision@10 60% (vs 20%). Paired t-test t=122.80 p<0.0001. 분석가의 자기 비판 → 개선 → 검증의 closed loop 입증. trade-off: selected 의존도 ↓ (rank fusion 후속). [docs/refactor/12 ver.4 섹션](./docs/refactor/12_tiktok_recommendation_evolution.md)
-
-### 후속 분석 (선택)
-- [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
-- [ ] selected 인플루언서 변동 시 ver.3 stability 검증
-- [ ] 인플루언서 segment (nano/micro/middle) 별 FE 효과 차이
+### 분석 (선택, 외부 데이터 필요)
 - [ ] 다른 시점/데이터셋으로 K-Premium / selection effect 재현성 검증
-- [ ] Amazon × TikTok 매칭 (TikTok 바이럴 → Amazon 매출)
+- [ ] Amazon × TikTok 매칭 brand 수 확장 (현재 n=5)
+- [ ] 추천 알고리즘 ver.4 selected 의존도 ↓ (rank fusion 등 후속)
 
 ### 엔지니어링
 - [ ] 파서 / 클리너 유닛 테스트 (pytest) 추가
 - [ ] Dockerfile + docker-compose (개발용 컨테이너)
 - [ ] 재현용 샘플 데이터셋 (100 건 내외) 추가 제공
-- [ ] `.env.example` 을 통한 환경 변수 관리 표준화
-- [ ] amazon_tiktok 변종 6 개 통폐합 ([notebooks/amazon_tiktok/README.md](./notebooks/amazon_tiktok/README.md) 참고)
+- [ ] `.env.example` 환경 변수 관리 표준화
+
+### 정리
+- [ ] amazon_tiktok 변종 6 개 통폐합 ([notebooks/amazon_tiktok/README.md](./notebooks/amazon_tiktok/README.md))
+- [ ] team_folder 위치 이동 검토 (notebooks/team/ 또는 data/archive/team/)
+- [ ] team_folder M/ PPTX 2개 (237MB) data/archive/ 이동 검토
 
 ---
 
