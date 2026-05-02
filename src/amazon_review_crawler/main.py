@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
-from mysql1 import MySqlClient
+from mysql import MySqlClient
 from reviews import load_reviews
 from items import load_items
 from util.slack import send_msg
@@ -15,8 +15,8 @@ import json
 import time
 import pandas as pd
 import random
-from dotenv import load_dotenv
-load_dotenv()
+from dotenv import find_dotenv, load_dotenv
+load_dotenv(find_dotenv())
 
 # 아마존 크롤링 함수
 
@@ -24,22 +24,25 @@ driver = webdriver.Chrome()
 wait = WebDriverWait(driver, 3)
 
 
-ID = os.environ.get('ID') 
-PW = os.environ.get('PW')
-DB_SERVER_HOST = os.environ.get("DB_SERVER_HOST")
-DB_USERNAME = os.environ.get("DB_USERNAME")
-DB_PASSWORD = os.environ.get("DB_PASSWORD")
-DB_DATABASE = os.environ.get("DB_DATABASE")
-DB_PORT = os.environ.get("DB_PORT")
+# Amazon 로그인 자격증명 (.env 의 CRAWLER_* 사용 — env-prefix 규칙)
+ID = os.environ.get("CRAWLER_ID")
+PW = os.environ.get("CRAWLER_PW")
 
+# DB 연결 정보 — split form 그대로 .env 에 유지하고 여기서 URL 조립
+_DB_HOST = os.environ.get("CRAWLER_DB_HOST")
+_DB_USER = os.environ.get("CRAWLER_DB_USER")
+_DB_PW   = os.environ.get("CRAWLER_DB_PASSWORD")
+_DB_NAME = os.environ.get("CRAWLER_DB_NAME")
+_DB_PORT = os.environ.get("CRAWLER_DB_PORT", "3306")
 
-my_sql_client = MySqlClient(
-    server_name=DB_SERVER_HOST,
-    database_name=DB_DATABASE,
-    username=DB_USERNAME,
-    password=DB_PASSWORD,
-    port=DB_PORT
+_master_url = (
+    f"mysql+mysqlconnector://{_DB_USER}:{_DB_PW}@{_DB_HOST}:{_DB_PORT}/{_DB_NAME}"
 )
+# replica는 옵셔널 — .env 에 CRAWLER_DB_REPLICA_URL 있을 때만 활성화
+_replica_url = os.environ.get("CRAWLER_DB_REPLICA_URL") or None
+
+# MySqlClient 생성 시 즉시 preflight ping → DB 안 켜져있으면 여기서 친절한 에러로 멈춤
+my_sql_client = MySqlClient(master_url=_master_url, replica_url=_replica_url)
 
 ASIN_list = []
 
