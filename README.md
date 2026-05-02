@@ -21,14 +21,23 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 
 처음에 단순 회귀로 추정한 K-Beauty 키워드 효과를 단계적으로 인과 보강 → **마케팅 의사결정의 핵심 레버를 키워드 → 인플루언서 선정으로 이동**:
 
-| 추정 단계 | 모델 | K-Premium | p-value | 해석 |
+| 추정 단계 | 모델 (v2 정의: 3-그룹 K-Beauty / Generic Skincare / Others, 윈저 cap) | K-Premium | p-value | 해석 |
 |---|---|---:|---:|---|
-| ① OLS (영상 단위) | `ERV ~ k_keyword + log_view + log_follower` | +5.0166 %p | <0.0001 ✅ | 일반 회귀 — 인플루언서 selection 포함 |
-| ② PSM ATT (1:1 매칭) | 영상 특성 매칭 후 ATT | +4.7642 %p | <0.01 ✅ | 영상 단위 인과 보강 — 인플루언서 selection 미통제 |
-| ③ **+ 인플루언서 Fixed Effect** | LSDV + clustered SE | **+0.2363 %p** | 0.7464 | **같은 인플루언서 내 효과 ≈ 0** (95% CI [-1.20, 1.67]) |
-| ④ Paired t-test (dual 42명) | within 평균 비교 | +0.5569 %p | 0.4862 | ③ 과 동일 결론 |
+| ① OLS Full | `ERV_w ~ is_generic + is_k_beauty + log_*` (incremental = K − Generic) | +4.859 %p | <0.001 ✅ | 일반 회귀 — 인플루언서 selection 포함 |
+| ② PSM ATT (1:1 매칭) | 영상 특성 (`log_follower, log_view, upload_gap`) 매칭 후 ATT | +4.764 %p | <0.01 ✅ | 영상 단위 인과 보강 — 인플루언서 selection 미통제 |
+| ③ **+ 인플루언서 Fixed Effect** (K-Beauty vs Generic Skincare, dual 30명) | LSDV + clustered SE | **−0.849 %p** | 0.60 | **인플루언서 통제 시 효과 사라짐** (음수, 유의 X). selection effect ~100%+ |
 
-**🔍 발견**: 단순 OLS 의 5.02%p 효과 중 **4.78%p (95.3%) 가 인플루언서 selection effect**. K-beauty 키워드 자체의 추가 효과는 거의 0.
+→ **PSM 으로 영상 특성 매칭해도 selection effect 잡지 못함** — 인플루언서 고유 특성 (베이스 ER, 채널 컨셉) 통제하는 within-influencer FE 가 가장 robust 한 인과 추정.
+
+**🔍 broad pattern — 다른 group 정의에서도 같은 결론**:
+
+| Group 정의 | 단순 OLS | within-FE | selection % |
+|---|---:|---:|---:|
+| **v2 정의** (3 단어 `kbeauty/k-beauty/koreanskincare` + non_k_skincare 비교 그룹, K-Beauty vs Generic Skincare) | +4.15 %p | **−0.85 %p** | **100%+** |
+| **4 단어** (`kbeauty/korean/wonyoung/korea`, K-keyword vs others, trim winsorize) | +5.02 %p | **+0.24 %p** | **95.3%** |
+| Paired t-test (4 단어 dual 42명, within 평균) | — | +0.56 %p (p=0.49) | — |
+
+→ group 정의 / winsorize 방식 무관 **single OLS ~5%p → FE 통제 시 ≈ 0** 패턴 robust.
 
 > 단순 OLS 만 보고 "K-beauty 키워드 추가 → ERV +5%p, 1만뷰당 47,642원" 결론 냈다면 잘못된 마케팅 의사결정. ③ Fixed Effect 까지 진행해서 selection 과 causal 효과 분리 → 진짜 레버 식별.
 
