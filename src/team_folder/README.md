@@ -32,7 +32,7 @@
 
 ## 폴더 카탈로그
 
-### `M/` — 팀원 M (5 파일, 249MB)
+### `M/` — 팀원 M (4 파일, 노트북 + pptx)
 
 | 파일 | 사이즈 | 역할 |
 |---|---|---|
@@ -40,7 +40,8 @@
 | `(클러스터링추가)Final_Project_삼박자_0121.ipynb` | 7.3M | **M 의 마지막**. 1/21. 데이터 파일 일반화 + 클러스터링 분석 추가 |
 | `3beaty_최종프로젝트_v1_0115.pptx` | 161M | 1/15 발표 자료 (가장 무거움 — 이미지 다수) |
 | `기획흐름참고용.pptx` | 76M | 기획 자료 (참고용) |
-| `amazon_koreaOnly_translated.csv` | 10M | Amazon 리뷰 한글 번역본 데이터 |
+
+> M 의 작업 데이터 `amazon_koreaOnly_translated.csv` (Amazon 리뷰 한글 번역본) 는 `data/amazon/` 로 이동됨 (csv 는 무조건 `data/` 원칙).
 
 ### `H/` — 팀원 H (5 ipynb, 60MB)
 
@@ -52,11 +53,11 @@
 | `3조_분석스크립트_v5_0128(h).ipynb` | 20M | 494 | **🎯 H 최종 (1/28)** — 가장 최신·풍부. WordNetLemmatizer + ngrams + Phrases. Data Overview / Handling Missing Values / Column-wise transformation 섹션 체계화 |
 | `Test용 코드 v1 copy 2.ipynb` | 11M | 171 | **별개 test 분기** (이름이 Test 라 위 진화 흐름과 별도 가지) |
 
-### `S/` — 팀원 S (1 파일, 172KB)
+### `S/` — 팀원 S (폴더 폐기됨 — 데이터만 보유)
 
-| 파일 | 사이즈 | 역할 |
-|---|---|---|
-| `cleaned_info.xlsx` | 172K | **TikTok 인플루언서 영상 설명 (`info_tag`) 정제본**. 1679 rows × {name, info_tag}. 영상 설명에서 hashtag (`#kbeauty #koreanskincare #wonyoungism` 등) 추출 가능한 형태. 다른 팀원의 후속 분석 (M 의 토픽 모델링, H 의 텍스트 전처리) input 으로 사용됨 |
+S 의 작업 산출물 `cleaned_info.xlsx` (TikTok 인플루언서 영상 설명 `info_tag` 정제본, 1679 rows × {name, info_tag}) 은 `data/tiktok/cleaned_info.xlsx` 로 이동됨. M 의 토픽 모델링 / H 의 텍스트 전처리 input 으로 사용됨 (csv/xlsx 는 무조건 `data/` 원칙).
+
+빈 `S/` 폴더는 폐기.
 
 ## 추천 main
 
