@@ -36,6 +36,14 @@ Amazon 의 고객 리뷰(정성)와 TikTok 의 인플루언서 반응(정량/행
 **⏱️ 시계열 lag 분석 — 인과 방향 정반대 발견**:
 30 개월 aggregate 시계열로 cross-correlation 추가 검증. **원본 ρ=0.715 (lag profile 평탄) → 시간 trend 가 dominant 한 spurious correlation** 의심. **Detrended 후 lag=-3 의 ρ=0.79 가 최대** (Amazon 이 TikTok 보다 3 개월 선행), First-difference 도 lag=-1 의 ρ=0.47 만 유의. → "TikTok → Amazon" 가설의 **인과 방향 정반대** — Amazon 시장 활동이 TikTok 콘텐츠 증가보다 선행 (또는 K-Beauty 시장 성장이 공통 원인, Amazon 이 leading indicator). selection effect / cross-sectional 음의 상관 / **이번 시계열 인과 방향 역**까지 = **단순 분석의 함정** 패턴 4번째 사례.
 
+**🎯 Segment 별 selection effect heterogeneity — 평균의 함정**:
+selection effect 95% 가 모든 segment 에서 동일한가? 팔로워 규모별 분해 결과 **3 가지 패턴 양극화**:
+- **micro (10K-100K) / middle (100K-500K)** = 전체의 78% → **selection 90-100%** (키워드 무의미, 인플루언서 선정이 핵심)
+- **mega (>1M)** → selection 17% + 약한 콘텐츠 효과 (FE +0.83%p, p<0.001 유의지만 작음)
+- **nano (<10K)** → 콘텐츠 효과 +5.31%p (FE p<0.001) 가능성. 단 n_dual=3 표본 한계 (검증 필요)
+
+→ **마케팅 차별 전략 시사**: micro/middle 은 인플루언서 선정 캠페인, nano 는 키워드 캠페인 (검증 후), mega 는 ROI 작아 키워드 캠페인 가치 낮음. 평균 95% 뒤에 숨은 heterogeneity 가 segment-specific 의사결정으로 직결.
+
 **왜 중요한가** — 인과 추론 단계 없이 ① 만 봤다면 잘못된 마케팅 결론 도출:
 - ❌ ① 만 보고 결론: "K-beauty 키워드 추가 → ERV +5 %p, 1 만뷰당 47,642 원 가치" (옛 README)
 - ✅ ③ 까지 가서 도출한 결론: **"K-beauty 키워드 추가 효과는 통계적으로 유의하지 않음. 진짜 효과는 인플루언서 선정에서 나온다"**
@@ -164,6 +172,7 @@ Kbeauty_Analysis/
 - [x] **토픽 × ER within-influencer 분석** — 9 토픽 중 8개 통제 시 통계적 유의 X (asmr 만 +2.19 marginal). selection effect 가 K-keyword 만의 특수 현상이 아닌 **broad pattern** 임을 입증 ([tiktok_statistic_analysis.ipynb cell 160-162](./notebooks/tiktok/tiktok_statistic_analysis.ipynb))
 - [x] **Amazon × TikTok 5 브랜드 매칭 분석** — "TikTok 화제 → Amazon 매출" 가설 반박: 음의 상관 (Spearman -0.80). 신생/성장 브랜드는 TikTok 활발 + Amazon 중간, established (COSRX) 는 Amazon 압도 + TikTok 적음. **본 프로젝트의 통합 데이터 활용 핵심 분석**. 자세히는 [docs/refactor/13](./docs/refactor/13_amazon_tiktok_brand_matching.md)
 - [x] **시계열 lag cross-correlation (30 개월)** — Detrended 후 **lag=-3 의 ρ=0.79 최대** (Amazon 이 TikTok 보다 3 개월 선행). 가설 ("TikTok → Amazon") 의 **인과 방향 정반대**. K-Beauty 시장 성장이 공통 원인 또는 Amazon 이 leading indicator. [docs/refactor/13 시계열 섹션](./docs/refactor/13_amazon_tiktok_brand_matching.md)
+- [x] **Segment 별 within-influencer FE** — selection effect 가 segment 별 매우 다름. **nano (n_dual=3)**: 콘텐츠 효과 +5.31%p (단 표본 한계). **micro/middle (78%)**: selection 90-100% (키워드 무의미). **mega**: selection 17%, 약한 콘텐츠 효과 (작지만 유의). 평균 95% 안에 큰 heterogeneity → **segment 차별 마케팅 전략 필요**. [tiktok_statistic_analysis.ipynb cell 163-165](./notebooks/tiktok/tiktok_statistic_analysis.ipynb)
 
 ### 후속 분석 (선택)
 - [ ] **추천 알고리즘 ver.4** — TF inflation → row-wise vector scaling, `int(round)` 정보 손실 제거
