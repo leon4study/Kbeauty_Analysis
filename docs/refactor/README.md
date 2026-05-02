@@ -28,7 +28,8 @@
 | [09_ollama_rag_variants.md](09_ollama_rag_variants.md) | gradio_rag_ch1~ch8 + LangChain 변종 정리 | `3a99a56` |
 | [10_fake_data_gen.md](10_fake_data_gen.md) | 중복 코드 → `address_utils`, project_code 흡수 | `60798a2` |
 | [11_project_code_dissolution.md](11_project_code_dissolution.md) | `src/project_code/` 해체, lemmatized 노트북 승격 | `60798a2` |
-| [12_tiktok_recommendation_evolution.md](12_tiktok_recommendation_evolution.md) | tiktoker 추천 알고리즘 ver.1/v2/v3 + 회귀분석 진화 | (이번 정리) |
+| [12_tiktok_recommendation_evolution.md](12_tiktok_recommendation_evolution.md) | tiktoker 추천 알고리즘 ver.1/v2/v3 + 회귀분석 진화 + 정량화 (Top-10 = 2.32× random) | (이번 정리) |
+| [13_amazon_tiktok_brand_matching.md](13_amazon_tiktok_brand_matching.md) | Amazon × TikTok 5 브랜드 매칭 — 가설 반박: TikTok 활발도 ↔ Amazon 인기도 = 음의 상관 (신생 vs established 양극화) | (이번 정리) |
 | [EXPERIMENTS_PLAYBOOK.md](EXPERIMENTS_PLAYBOOK.md) | **변종 정리 표준 — 폴더 우선, 통폐합 패턴, 결정 트리** | (이번 정리) |
 
 ## 정리 원칙 (이 repo에 적용된 것)
