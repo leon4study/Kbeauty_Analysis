@@ -8,7 +8,7 @@ import os
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
-import slack1
+from util import slack
 
 
 path = "/Users/jun/GitStudy/Data_4/Data/project5/address"
@@ -121,7 +121,7 @@ for idx, link in enumerate(links):
         temp_df = addr_to_df(copied_text)
         print(temp_df)
         if temp_df.empty:
-            slack1.send_msg("crawling address 중 오류 발생!")
+            slack.send_msg("crawling address 중 오류 발생!")
             input("계속하려면 엔터 키를 누르세요...")
             continue
 
@@ -147,4 +147,4 @@ for idx, link in enumerate(links):
     prev_c = c
 
 
-slack1.send_msg("crawling address 완료!")
+slack.send_msg("crawling address 완료!")

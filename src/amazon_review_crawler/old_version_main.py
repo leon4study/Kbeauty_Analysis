@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import Select
 from mysql1 import MySqlClient
 from reviews import load_reviews
 from items import load_items
-from slack1 import send_msg
+from util.slack import send_msg
 import os
 import json
 import time
