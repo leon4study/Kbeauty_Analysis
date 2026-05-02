@@ -17,8 +17,8 @@ TikTok 영상/인플루언서 데이터 기반의 EDA + 토픽 모델링 + 추�
 |---|---|
 | `tiktok_EDA.ipynb` | 영상 단위 기본 EDA |
 | `tiktok_statistic_analysis.ipynb` | 영상 통계 분석 |
-| `tiktok_marketing_modeling.ipynb` (v1) | 마케팅 효과 모델링 v1 |
-| `tiktok_marketing_modeling_v2.ipynb` (v2) | 마케팅 효과 모델링 v2 (v1 다음 단계, **차이 검증 필요**) |
+| `tiktok_marketing_modeling.ipynb` (v1, 이전) | 그룹 라벨 `non_k_skincare_only`/`k_keyword`, sklearn `LogisticRegression` 기반 PSM, `run_models_compare` 함수 |
+| `tiktok_marketing_modeling_v2.ipynb` (**v2, main**) | v1 refactor — 그룹 라벨 정리 (`Generic Skincare`/`K-Beauty`/`Others`), `required_cols` 입력 검증, `statsmodels` VIF 다중공선성 검사 추가, `run_premium_ols` 로 함수 단순화, ERV 가중치 `ERV_w` + `log_follower`/`log_view`/`view_to_follower_ratio` 파생 변수 |
 
 ### 인플루언서 단위 (`tiktoker_*`)
 
@@ -37,7 +37,7 @@ TikTok 영상/인플루언서 데이터 기반의 EDA + 토픽 모델링 + 추�
 
 ## 변종 노트
 
-`tiktok_marketing_modeling.ipynb` (v1) ↔ `_v2.ipynb` 차이는 아직 정밀 검증 안 됨 — 별도 큐레이션 세션에서 확인 후 [EXPERIMENTS_PLAYBOOK](../../docs/refactor/EXPERIMENTS_PLAYBOOK.md) 패턴 A/C 적용 예정.
+`tiktok_marketing_modeling.ipynb` (v1) ↔ `_v2.ipynb` 차이 검증 완료 — v2 가 v1 의 refactor (그룹 라벨 + 함수 단순화 + VIF 검증 + ERV_w/log 변수). v2 가 main, v1 은 진화 흔적 (PLAYBOOK 패턴 C — README 카탈로그로 통합).
 
 ## 관련 docs
 
