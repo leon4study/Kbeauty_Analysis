@@ -28,12 +28,17 @@
 | [09_ollama_rag_variants.md](09_ollama_rag_variants.md) | gradio_rag_ch1~ch8 + LangChain 변종 정리 | `3a99a56` |
 | [10_fake_data_gen.md](10_fake_data_gen.md) | 중복 코드 → `address_utils`, project_code 흡수 | `60798a2` |
 | [11_project_code_dissolution.md](11_project_code_dissolution.md) | `src/project_code/` 해체, lemmatized 노트북 승격 | `60798a2` |
+| [12_tiktok_recommendation_evolution.md](12_tiktok_recommendation_evolution.md) | tiktoker 추천 알고리즘 ver.1/v2/v3 + 회귀분석 진화 | (이번 정리) |
+| [EXPERIMENTS_PLAYBOOK.md](EXPERIMENTS_PLAYBOOK.md) | **변종 정리 표준 — 폴더 우선, 통폐합 패턴, 결정 트리** | (이번 정리) |
 
 ## 정리 원칙 (이 repo에 적용된 것)
 
-1. **사용처 0개 + 후계 있음 → 학습 자료로 ~/GitStudy/utils/ 로 이동** (이 repo는 깔끔하게)
-2. **사용처 0개 + 후계 없음 + git 보존 충분 → 폐기**
-3. **변종 폐기 시에도 의도/차이는 이 docs/refactor/ 에 표로 남김**
-4. **함수화는 진짜 중복 (3+ 곳)일 때만** — 한 줄짜리 wrapping은 하지 않음
-5. **코드 변경 동반된 모든 함수에 docstring 필수** (한국어, "왜" 우선)
-6. **포터블 경로**: 절대 경로 → `REPO_ROOT` (`pyproject.toml` + `pip install -e .` 기반)
+> **변종 정리 표준은 [EXPERIMENTS_PLAYBOOK.md](EXPERIMENTS_PLAYBOOK.md) 참고** — 폴더 우선, 통폐합 패턴 A/B/C, 결정 트리, 실용 명령어.
+
+1. **도메인 무관한 학습 sketch → `~/GitStudy/utils/legacy_*`** (외부 보존). 도메인 흔적은 프로젝트 안에 둠
+2. **변종은 통폐합 우선** (단일 파일 + 주석 진화 / 파라미터화 / README 카탈로그). 단순 보존보다 영양가↑
+3. **변종 폐기 시에도 의도/차이는 이 docs/refactor/ 또는 도메인 README 에 표로 남김**
+4. **폴더가 1순위 진입점** — 도메인 폴더 열자마자 README 로 의도 파악 가능해야 함. git history/branch 는 보조
+5. **함수화는 진짜 중복 (3+ 곳)일 때만** — 한 줄짜리 wrapping은 하지 않음
+6. **코드 변경 동반된 모든 함수에 docstring 필수** (한국어, "왜" 우선)
+7. **포터블 경로**: 절대 경로 → `REPO_ROOT` (`pyproject.toml` + `pip install -e .` 기반)
