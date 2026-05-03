@@ -1,14 +1,29 @@
-import gradio as gr
-import pandas as pd
-import networkx as nx
-import matplotlib.pyplot as plt
-from io import BytesIO
-from PIL import Image
-from dotenv import load_dotenv
-import os
-import yaml
 import logging
+import os
+
+import gradio as gr
+import yaml
+from dotenv import load_dotenv
 from graphrag.query.cli import run_global_search, run_local_search
+
+# 그래프 시각화는 같은 패키지의 graphrag_viewer/plot.py 에 위임 — DRY 위해 추출.
+from rag_chatbot.graphrag_viewer.plot import parquet_to_graph, render_graph_image
+
+# 경로 portability: settings.yaml 안의 경로는 REPO_ROOT 기준 상대경로.
+# 호출부에서 REPO_ROOT 와 합쳐 절대경로로 변환해 GraphRAG 에 넘김.
+from util.repo_paths import REPO_ROOT
+
+
+def _resolve(path):
+    """settings.yaml 의 경로 값을 REPO_ROOT 기준 절대경로로 변환.
+
+    이미 절대경로면 그대로 반환 (env override 한 경우 등).
+    """
+    if not path:
+        return path
+    if os.path.isabs(path):
+        return path
+    return str(REPO_ROOT / path)
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -36,10 +51,12 @@ def load_settings():
     yaml_path = os.getenv("GRAPHRAG_CONFIG", os.path.join(base_dir, "indexing", "settings.yaml"))
     config = load_yaml_config(yaml_path)
     
+    # config_path 는 yaml 파일 자체의 위치 (이미 절대경로). data_path/root_path 는
+    # yaml 안에 REPO_ROOT 기준 상대경로로 적혀있어 _resolve() 로 절대경로 변환.
     return {
-        "config_path": yaml_path,
-        "data_path": os.getenv("DATA_PATH", config.get("data_path")),
-        "root_path": os.getenv("ROOT_PATH", config.get("root_path", ".")),
+        "config_path": _resolve(os.getenv("CONFIG_PATH", config.get("config_path", yaml_path))),
+        "data_path": _resolve(os.getenv("DATA_PATH", config.get("data_path"))),
+        "root_path": _resolve(os.getenv("ROOT_PATH", config.get("root_path", "."))),
         "method": os.getenv("METHOD", config.get("method", "local")),
         "community_level": int(os.getenv("COMMUNITY_LEVEL", config.get("community_level", 2))),
         "response_type": os.getenv("RESPONSE_TYPE", config.get("response_type", "Multiple Paragraphs")),
@@ -55,43 +72,31 @@ def run_search(method, query, settings):
         raise ValueError("Invalid method")
 
 def apply_parquet_files(parquet_files):
-    """✅ Parquet 데이터를 기반으로 네트워크 그래프 생성"""
+    """업로드된 parquet 파일들을 그래프로 시각화 + 검색용 데이터로 저장.
+
+    UI에서 "적용하기" 누르면 호출되는 핸들러. 각 parquet에서 (1) 네트워크
+    그래프 이미지를 만들어 갤러리에 띄우고 (2) 원본 DataFrame을 ``graph_data``
+    글로벌에 누적 — 이후 ``perform_search`` 가 이 데이터를 검색에 활용.
+
+    실제 그래프 생성/렌더링은 ``rag_chatbot.graphrag_viewer.plot`` 에 위임.
+    """
     global settings, graph_data
-    settings = load_settings()  # 환경 설정 저장
+    settings = load_settings()
 
     if not parquet_files:
         return ["⚠️ Parquet 파일을 먼저 업로드하세요."], "⚠️ Parquet 파일을 먼저 업로드해야 합니다."
 
-    all_graphs = []
-    graph_data = []  # 저장할 데이터
+    all_graphs: list = []
+    graph_data = []  # 검색에서 참조할 DataFrame 누적
 
     for parquet_file in parquet_files:
-        df = pd.read_parquet(parquet_file.name)
-        G = nx.DiGraph()
-
-        if "source" in df.columns and "target" in df.columns:
-            for _, row in df.iterrows():
-                G.add_edge(row["source"], row["target"])
-        elif "id" in df.columns:
-            G.add_nodes_from(df["id"])
-        else:
-            all_graphs.append(f"⚠️ {parquet_file.name}에 'source' 또는 'id' 컬럼이 없습니다.")
+        try:
+            G, df = parquet_to_graph(parquet_file.name)
+        except ValueError as e:
+            all_graphs.append(f"⚠️ {parquet_file.name}: {e}")
             continue
-
-        # 그래프 저장
         graph_data.append(df)
-
-        # 그래프 시각화
-        pos = nx.spring_layout(G, seed=42)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        nx.draw(G, pos, with_labels=True, node_color="skyblue", edge_color="gray", node_size=500, font_size=8, ax=ax)
-
-        # 이미지 변환
-        buf = BytesIO()
-        plt.savefig(buf, format="png")
-        buf.seek(0)
-        img = Image.open(buf)
-        all_graphs.append(img)
+        all_graphs.append(render_graph_image(G))
 
     return all_graphs, "✅ 데이터 적용 완료! 이제 질문을 입력하세요."
 

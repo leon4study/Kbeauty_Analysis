@@ -7,6 +7,22 @@ import argparse  # argparse 모듈 추가
 from enum import Enum
 import gradio as gr
 
+# 경로 portability: settings.yaml 안의 경로는 REPO_ROOT 기준 상대경로.
+# 호출부에서 REPO_ROOT 와 합쳐 절대경로로 변환해 GraphRAG 에 넘김.
+from util.repo_paths import REPO_ROOT
+
+
+def _resolve(path):
+    """settings.yaml 의 경로 값을 REPO_ROOT 기준 절대경로로 변환.
+
+    이미 절대경로면 그대로 반환 (env override 한 경우 등).
+    """
+    if not path:
+        return path
+    if os.path.isabs(path):
+        return path
+    return str(REPO_ROOT / path)
+
 INVALID_METHOD_ERROR = "Invalid method"
 
 # GraphRAG 관련 모듈
@@ -54,10 +70,12 @@ def load_settings():
     if not config:  # 설정이 비어 있으면 경고
         print("⚠️ WARNING: settings.yaml 파일이 비어 있거나, 올바르게 로드되지 않았습니다.")
 
+    # config_path 는 yaml 파일 자체의 위치 (이미 절대경로). data_path/root_path 는
+    # yaml 안에 REPO_ROOT 기준 상대경로로 적혀있어 _resolve() 로 절대경로 변환.
     return {
-        "config_path": yaml_path,
-        "data_path": os.getenv("DATA_PATH", config.get("data_path")),
-        "root_path": os.getenv("ROOT_PATH", config.get("root_path", ".")),
+        "config_path": _resolve(os.getenv("CONFIG_PATH", config.get("config_path", yaml_path))),
+        "data_path": _resolve(os.getenv("DATA_PATH", config.get("data_path"))),
+        "root_path": _resolve(os.getenv("ROOT_PATH", config.get("root_path", "."))),
         "method": os.getenv("METHOD", config.get("method", "local")),
         "community_level": int(os.getenv("COMMUNITY_LEVEL", config.get("community_level", 2))),
         "response_type": os.getenv("RESPONSE_TYPE", config.get("response_type", "Multiple Paragraphs")),
