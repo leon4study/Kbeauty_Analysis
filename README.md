@@ -45,7 +45,14 @@
 | 추천 알고리즘 ver.4 | **무작위 대비 3.25배** | 56명 인플루언서 중 2명을 시드로 ver.4 알고리즘이 나머지를 추천했을 때, Top-10 인플루언서의 ER% (참여율) 평균이 무작위 추천 대비 3.25배. 1,540 가지 모든 조합으로 부트스트랩 검증 |
 | 1만뷰당 환산 가치 | **47,600 ~ 51,000원** | K-Premium 효과를 *참여 1건당 100원* 가정 시 1만뷰당 추가 가치 |
 
-→ 단계별 표 + Robustness 4 사례 + 추천 알고리즘 ver.1 → ver.4 진화 자세히: [`docs/refactor/`](docs/refactor/)
+### K-Premium 효과의 95% 가 인플루언서 selection 인 걸 어떻게 발견했나
+
+PSM ATT 4.76 %p 까지 가도 영상 특성 (조회수·팔로워·업로드 주기) 만 매칭하고 *인플루언서 자체* (베이스 ER, 채널 컨셉, 구독자 충성도 등) 는 통제 못 한다는 점을 인지했습니다. *K-Beauty 키워드를 쓰는 인플루언서들이 원래부터 인기 있는 사람들일 가능성* 을 검증하기 위해 *같은 인플루언서가 K-keyword 영상도 non-K 영상도 만든 케이스* (dual 인플루언서) 의 표본을 추가 수집했습니다 — 1차 50명 → 2차 56명, 인플루언서당 30 영상씩 = 1,680 영상. LSDV (Least Squares Dummy Variable, 인플루언서별 dummy variable) + 인플루언서 단위 clustered standard error 회귀로 같은 인플루언서 안에서만 비교했을 때, K-keyword 자체 효과는 **+0.24 %p (p=0.75)** — 통계적 유의 X. 즉 단순 OLS 의 5.02 %p 중 약 95% 가 *인플루언서 selection effect* 임이 드러났습니다.
+
+**결과의 nuance — underpowered 가능성**: dual 인플루언서 ~40명 + 인플루언서당 ~30 영상 표본은 *진짜 0* 인지 *약한 양의 효과 (예: +0.5 %p) 인데 detect 못 한 건지* 구분하기에 작습니다. 그럼에도 *selection effect 가 dominant 라는 상대적 비율* 결론은 토픽 × ER within-FE (9 토픽 중 8 개도 통계적 유의 X) + segment 별 within-FE 두 보강 검증으로 일관되게 입증됐습니다.
+
+→ 분석 동기·방법론·한계·후속 작업 자세히: [`docs/refactor/14_kpremium_number_history.md`](docs/refactor/14_kpremium_number_history.md)
+→ 단계별 표 + Robustness 4 사례 + 추천 알고리즘 ver.1 → ver.4 진화: [`docs/refactor/`](docs/refactor/)
 
 ---
 

@@ -127,6 +127,20 @@ df['content_similarity'] = similarity_scores.mean(axis=1)
 | selected 2명만 검증 | `["krystallee2222", "emchu_"]` 만 — 다른 selected 조합으로 generalization 미검증 | 다양한 selected 조합으로 stability 테스트 |
 | Cold-start | 새 인플루언서는 ER% 누적 + LDA 토픽 라벨 후만 추천 가능 | 메타데이터 기반 hybrid (팔로워/지역/카테고리) 보강 |
 
+### 정량화 — 용어 정의
+
+본 검증의 핵심 용어. 이후 §정량화 결과 / §ver.4 / §Stability 검증의 표·결과를 읽기 전 정리.
+
+- **selected (시드 인플루언서)**: 알고리즘에 *"이 사람과 비슷한 인플루언서 추천해줘"* 의 기준이 되는 인플루언서. 단일 또는 다중 (시드 N 명 가능)
+- **후보 풀 (candidate pool)**: 추천 대상이 되는 나머지 인플루언서. 전체 56 명 중 selected 를 뺀 나머지 (예: selected 2 명 → 후보 풀 54 명)
+- **Top-K 추천 ER%**: 알고리즘이 추천한 상위 K 명 인플루언서의 ER% (Engagement Rate, 참여율) 평균. K 클수록 묶음 단위 효과, K 작을수록 개별 ranking 정확도
+- **무작위 baseline**: 후보 풀에서 무작위로 K 명 골라 ER% 평균 계산. 10,000 회 반복으로 95% 신뢰구간 산출 — 알고리즘 추천이 운이 아닌 실력인지 비교 기준
+- **천장 (ceiling)**: 후보 풀에서 ER% 진짜 상위 K 명의 평균. 이론적으로 가능한 최대치 (알고리즘이 ER% 정보를 100% 활용했을 때 도달 가능한 상한)
+- **1,540 selected pair (Stability 검증)**: 56 명 중 2 명을 시드로 뽑는 모든 가능 조합 = C(56, 2) = 1,540. 단일 selected 결과가 *lucky / unlucky case* 인지 검증 목적
+- **두 단계 부트스트랩 (혼동 방지)**:
+  1. **샘플 단위** (10,000 회): 한 selected pair 안에서 무작위 K 명 샘플링 반복 → 알고리즘 결과가 무작위 분포의 어디 위치인지 (signal vs noise)
+  2. **조합 단위** (1,540 pair): 모든 selected 조합으로 알고리즘 stability 검증 → selected 의존도 (어떤 시드로 시작해도 잘 작동하는지)
+
 ### 정량화 결과 (2026-05-03 검증)
 
 ver.3 가 실제로 high-ER% 인플루언서를 잘 골라내는가? 후보 54명 중 Top-K 추천 vs 무작위 K명 (10000 부트스트랩) vs 천장 (ER% 상위 K) 비교.
