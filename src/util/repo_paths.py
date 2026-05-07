@@ -36,13 +36,26 @@ NOTEBOOKS = REPO_ROOT / "notebooks"
 # Data top-level
 DATA = REPO_ROOT / "data"
 
-# Data subdirs
+# Data subdirs (legacy — 마이그레이션 진행 중, 점진적으로 BRONZE/SILVER/GOLD 로 이동)
 AMAZON = DATA / "amazon"
 TIKTOK = DATA / "tiktok"
 MODEL = DATA / "model"
 RESULTS = DATA / "results"
 ARCHIVE = DATA / "archive"
 REFERENCES = DATA / "References"
+
+# Medallion architecture (bronze: raw 수집 / silver: 정제 / gold: 분석 input)
+BRONZE = DATA / "bronze"
+SILVER = DATA / "silver"
+GOLD = DATA / "gold"
+
+# 도메인별 경로 (medallion × source)
+BRONZE_AMAZON = BRONZE / "amazon"
+BRONZE_TIKTOK = BRONZE / "tiktok"
+SILVER_AMAZON = SILVER / "amazon"
+SILVER_TIKTOK = SILVER / "tiktok"
+GOLD_AMAZON = GOLD / "amazon"
+GOLD_TIKTOK = GOLD / "tiktok"
 
 # Frequently-used Autogluon model paths
 AUTOGLUON_DIR = TIKTOK / "AutogluonModels"
