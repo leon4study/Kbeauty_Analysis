@@ -176,8 +176,36 @@ def gradio_interface(settings):
     return demo
 
 
+def _check_env() -> None:
+    """첫 실행자 친화적 환경 체크 — 필수 항목 미충족 시 명확한 안내로 raise."""
+    # 1. OpenAI API key 확인
+    api_key = os.getenv("GRAPHRAG_API_KEY")
+    placeholder_keys = {"your-graphrag-api-key", "your-llm-api-key", "sk-...", "dummy", ""}
+    if not api_key or api_key in placeholder_keys:
+        raise EnvironmentError(
+            f"\n\n❌ OpenAI API key 가 설정되지 않았습니다 (GRAPHRAG_API_KEY).\n\n"
+            f"설정 방법:\n"
+            f"   1. https://platform.openai.com/api-keys 에서 key 발급\n"
+            f"   2. .env 파일에 추가: GRAPHRAG_API_KEY=sk-...\n"
+            f"   3. 또는 환경변수: export GRAPHRAG_API_KEY=sk-...\n\n"
+            f"자세한 안내: src/rag_chatbot/cosmetic_rag_chat/README.md\n"
+        )
+
+    # 2. settings.yaml 존재 확인
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    yaml_path = os.getenv("GRAPHRAG_CONFIG", os.path.join(base_dir, "indexing", "settings.yaml"))
+    if not os.path.exists(yaml_path):
+        raise FileNotFoundError(
+            f"\n\n❌ GraphRAG settings.yaml 을 찾을 수 없습니다:\n"
+            f"   {yaml_path}\n\n"
+            f"기본 설정 파일이 indexing/settings.yaml 에 있어야 합니다.\n"
+            f"또는 GRAPHRAG_CONFIG 환경변수로 다른 경로 지정.\n"
+        )
+
+
 def main():
     """메인 실행 함수"""
+    _check_env()
     settings = load_settings()
 
     # method를 설정 파일에 반영

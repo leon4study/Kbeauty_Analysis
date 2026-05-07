@@ -10,7 +10,7 @@
 
 **TikTok - 마케팅 효과 정량 검증**
 
-*K-Beauty 마케팅이 Amazon 매출로 연결되는가* 를 정량으로 검증했습니다. 약 4,600 영상을 반자동 수집한 뒤 정제·필터를 거쳐 56명 인플루언서의 1,680 영상으로 분석에 들어갔습니다. OLS → 매칭 기반 인과 추정 (PSM) → 같은 인플루언서 안에서만 비교하는 within-influencer Fixed Effect 까지 4 단계 회귀로 K-Premium 4.76 ~ 5.10 %p 를 추정했는데, 마지막 within-FE 단계에서 그 효과의 약 95% 가 *인플루언서 selection effect* 임이 드러났습니다. 마케팅의 핵심 레버가 *키워드* 가 아니라 *인플루언서 선정* 이라는 결론으로 넘어갔고, 이 selection 을 자동화하기 위해 추천 알고리즘을 ver.1 부터 ver.4 까지 진화시켜 1,540 조합 부트스트랩 검증에서 무작위 대비 1.25배에서 3.25배 ER% 까지 끌어올렸습니다.
+*K-Beauty 마케팅이 Amazon 매출로 연결되는가* 를 정량으로 검증했습니다. 키워드 기반으로 약 6,500 영상 (인플루언서 3,300+ 명) 을 1차 수집한 뒤, 분석 표본 확보를 위해 56명 인플루언서로 좁혀 인플루언서당 30 영상씩 추가 수집해 1,680 영상으로 분석에 들어갔습니다. OLS → 매칭 기반 인과 추정 (PSM) → 같은 인플루언서 안에서만 비교하는 within-influencer Fixed Effect 까지 4 단계 회귀로 K-Premium 4.76 ~ 5.10 %p 를 추정했는데, 마지막 within-FE 단계에서 그 효과의 약 95% 가 *인플루언서 selection effect* 임이 드러났습니다. 마케팅의 핵심 레버가 *키워드* 가 아니라 *인플루언서 선정* 이라는 결론으로 넘어갔고, 이 selection 을 자동화하기 위해 추천 알고리즘을 ver.1 부터 ver.4 까지 진화시켜 1,540 조합 부트스트랩 검증에서 무작위 대비 1.25배에서 3.25배 ER% 까지 끌어올렸습니다.
 
 ---
 
@@ -32,7 +32,9 @@
 - 로컬 Ollama (gemma2) — 비용·프라이버시 이점
 - OpenAI (gpt-3.5-turbo) — 정확도
 
-→ 실행 방법: [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md)
+→ 실행 방법:
+- 로컬 Ollama 변형 → [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md)
+- OpenAI 변형 → [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md)
 
 ---
 
@@ -127,7 +129,9 @@ data/
 - **노트북 카탈로그**:
   - [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md) — TikTok 분석 8 노트북
   - [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md) — Amazon × TikTok 결합 7 노트북
-- **추천 챗봇 실행**: [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md)
+- **추천 챗봇 실행**:
+  - [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md) — 로컬 Ollama 변형 (비용 0)
+  - [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) — OpenAI 변형 (정확도 보강)
 - **분석 깊이 docs**:
   - [12 — 추천 알고리즘 ver.1 → ver.4 진화 + 정량 검증](docs/refactor/12_tiktok_recommendation_evolution.md)
   - [13 — Amazon × TikTok 5 brand matching + 시계열 lag](docs/refactor/13_amazon_tiktok_brand_matching.md)

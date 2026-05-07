@@ -41,6 +41,41 @@ from llama_index.vector_stores.lancedb import LanceDBVectorStore
 from util.repo_paths import DATA
 
 
+# ---- 환경 체크 (첫 실행자 친화 에러) ----------------------------------------
+def _check_env() -> None:
+    """필수 환경 (GraphRAG 인덱스 + Ollama 데몬) 미충족 시 명확한 안내로 raise."""
+    # 1. GraphRAG LanceDB 인덱스 존재 확인
+    db_path = DATA / "model" / "graphrag_t_2" / "output" / "lancedb"
+    if not db_path.exists():
+        raise FileNotFoundError(
+            f"\n\n❌ GraphRAG LanceDB 인덱스를 찾을 수 없습니다:\n"
+            f"   {db_path}\n\n"
+            f"GraphRAG 인덱싱을 먼저 실행하세요:\n"
+            f"   graphrag index --root ./data/model/graphrag_t_2\n\n"
+            f"자세한 안내: src/rag_chatbot/ollama/README.md\n"
+        )
+
+    # 2. Ollama 데몬 reachable 확인
+    import urllib.error
+    import urllib.request
+
+    try:
+        urllib.request.urlopen("http://localhost:11434/api/tags", timeout=2)
+    except (urllib.error.URLError, ConnectionError, TimeoutError, OSError) as e:
+        raise ConnectionError(
+            f"\n\n❌ Ollama 데몬에 연결할 수 없습니다 (http://localhost:11434).\n\n"
+            f"Ollama 시작 방법:\n"
+            f"   1. 설치: https://ollama.com\n"
+            f"   2. 모델 다운로드: ollama pull gemma2\n"
+            f"   3. 데몬 시작: ollama serve\n"
+            f"   4. 확인: curl http://localhost:11434/api/tags\n\n"
+            f"자세한 안내: src/rag_chatbot/ollama/README.md\n"
+        ) from e
+
+
+_check_env()
+
+
 # ---- LlamaIndex 글로벌 Settings ---------------------------------------------
 # 모든 인덱스가 공통 임베딩/LLM 사용하도록 ``Settings`` 에 한 번 등록.
 # 임베딩: 차원/품질 trade-off 고려해서 mpnet 채택 (다른 모델 시도는 주석 참고).

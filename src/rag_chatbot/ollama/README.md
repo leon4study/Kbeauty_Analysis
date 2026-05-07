@@ -1,66 +1,163 @@
-# Ollama RAG 챗봇
+# Ollama 기반 K-Beauty 추천 챗봇
 
-K-beauty GraphRAG 인덱싱 결과 (LanceDB) 에 자연어 질문을 던지는 챗봇. **로컬 Ollama** 로 LLM 비용을 줄이는 게 목표 (메인 챗봇 [`../cosmetic_rag_chat/`](../cosmetic_rag_chat/) 은 OpenAI cloud 사용).
+K-Beauty 5 브랜드 (COSRX · PURITO · Beauty of Joseon · I'm From · Dr.Jart+) 의 제품·성분·효과 정보를 GraphRAG 로 인덱싱한 지식 그래프 위에서, 자연어로 화장품을 추천받는 챗봇입니다. 로컬 Ollama 사용으로 LLM 비용 0 + 프라이버시 이점.
 
-## canonical 파일
+> 같은 데이터로 OpenAI 변형 [`../cosmetic_rag_chat/`](../cosmetic_rag_chat/) 도 있습니다 (정확도 보강용).
 
-| 파일 | 무엇을 함 |
-|---|---|
-| `gradio_rag_ch7.py` | 메인 챗봇 — Gradio `ChatInterface(multimodal)` + LanceDB + LlamaIndex + Ollama. 파일 업로드 + 멀티턴 대화 지원. ch1→ch7 progressive iteration 의 마지막 단계 |
-| `gradio_rag_ch8.ipynb` | ch7 다음 별개 진화 가지 — LanceDB graph 데이터를 더 깊이 활용 (relationship_df, indexes dict 등). ch7 와 22% 유사 |
-| `OllamaLLM.py` | LlamaIndex 용 Custom Ollama LLM wrapper (httpx 직접, timeout, json_mode, context_window). ⚠️ 알려진 미완성 (import 누락) — 사용 전 docstring 확인 |
-| `check_db.ipynb` | LanceDB 검증 도구 — 테이블 목록, entity-description 미리보기 |
+## 사용 시나리오 예시
+
+- *"민감 피부에 맞는 보습 크림 추천해줘"*
+- *"파라벤 알러지 있는데 안전한 제품?"*
+- *"건성 피부 + 알코올 free 클렌저"*
+
+---
+
+## 빠른 실행 (5 단계)
+
+```bash
+# 1. Python 의존성 설치 (uv 권장)
+uv sync
+# pip 사용 시: pip install -e .
+
+# 2. Ollama 설치 (https://ollama.com) + 모델 다운로드
+ollama pull gemma2
+ollama pull nomic-embed-text
+
+# 3. Ollama 데몬 시작 (별도 터미널 또는 자동 시작)
+ollama serve
+
+# 4. .env 셋업 + GraphRAG 인덱싱 (~수 시간, 한 번만)
+cp .env.example .env   # 필요한 키 채우기
+graphrag index --root ./data/model/graphrag_t_2
+
+# 5. 챗봇 실행
+python -m src.rag_chatbot.ollama.gradio_rag_ch7
+```
+
+→ 콘솔에 `Running on local URL: http://127.0.0.1:7860` 가 뜨면 브라우저 자동 열림. 채팅 박스에 자연어 질문 입력.
+
+---
+
+## 사전 준비
+
+### 1. Python 환경 — uv 권장
+
+uv 가 pip 대비 10~100배 빠르고 `uv.lock` 으로 환경 재현 보장.
+
+```bash
+# uv 설치 (없으면)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 의존성 설치
+uv sync
+```
+
+**pip 대안**:
+
+```bash
+pip install -e .
+```
+
+### 2. Ollama (로컬 LLM)
+
+```bash
+# 1. https://ollama.com 에서 OS 별 설치
+# 2. 모델 다운로드
+ollama pull gemma2              # LLM, 약 5GB
+ollama pull nomic-embed-text    # 임베딩, 약 280MB
+
+# 3. 데몬 시작 (이미 떠있는지 확인)
+ollama serve
+# macOS 는 보통 메뉴바 아이콘에서 자동 시작
+```
+
+**확인**: `curl http://localhost:11434/api/tags` 가 응답하면 OK.
+
+### 3. GraphRAG 인덱싱
+
+K-Beauty 5 브랜드 제품·성분·효과 데이터를 GraphRAG 로 인덱싱한 결과 (LanceDB) 가 챗봇 응답의 근거.
+
+**입력 데이터**: `data/model/graphrag_t_2/input/5brand_graphrag_part.txt` (git 에 포함)
+
+**인덱싱 실행**:
+
+```bash
+graphrag index --root ./data/model/graphrag_t_2
+```
+
+소요 시간:
+- Ollama gemma2 (로컬): **수 시간** (CPU 기준, GPU 가속 시 단축)
+- OpenAI API 사용 시: **수 분 ~ 수십 분** (API 비용 발생)
+
+설정 변경: `data/model/graphrag_t_2/settings.yaml` (현재 Ollama gemma2 기본)
+
+**결과**: `data/model/graphrag_t_2/output/lancedb/` 폴더 생성되면 인덱싱 완료.
+
+> ⚠️ lancedb 폴더는 `.gitignore` 로 제외 — 처음 clone 한 사용자는 직접 인덱싱 필요.
+
+### 4. 환경변수 (.env)
+
+```bash
+cp .env.example .env
+```
+
+필수 변수 (Ollama 만 사용 시):
+- `GRAPHRAG_API_KEY=dummy` (Ollama 는 키 검증 안 함, 임의 값 OK)
+- `LLM_MODEL=gemma2`
+- `EMBED_MODEL=nomic-embed-text`
+
+자세한 prefix 규칙: [`.env.example`](../../../.env.example)
+
+---
 
 ## 실행
 
 ```bash
-# Ollama 데몬 (localhost:11434) 실행 + GraphRAG 인덱싱 결과 (data/model/graphrag_t_2/output/lancedb) 준비된 상태에서
 python -m src.rag_chatbot.ollama.gradio_rag_ch7
 ```
 
-## 변종 카탈로그 (폐기/외부 보존된 것 포함)
-
-| 변종 | 가설/차이 | 처분 |
-|---|---|---|
-| `gradio_rag_ch1.py` (82줄) | 기본 골격 — Ollama + LanceDB + LlamaIndex + `gr.Interface` | 폐기 (git show `3a99a56^:...` 으로 복원 가능) |
-| `gradio_rag_ch2.py` | 빈 placeholder | 폐기 |
-| `gradio_rag_ch4.py` (83줄) | ch1과 거의 동일, 미세 차이 | 폐기 |
-| `gradio_rag_ch5.py` (90줄) | imports 정리 | 폐기 |
-| `gradio_rag_ch6.py` (121줄) | YAML 기반 RAG 주석 헤더 추가 | 폐기 |
-| `gradio_rag_ch7.ipynb` | ch7.py 와 95% 동일, 출력 보면서 개발용 | 폐기 (.py 가 충분) |
-| `gradio_rag_ch3.py` (58줄) | **다른 stack** — LangChain + FAISS + ChatOpenAI(gpt-3.5). title은 Ollama 인데 코드는 OpenAI cloud → 마이그레이션 미완성 | `~/GitStudy/utils/legacy_rag/langchain_variant.py` 보존 |
-| `OllamaLLM.py` (옛 v1, 23줄) | 기본 wrapper | 폐기. v2 가 `OllamaLLM.py` 이름 회수 (단일 wrapper) |
-| `rag_chat_t1.py` | test scratch | 폐기 |
-
-## 진화 흐름
+성공 시 콘솔 출력:
 
 ```
-ch1 (82, 기본)
-  ↓
-ch4 (83, 미세조정)
-  ↓
-ch5 (90, imports 정리)
-  ↓
-ch6 (121, RAG 주석 헤더)
-  ↓
-ch7 (117, gr.Interface → ChatInterface multimodal)  ← canonical .py
-  ↓
-ch8.ipynb (LanceDB graph 더 깊이 활용)               ← 별개 가지, 보존
-
-[ch3 LangChain 변종 → utils/legacy_rag/langchain_variant.py]
+Running on local URL: http://127.0.0.1:7860
 ```
 
-**ch1 ↔ ch7 diff = 100줄** (큰 진화), **ch6 ↔ ch7 diff = 15줄** (마지막 큰 도약 — UI multimodal 화).
+브라우저가 자동으로 열리며 Gradio UI 등장. 채팅 박스에 자연어 질문 입력 (위 *사용 시나리오* 참고).
 
-## 학습 포인트
+---
 
-1. `chN` 식 숫자 증가 네이밍은 진화 흐름은 보여주지만 **무엇이 바뀌었는지** 안 보임 → 의미 있는 commit + 적은 수의 의미 있는 파일이 더 나음
-2. 다른 stack 시도는 `_variant.py` 처럼 명확한 이름으로 분리 (ch3 가 LangChain 인 게 파일명에 안 드러나 헷갈렸음)
-3. `gr.Interface` → `gr.ChatInterface(multimodal)` 이 RAG 챗봇에서 의미 있는 도약 (파일 업로드 + 멀티턴)
-4. LLM wrapper 확장은 작은 일 아님 — `BaseOllama` extend 시 callback / metadata / chat 시그니처 등 LlamaIndex 내부 contract 알아야 (OllamaLLM2 의 미완성이 그 증거)
-5. 노트북과 .py 동시 보존은 90%+ 같은 코드면 둘 중 하나로 충분
+## 트러블슈팅
+
+| 에러 | 원인 + 해결 |
+| --- | --- |
+| `FileNotFoundError: ... lancedb` | GraphRAG 인덱싱 안 됨 → *사전 준비 3. GraphRAG 인덱싱* 실행 |
+| `ConnectionError: ... 11434` | Ollama 데몬 안 떠있음 → `ollama serve` 또는 `curl http://localhost:11434/api/tags` 응답 확인 |
+| `ModuleNotFoundError: llama_index ...` | 의존성 미설치 → `uv sync` 또는 `pip install -e .` |
+| `Out of memory` / 응답 느림 | gemma2 가 메모리 ~5GB+ 사용 → 작은 모델: `ollama pull gemma2:2b` 후 `gradio_rag_ch7.py` 의 `model="gemma2"` → `model="gemma2:2b"` 변경 |
+| 첫 실행 시 sentence-transformers 다운로드 느림 | HuggingFace 임베딩 모델 (`all-mpnet-base-v2`) 첫 실행 시 자동 다운로드 (~수백 MB) — 캐시 후 빠름 |
+
+---
+
+## 파일 구성
+
+| 파일 | 역할 |
+| --- | --- |
+| `gradio_rag_ch7.py` | **메인 챗봇** (실행 entry point) |
+| `OllamaLLM.py` | LlamaIndex 용 Custom Ollama LLM wrapper (httpx 직접 사용) |
+| `check_db.ipynb` | LanceDB 검증 도구 (테이블 / entity 미리보기, 디버깅용) |
+| `gradio_rag_ch8.ipynb` | LanceDB graph 데이터 깊이 활용 실험 (별도 진화 가지) |
+
+---
+
+## 개발 노트 (Development Notes)
+
+`ch1 → ch7` progressive iteration 의 변종 카탈로그 + 진화 흐름 + 학습 포인트는 별도 docs 로 정리:
+
+→ [`../../../docs/refactor/09_ollama_rag_variants.md`](../../../docs/refactor/09_ollama_rag_variants.md)
+
+폐기된 변종 (`ch1`~`ch6`, `ch3` LangChain, `OllamaLLM v1` 등) 의 *왜 폐기했나* + git 복원 명령어도 거기 정리됨.
 
 ## 관련 docs
 
-- [../../docs/refactor/09_ollama_rag_variants.md](../../docs/refactor/09_ollama_rag_variants.md) — 자세한 변종 정리 기록
-- [../../docs/refactor/EXPERIMENTS_PLAYBOOK.md](../../docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준 (이 README 가 패턴 C 의 사례)
+- [`../cosmetic_rag_chat/README.md`](../cosmetic_rag_chat/README.md) — OpenAI 변형 챗봇 (정확도 보강용)
+- [`../../../docs/refactor/EXPERIMENTS_PLAYBOOK.md`](../../../docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준
