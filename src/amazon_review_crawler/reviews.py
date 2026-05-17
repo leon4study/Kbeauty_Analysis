@@ -1,6 +1,46 @@
-"""Amazon reviews 데이터를 MySQL ``reviews`` 테이블에 적재.
+"""
+File: src/amazon_review_crawler/reviews.py
 
-스키마 정의 + 적재 메서드 분기 wrapper. 실제 SQL은 ``mysql.MySqlClient`` 위임.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+무엇인가 (What)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Amazon ``reviews`` 테이블 스키마 정의 + 적재 함수.
+items.py 와 동일 패턴 — ``load_reviews()`` 한 번에 스키마 보장 + 적재.
+
+왜 있는가 (Why)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 리뷰 스키마를 별도 파일로 분리해 items 스키마와 충돌 없이 독립 관리.
+- 크롤러(main.py) 는 ``load_reviews(df, client)`` 만 호출 — SQL 세부사항 모름.
+
+어디에 쓰이는가 (Where)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- ``src/amazon_review_crawler/main.py`` 크롤링 루프에서 items 적재 직후 호출.
+
+테이블 스키마 요약
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    reviews (PK: review_num)
+      review_num    리뷰 고유 ID
+      ASIN          상품 ID (items.ASIN 참조 — FK 미설정, 앱 레벨 보장)
+      customer_id   리뷰 작성자 ID
+      customer_name 리뷰 작성자 이름
+      title         리뷰 제목
+      date          수집 원문 날짜 문자열
+      review_rating 별점 (텍스트 — "5.0 out of 5 stars" 형태)
+      content       리뷰 본문
+
+미구현 / 설계 노트
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- ASIN 컬럼에 인덱스 없음. 현재 규모(수천 rows)에서는 문제없으나,
+  "특정 ASIN 의 전체 리뷰" 쿼리를 MySQL 에서 직접 날릴 일이 생기면
+  ``CREATE INDEX idx_reviews_asin ON reviews(ASIN)`` 추가 권장.
+- review_rating 은 텍스트로 저장 — 숫자 변환은 노트북 전처리 단계에서 수행.
+
+관련 파일 (Related)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- src/amazon_review_crawler/mysql.py    ← 실제 SQL 실행
+- src/amazon_review_crawler/items.py   ← 동일 패턴의 items 테이블 적재
+- src/amazon_review_crawler/main.py    ← 호출부
+- docs/db_schema.md                    ← 전체 DB 스키마 문서
 """
 from __future__ import annotations
 

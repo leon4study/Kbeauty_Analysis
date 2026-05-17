@@ -1,22 +1,68 @@
-"""TikTok bronze → silver 변환 파이프라인.
+"""
+File: src/pipelines/build_silver_tiktok.py
 
-**현재 silver 파일 상태**
-``data/silver/tiktok/tiktok_videos_silver.csv`` 는 원본 4개 raw csv 를 외부
-환경(작성자 로컬 크롤러)에서 변환한 *historical artifact* 다. 이 스크립트는
-그 결과를 재현하는 게 아니라, **신규 raw csv 가 추가됐을 때** 동일 스키마의
-silver 를 새로 생성하기 위한 canonical 파이프라인이다.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+무엇인가 (What)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TikTok bronze(raw CSV) → silver(정제 통합본) 변환 파이프라인.
+``data/bronze/tiktok/`` 의 검색어별 raw CSV 들을 읽어 컬럼 rename + dedup +
+hash_tag 추출 후 9 컬럼 고정 스키마로 ``data/silver/tiktok/tiktok_videos_silver.csv``
+에 저장한다.
 
-**실행 방법**
+왜 있는가 (Why)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+현재 silver 파일(``tiktok_videos_silver.csv``)은 외부 환경(작성자 로컬 크롤러)에서
+변환한 *historical artifact* 다 — 원본 raw 4 개 CSV 중 일부가 소실돼 재현 불가.
+이 스크립트는 그 결과를 재현하는 게 아니라, **신규 raw CSV 가 추가됐을 때**
+동일 스키마의 silver 를 새로 생성하기 위한 canonical 파이프라인이다.
+
+노트북 안에 변환 코드를 두지 않는 이유:
+- 노트북은 run-all 하면 항상 silver 를 덮어쓰는 사이드이펙트 발생 위험.
+- 이 스크립트는 별도 실행 + overwrite 플래그 필수 → 의도치 않은 덮어쓰기 방지.
+- Python 모듈이라 단위 테스트 (extract_hashtags 등) 가능.
+
+어디에 쓰이는가 (Where)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- **신규 raw CSV 추가 시** 직접 실행 (cron 자동화 X, 수동 판단 후 실행).
+- 생성된 silver 파일은 ``src/util/data_io.py`` 의 ``load_keyword_dfs()`` 와
+  ``notebooks/tiktok/`` 각 노트북이 읽어서 사용.
+
+어떤 상황 (When — 실행 흐름)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. ``data/bronze/tiktok/`` 에 새 raw CSV 추가 (크롤러 실행 후)
+2. ``_FILENAME_TO_SEARCH_TERM`` 에 새 파일명 → search_term 등록
+3. ``python src/pipelines/build_silver_tiktok.py --overwrite``
+4. 생성된 silver CSV 를 노트북에서 read → 분석 재실행
+
+사용법 (How)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # silver 파일이 없을 때 (처음 생성)
     python src/pipelines/build_silver_tiktok.py
 
-**입력** (``data/bronze/tiktok/``)
-    파일명 패턴: ``tiktok_search_<search_term>.csv``
-    필수 컬럼: like, comment, save, tiktoker_name, date, info
+    # 기존 silver 덮어쓰기 (신규 raw 추가 후)
+    python src/pipelines/build_silver_tiktok.py --overwrite
 
-**출력** (``data/silver/tiktok/``)
-    ``tiktok_videos_silver.csv`` — 9 컬럼 고정 스키마:
+입력 스키마 (bronze raw CSV)
+    필수 컬럼: like, comment, save, tiktoker_name, date, info
+    파일명 패턴: tiktok_search_<keyword>.csv
+
+출력 스키마 (silver CSV — 9 컬럼 고정)
     search_term, vedio_order, tiktoker_name, upload_date,
     like_cnt, comment_cnt, save_cnt, info, hash_tag
+
+설계 노트
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+hash_tag 추출: 현재 ``#\w+`` 패턴으로 #hashtag 만 추출.
+historical silver 는 @mention 도 포함하는 등 원본 추출 로직이 불명확하다.
+신규 데이터부터는 이 스크립트의 추출 방식으로 통일한다.
+
+관련 파일 (Related)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- src/util/repo_paths.py         ← BRONZE_TIKTOK, SILVER_TIKTOK 경로 상수
+- src/util/data_io.py            ← silver 읽는 load_keyword_dfs()
+- src/tiktok_crawler/            ← bronze raw CSV 생성 크롤러
+- notebooks/tiktok/              ← silver 를 읽어 분석하는 노트북들
+- docs/refactor/16_silver_artifact_origin.md ← silver artifact 결정 기록
 """
 from __future__ import annotations
 
