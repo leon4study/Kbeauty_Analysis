@@ -1,3 +1,53 @@
+"""
+File: src/amazon_review_crawler/main.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+무엇인가 (What)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Amazon K-Beauty 5개 브랜드(COSRX, Beauty of Joseon, Dr. Jart+, PURITO,
+I'm from) 의 상품 메타데이터와 리뷰를 Selenium으로 수집하고 MySQL에 적재하는
+엔드투엔드 크롤링 스크립트.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+왜 필요한가 (Why)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+신규 인디 K-Beauty 브랜드(3-beaty)의 미국 Amazon 진출 전략 수립을 위해
+경쟁사 리뷰 raw data를 수집. 이 데이터가 EDA / LDA 토픽 모델 / GraphRAG
+챗봇 지식그래프의 입력 원천이 된다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+어디서 쓰이는가 (Where)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+단독 실행 스크립트 (``python main.py``). 수집 결과는 MySQL ``items`` /
+``reviews`` 테이블에 적재되고, 이후 노트북에서 SELECT 해 분석에 사용.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+언제 실행되는가 (When)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+수동 배치 실행. 브랜드 추가·재수집이 필요할 때 하단 ``crawl_amazon()``
+호출 인자를 변경하고 실행.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+흐름 (How)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Selenium Chrome 실행
+  → ``open_amazon_keyword()``  : 키워드 검색
+  → ``amazon_login()``         : 계정 로그인 (.env CRAWLER_ID/PW)
+  → ``brand_filter_refresh()`` : 브랜드 사이드바 필터 클릭
+  → ``select_best_sellers()``  : Best Sellers 정렬
+  → 카테고리 × 아이템 이중 루프
+      - 상품 메타데이터 수집 → ``load_items()``  → MySQL items
+      - 리뷰 페이지 수집    → ``load_reviews()`` → MySQL reviews
+  → ``send_msg()``             : Slack 완료 알림
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+관련 모듈 (Related)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- mysql.py       : MySqlClient — DB 연결·upsert·insert-ignore
+- items.py       : load_items() — items 테이블 스키마 + 적재
+- reviews.py     : load_reviews() — reviews 테이블 스키마 + 적재
+- util/slack.py  : send_msg() — Slack 완료/에러 알림
+"""
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -264,6 +314,12 @@ def get_asin_from_sql():
 
 
 def check_DrJart():
+    """
+    현재 페이지에 Dr. Jart+ 브랜드 필터 요소가 존재하는지 확인하는 함수.
+
+    Returns:
+        bool: Dr. Jart+ 필터 요소 존재 여부 (True / False).
+    """
     try:
         # 요소가 로드될 때까지 기다림
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#p_123\\/452045 > span > a > span")))
@@ -286,7 +342,21 @@ def check_DrJart():
     
 
 
-def brand_filter_refresh(brand:str): #brands 필터. 체크하면 해당 브랜드만 나옴. (단 체크하려면 해당 브랜드 체크박스 알아야 함.)
+def brand_filter_refresh(brand: str):
+    """
+    Amazon 검색 결과 사이드바에서 특정 브랜드 필터 체크박스를 클릭하는 함수.
+
+    브랜드별 CSS 셀렉터(``#p_123\\/...``)가 하드코딩되어 있으며, 클릭 후
+    페이지 리프레시가 완료될 때까지 대기한다.
+
+    Args:
+        brand (str): 필터링할 브랜드명.
+            지원 값: "COSRX", "Beauty of Joseon", "Dr. Jart+", "PURITO", "I'm from"
+
+    Returns:
+        bool: 필터 클릭 및 페이지 리프레시 성공 여부.
+    """
+    # brands 필터 — 체크하면 해당 브랜드만 나옴. 브랜드별 체크박스 CSS 셀렉터 하드코딩.
     brands = ["COSRX","Beauty of Joseon","Dr. Jart+","PURITO","I'm from"]
     try:
         if brand == brands[0]:
@@ -333,6 +403,15 @@ def brand_filter_refresh(brand:str): #brands 필터. 체크하면 해당 브랜�
 
 
 def get_description():
+    """
+    현재 Amazon 상품 페이지의 "About this item" 섹션 텍스트를 JSON 문자열로 추출.
+
+    ``feature-bullets`` ID 아래 ``li`` 항목들을 수집해 줄바꿈으로 합친 뒤
+    ``{"description": "..."}`` 형태의 JSON 문자열로 반환.
+
+    Returns:
+        str | None: JSON 문자열. 요소 부재 또는 오류 시 None.
+    """
     try :
         result = {}
         # "feature-bullets" ID가 있는 요소를 기다린 후 가져오기
@@ -354,6 +433,16 @@ def get_description():
 
 
 def cosrx_description_to_json():
+    """
+    COSRX 상품 상세 페이지의 visual-rich-product-description 섹션을 JSON으로 추출.
+
+    COSRX는 일반 ``feature-bullets`` 대신 ``visual-rich-product-description``
+    컨테이너를 사용하므로 별도 함수로 분리. 섹션 제목(h4)–내용(visualRpdText)
+    쌍을 dict로 구성해 JSON 문자열로 반환.
+
+    Returns:
+        str | None: JSON 문자열. 요소 부재 또는 오류 시 None.
+    """
     try:
         # 결과를 저장할 딕셔너리
         result = {}
@@ -383,6 +472,15 @@ def cosrx_description_to_json():
 
 
 def is_sponsored(item):
+    """
+    검색 결과 아이템 요소에 Sponsored 라벨이 있는지 확인하는 함수.
+
+    Args:
+        item: Selenium WebElement — 검색 결과 리스트의 단일 아이템.
+
+    Returns:
+        bool: Sponsored 라벨 존재 시 True, 없거나 확인 불가 시 False.
+    """
     try:
         if item.find_elements(By.CLASS_NAME, "puis-sponsored-label-text"):  # Sponsored 라벨 존재 확인
             ("Sponsored_passed")
@@ -393,13 +491,36 @@ def is_sponsored(item):
     return False
 
 def click_BeautyPersonalCareDepartment():
+    """
+    Amazon 사이드바에서 'Beauty & Personal Care' 카테고리 필터를 클릭하는 함수.
+
+    크롤링 대상 카테고리를 Beauty & Personal Care 로 좁히기 위해 사용.
+    현재 ``crawl_amazon()`` 내에서 직접 호출하진 않으나, 수동 실행 시 활용 가능.
+    """
     # Beauty & Personal Care Department 선택 (클릭))
     category_Department = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#n\\/3760911')))
     # 요소를 클릭하거나 원하는 작업 수행
     category_Department.click()
 
-def crawl_amazon(keyword="skin+care", asin_skip = True , sponsored_filter = False):
+def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
+    """
+    Amazon 키워드 검색 → 브랜드 필터 → 카테고리 루프 → 아이템·리뷰 수집의
+    메인 크롤링 함수.
 
+    Args:
+        keyword (str): Amazon 검색 키워드. 기본값 ``"skin+care"``.
+            브랜드명(예: ``"I'm from"``)을 직접 넘겨도 됨.
+        asin_skip (bool): True 이면 이미 MySQL ``items`` 테이블에 있는 ASIN을
+            건너뜀 — 중복 수집 방지. False 이면 전부 재수집.
+        sponsored_filter (bool): True 이면 Sponsored 아이템을 수집 대상에서 제외.
+
+    Returns:
+        None — 수집 결과는 MySQL에 직접 적재됨 (``load_items``, ``load_reviews``).
+
+    Note:
+        함수 말미에 ``driver.quit()`` 이 호출되어 브라우저가 종료됨.
+        예외 발생 시에도 finally 블록으로 quit 보장.
+    """
     open_amazon_keyword(keyword)
     amazon_login(ID, PW)
     brands = ["COSRX","Beauty of Joseon","Dr. Jart+","PURITO","I'm from"]
