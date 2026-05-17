@@ -1,9 +1,54 @@
+"""
+File: src/rag_chatbot/cosmetic_rag_chat/main.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+무엇인가 (What)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OpenAI 기반 GraphRAG 화장품 추천 챗봇의 진입점.
+``settings.yaml`` 로 GraphRAG 설정을 로드하고, Gradio UI 를 띄워
+사용자의 피부 타입·알러지·성분 조건에 맞는 화장품을 추천한다.
+
+왜 있는가 (Why)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- ``gradio_rag_ch7.py`` (Ollama 변형)의 OpenAI 대응 버전.
+  로컬 LLM 없이 API 키만으로 더 높은 정확도를 원하는 사용자를 위한 변형.
+- GraphRAG local / global search 두 방법을 런타임에 선택 가능
+  (``--method local|global`` 또는 Gradio 드롭다운).
+
+어디에 쓰이는가 (Where)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 사용자가 직접 ``python main.py`` 로 실행 → 브라우저에서 Gradio UI.
+- ``src/rag_chatbot/cosmetic_rag_chat/README.md`` 에 실행 방법 문서화.
+
+어떤 상황 (When — 런타임 흐름)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. ``main()`` 호출 → ``_check_env()`` 로 GRAPHRAG_API_KEY 존재 확인
+2. ``load_settings()`` → settings.yaml 읽기 + 경로를 REPO_ROOT 기준 절대경로 변환
+3. ``setup_llm_and_embedder()`` → OpenAI LLM + embedding 초기화
+4. ``gradio_interface()`` → Gradio ChatInterface 빌드 + launch
+
+사용법 (How)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    cd src/rag_chatbot/cosmetic_rag_chat
+    python main.py                    # 기본 (local search)
+    python main.py --method global    # global search 모드
+
+    GRAPHRAG_API_KEY 환경변수 또는 .env 파일 필요.
+
+관련 파일 (Related)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- src/rag_chatbot/ollama/gradio_rag_ch7.py   ← 로컬 Ollama 변형 (비용 0)
+- src/rag_chatbot/cosmetic_rag_chat/settings.yaml ← GraphRAG 설정
+- data/model/graphrag_t_2/output/lancedb    ← GraphRAG 인덱싱 결과 (LanceDB)
+- src/rag_chatbot/cosmetic_rag_chat/README.md ← 실행 방법 문서
+"""
+
 from dotenv import load_dotenv
 import os
 import yaml
 import logging
 import tiktoken
-import argparse  # argparse 모듈 추가
+import argparse
 from enum import Enum
 import gradio as gr
 

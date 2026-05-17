@@ -1,6 +1,50 @@
-"""Amazon items 데이터를 MySQL ``items`` 테이블에 적재.
+"""
+File: src/amazon_review_crawler/items.py
 
-스키마 정의 + 적재 메서드 분기 wrapper. 실제 SQL은 ``mysql.MySqlClient`` 위임.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+무엇인가 (What)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Amazon ``items`` 테이블 스키마 정의 + 적재 함수.
+``load_items()`` 한 번 호출로 스키마 보장(없으면 생성) 후 DataFrame 을
+upsert / insert 중 하나로 MySQL 에 올린다.
+
+왜 있는가 (Why)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- 스키마와 적재 로직을 한 파일에 두면, 컬럼 추가 시 스키마·적재·호출부를
+  한 곳만 보면 됨.
+- ``mysql.MySqlClient`` 가 실제 SQL 실행을 담당하고, 이 파일은 *어떤 테이블에
+  어떤 컬럼을 넣는지* 만 정의 — 단일 책임.
+- reviews.py 와 동일 패턴 → 새 테이블 추가 시 파일 복사 후 스키마만 교체.
+
+어디에 쓰이는가 (Where)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- ``src/amazon_review_crawler/main.py`` 의 크롤링 루프 끝에서 호출.
+  배치(5 브랜드) 크롤링이 끝날 때마다 ``load_items(df, client)`` 한 번씩.
+
+테이블 스키마 요약
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    items (PK: ASIN)
+      ASIN          상품 고유 ID (Amazon Standard Identification Number)
+      title         상품명
+      order         크롤링 수집 순서
+      category      Amazon 대분류
+      brand         브랜드명
+      price         가격 (USD)
+      global_rating_count  글로벌 평점 수
+      description   상품 상세 설명 (JSON)
+      Special_Feature  특수 기능 태그
+      total_star_mean  평균 별점
+      detail_dict   상세 스펙 (JSON)
+      best_sellers_rank_Feature  베스트셀러 순위 텍스트
+      Ingredients   성분 목록
+      is_bundle     번들 상품 여부
+
+관련 파일 (Related)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- src/amazon_review_crawler/mysql.py    ← bulk_upsert / bulk_insert_ignore 구현
+- src/amazon_review_crawler/reviews.py ← 동일 패턴의 reviews 테이블 적재
+- src/amazon_review_crawler/main.py    ← 호출부
+- docs/db_schema.md                    ← 전체 DB 스키마 문서
 """
 from __future__ import annotations
 

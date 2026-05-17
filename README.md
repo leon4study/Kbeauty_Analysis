@@ -62,12 +62,17 @@
   review_crawler/               crawler/
        │                              │
        ▼                              ▼
-  data/amazon/                  data/tiktok/
+  data/bronze/amazon/           data/bronze/tiktok/
+  (raw 수집 CSV)                 (raw 수집 CSV)
        │                              │
        ▼                              ▼
-  notebooks/                    notebooks/tiktok/
-  EDA + lemmatized_             EDA + topic + recommend
-  full_pipeline                       │
+  data/silver/amazon/           data/silver/tiktok/       ← src/pipelines/
+  (전처리 bridge)                (정제 통합본)               build_silver_tiktok.py
+       │                              │
+       ▼                              ▼
+  notebooks/amazon/             notebooks/tiktok/
+  01 전처리 → 02 EDA            EDA + topic + recommend
+  → 03 LDA 토픽 모델                  │
        │                              │
        └──────────────┬───────────────┘
                       ▼
@@ -92,7 +97,7 @@ src/rag_chatbot/ (Ollama / OpenAI 두 변형)
 ```
 
 → 코드 자세히: [`src/README.md`](src/README.md)
-→ 노트북 카탈로그: [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md), [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md)
+→ 노트북 카탈로그: [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md), [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md), [`notebooks/amazon/`](notebooks/amazon/)
 
 ---
 
@@ -100,25 +105,32 @@ src/rag_chatbot/ (Ollama / OpenAI 두 변형)
 
 ```
 src/
-  amazon_review_crawler/   Amazon 리뷰 크롤러 (Selenium)
+  amazon_review_crawler/   Amazon 리뷰 크롤러 (Selenium + MySQL)
   tiktok_crawler/          TikTok 영상 크롤러 (Selenium 반자동)
+  pipelines/               데이터 파이프라인 (bronze → silver 변환)
   rag_chatbot/             개인 맞춤 추천 챗봇 (GraphRAG)
     ollama/                로컬 LLM 변형
     cosmetic_rag_chat/     OpenAI 변형
+    graphrag_viewer/       GraphRAG 결과 네트워크 시각화
   util/                    공통 유틸리티 (경로·부정어 처리·Slack)
 notebooks/
   EDA.ipynb                Amazon 5 brand EDA
-  lemmatized_full_pipeline Amazon 전처리 + LDA 토픽 모델
+  amazon/                  Amazon 분석 3단계 (전처리 → EDA → LDA)
+    01_amazon_preprocessing.ipynb
+    02_amazon_eda.ipynb
+    03_amazon_topic_modeling.ipynb
   tiktok/                  TikTok 분석 (8 노트북)
   amazon_tiktok/           Amazon × TikTok 결합 분석 (7 노트북)
+  archive/                 분할 전 원본 보존 (lemmatized_full_pipeline 등)
 docs/
-  refactor/                분석 깊이 영구 기록 (12, 13, 14)
+  refactor/                분석 깊이 영구 기록 (12~16)
   pipeline_overview.md     전체 파이프라인 개요
   amazon_crawler.md, ...   각 모듈 설계 docs
 data/
-  amazon/                  수집 리뷰 + 제품 데이터
-  tiktok/                  수집 영상 데이터
-  model/                   GraphRAG 인덱스
+  bronze/                  수집 원본 (amazon/ · tiktok/)
+  silver/                  정제 통합본 (amazon/ · tiktok/)
+  model/                   GraphRAG 인덱스 (LanceDB)
+  archive/                 재현 불가 artifact 보존
 ```
 
 ---
@@ -127,6 +139,7 @@ data/
 
 - **코드 모듈 카탈로그**: [`src/README.md`](src/README.md)
 - **노트북 카탈로그**:
+  - [`notebooks/amazon/`](notebooks/amazon/) — Amazon 분석 3단계 (01 전처리 → 02 EDA → 03 LDA)
   - [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md) — TikTok 분석 8 노트북
   - [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md) — Amazon × TikTok 결합 7 노트북
 - **추천 챗봇 실행**:
