@@ -72,6 +72,13 @@ K-Beauty 5 브랜드 데이터를 GraphRAG 로 인덱싱한 결과 (LanceDB) 가
 
 **입력 데이터**: `data/model/graphrag_t_2/input/5brand_graphrag_part.txt` (git 에 포함, ollama 변형과 공유)
 
+인덱싱 전에 입력 파일을 `indexing/input/` 에 복사:
+
+```bash
+cp data/model/graphrag_t_2/input/5brand_graphrag_part.txt \
+   src/rag_chatbot/cosmetic_rag_chat/indexing/input/
+```
+
 **설정 파일**: `indexing/settings.yaml` (OpenAI gpt-3.5-turbo 기본)
 
 **인덱싱 실행**:
