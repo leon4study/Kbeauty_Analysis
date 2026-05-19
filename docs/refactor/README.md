@@ -30,6 +30,9 @@
 | [11_project_code_dissolution.md](11_project_code_dissolution.md) | `src/project_code/` 해체, lemmatized 노트북 승격 | `60798a2` |
 | [12_tiktok_recommendation_evolution.md](12_tiktok_recommendation_evolution.md) | tiktoker 추천 알고리즘 ver.1/v2/v3 + 회귀분석 진화 + 정량화 (Top-10 = 2.32× random) | (이번 정리) |
 | [13_amazon_tiktok_brand_matching.md](13_amazon_tiktok_brand_matching.md) | Amazon × TikTok 5 브랜드 매칭 — 가설 반박: TikTok 활발도 ↔ Amazon 인기도 = 음의 상관 (신생 vs established 양극화) | (이번 정리) |
+| [14_kpremium_number_history.md](14_kpremium_number_history.md) | K-Premium 수치 변천 (8.43 → 4.76 ~ 5.10) 영구 기록 + within-FE 95% selection effect 발견 | (이번 정리) |
+| [15_ollama_graphrag_compatibility.md](15_ollama_graphrag_compatibility.md) | Ollama × GraphRAG 호환성 — entity extraction / 임베딩 차원 / JSON mode 3 issue + 운영 옵션 A/B/C | `1e236b1` |
+| [16_silver_artifact_origin.md](16_silver_artifact_origin.md) | silver 단계 설계 결정 + historical artifact 보존 이유 (raw 재현 불가) | `6bc440f` |
 | [EXPERIMENTS_PLAYBOOK.md](EXPERIMENTS_PLAYBOOK.md) | **변종 정리 표준 — 폴더 우선, 통폐합 패턴, 결정 트리** | (이번 정리) |
 
 ## 정리 원칙 (이 repo에 적용된 것)

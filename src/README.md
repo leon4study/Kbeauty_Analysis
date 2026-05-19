@@ -4,10 +4,11 @@ K-Beauty 분석 프로젝트의 코드 구성. 5 module.
 
 | Module | 역할 | 메인 파일 |
 | --- | --- | --- |
-| [amazon_review_crawler/](#-amazon_review_crawler) | Amazon 리뷰 수집 | `main.py` |
-| [tiktok_crawler/](#-tiktok_crawler) | TikTok 영상 수집 (반자동) | `tiktok_crawling.py` |
-| [rag_chatbot/](#-rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 | `ollama/gradio_rag_ch7.py` / `cosmetic_rag_chat/main.py` |
-| [util/](#-util) | 공통 유틸리티 | `repo_paths.py`, `negation.py` 등 |
+| [amazon_review_crawler/](#amazon_review_crawler) | Amazon 리뷰 수집 | `main.py` |
+| [tiktok_crawler/](#tiktok_crawler) | TikTok 영상 수집 (반자동) | `tiktok_crawling.py` |
+| [pipelines/](#pipelines) | medallion 변환 파이프라인 (bronze → silver) | `build_silver_amazon.py`, `build_silver_tiktok.py` |
+| [rag_chatbot/](#rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 | `ollama/gradio_rag_ch7.py` / `cosmetic_rag_chat/main.py` |
+| [util/](#util) | 공통 유틸리티 | `repo_paths.py`, `negation.py` 등 |
 
 ---
 
@@ -30,8 +31,8 @@ python -m src.amazon_review_crawler.main
 
 **출력물**:
 ```
-data/amazon/{brand}_items.csv      ← 제품 정보 (이름·가격·평점 등)
-data/amazon/{brand}_reviews.csv    ← 리뷰 본문 (별점·날짜·sentiment 등)
+data/bronze/amazon/{brand}_items.csv      ← 제품 정보 (이름·가격·평점 등)
+data/bronze/amazon/{brand}_reviews.csv    ← 리뷰 본문 (별점·날짜·sentiment 등)
 ```
 
 **의존성**: Selenium · SQLAlchemy · MySQL 서버 · `.env` (Amazon 계정 + Slack webhook URL)
@@ -56,11 +57,38 @@ python -m src.tiktok_crawler.tiktok_crawling
 
 **출력물**:
 ```
-data/tiktok/tiktok_post_final_df.csv      ← 영상 단위 통합 데이터
-data/tiktok/tiktoker_crawling_df_*.csv    ← 인플루언서별 raw 데이터
+data/bronze/tiktok/tiktok_search_<keyword>[_v<n>][_<date>].csv  ← 키워드 검색 결과
+data/bronze/tiktok/tiktokers_raw.csv                            ← 인플루언서별 raw 데이터
 ```
 
 **의존성**: Selenium · `.env` (TikTok 세션 자격증명)
+
+---
+
+## pipelines/
+
+medallion 아키텍처의 bronze → silver 변환을 모듈화한 CLI 파이프라인.
+
+| 파일 | 역할 |
+| --- | --- |
+| `build_silver_amazon.py` | bronze/amazon 5브랜드 items/reviews + skinsort → silver 3 파일 (lemmatize + n-gram + 번역) |
+| `build_silver_tiktok.py` | bronze/tiktok 검색 CSV 들 → silver/tiktok/tiktok_videos_silver.csv (rename + dedup + hash_tag) |
+
+**왜 노트북 안 두고 스크립트로 빼냈는가**:
+- 노트북 run-all 시 silver 덮어쓰기 사이드이펙트 위험
+- `--overwrite` 플래그 + 명시적 실행으로 의도치 않은 덮어쓰기 방지
+- Python 모듈이라 단위 테스트 가능
+
+**사용 방법**:
+```bash
+# 처음 생성
+python src/pipelines/build_silver_tiktok.py
+python src/pipelines/build_silver_amazon.py
+
+# 덮어쓰기 (신규 raw 추가 후)
+python src/pipelines/build_silver_amazon.py --overwrite --translate
+python src/pipelines/build_silver_tiktok.py --overwrite
+```
 
 ---
 
@@ -117,20 +145,21 @@ python -m src.rag_chatbot.cosmetic_rag_chat.main --search-type local
 
 | 파일 | 역할 |
 | --- | --- |
-| `repo_paths.py` | `.git` 디렉토리 기준으로 저장소 root 자동 감지. 노트북 / 스크립트 어디서 실행해도 `AMAZON`, `TIKTOK`, `DATA`, `MODEL` 절대경로 사용 가능 |
+| `repo_paths.py` | `.git` 디렉토리 기준으로 저장소 root 자동 감지. 노트북 / 스크립트 어디서 실행해도 `BRONZE_AMAZON`, `SILVER_AMAZON`, `BRONZE_TIKTOK`, `SILVER_TIKTOK`, `GOLD_AMAZON`, `GOLD_TIKTOK` 절대경로 사용 가능. legacy `AMAZON`/`TIKTOK` 도 유지 (마이그레이션 진행 중) |
 | `data_io.py` | 자주 쓰는 데이터 로드 함수 (`load_keyword_dfs()` 등) + `AMAZON_BRANDS` 5 브랜드 슬러그 상수 |
 | `negation.py` | Amazon 리뷰의 *"not sticky"*, *"alcohol-free"*, *"non-comedogenic"* 같은 부정 표현을 NLP 정규화하는 4 단계 파이프라인 (NLTK + PMI bigram + 도메인 lexicon + SpaCy 의존구문분석) |
 | `slack.py` | Slack incoming webhook 알림 (`send_msg(msg)`). 장시간 크롤러 / 배치 작업 완료 또는 에러 시 채널에 메시지 전송 |
 
 **사용 예시**:
 ```python
-from src.util.repo_paths import AMAZON, TIKTOK
+from src.util.repo_paths import BRONZE_AMAZON, SILVER_AMAZON, BRONZE_TIKTOK
 from src.util.data_io import load_keyword_dfs, AMAZON_BRANDS
 from src.util.slack import send_msg
 
-# 절대 경로 사용
+# medallion 경로 사용
 import pandas as pd
-df = pd.read_csv(AMAZON / "cosrx_reviews.csv")
+df = pd.read_csv(BRONZE_AMAZON / "cosrx_reviews.csv")     # raw
+df_silver = pd.read_csv(SILVER_AMAZON / "amazon_reviews_lemmatized.csv")  # 정제
 
 # Slack 알림
 send_msg("크롤러 완료: 1.2만 건 수집")
