@@ -68,10 +68,57 @@ import random
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Selenium 튜닝 상수
+# ─────────────────────────────────────────────────────────────────────────────
+# 이전에는 wait/sleep 값들이 파일 전체에 흩어져 있어서 (15+ 위치) 튜닝 시 grep
+# 으로 일일이 찾아야 했음. 한 곳에 모아 두면 anti-bot 회피 / 안정성 튜닝 시 한 번
+# 만 수정. 새 값 추가도 여기에 등록 후 참조.
+
+# WebDriverWait 의 explicit wait timeout (sec). 페이지 element 가 나타나길 기다리는
+# 최대 시간. 너무 짧으면 timeout, 길면 실패 감지 늦음.
+WAIT_TIMEOUT_SEC = 3
+
+# 짧은 click-to-click 간격 (sec). anti-bot 감지 회피용 jitter — 너무 일정한 클릭
+# 패턴은 봇으로 의심받음. 0.05~0.15 = 50~150ms 범위에서 randomize.
+SHORT_JITTER_RANGE = (0.05, 0.15)
+
+# 페이지 전환 (검색 결과 → 상품 페이지 등) 후 안정화 대기 (sec).
+# 0.7~1.0 = 700~1000ms. DOM 렌더링 완료 + script 실행 여유.
+PAGE_LOAD_JITTER_RANGE = (0.7, 1.0)
+
+# 스크롤 / 페이지네이션 클릭 후 짧은 안정 대기 (sec). 고정값 (jitter 불필요한 위치).
+SCROLL_PAUSE_SEC = 0.2
+
+# 페이지 완전 로드 (네트워크 트래픽 끝남 추정) 대기 (sec).
+HEAVY_PAGE_LOAD_SEC = 2
+
+# 페이지 점프 (다음 페이지 클릭) 대기 (sec). HEAVY_PAGE_LOAD 보다 약간 짧음.
+NEXT_PAGE_LOAD_SEC = 1.5
+
+# Amazon "Brand" 필터의 체크박스 ID prefix. 각 브랜드별 ID 는 `BRAND_FILTER_IDS`
+# dict 에 매핑.
+#
+# 왜 prefix 만 상수로? Amazon UI 가 가끔 prefix 를 갱신해도 dict 의 값 (브랜드별
+# 숫자 코드) 는 안 바뀌어서. 갱신 시 여기 한 곳만 수정.
+BRAND_FILTER_CSS_PREFIX = r"#p_123\/"
+BRAND_FILTER_CSS_SUFFIX = " > span > a > span"
+
+# 브랜드별 Amazon "Brand" 필터의 고유 ID. Amazon 이 internal 로 부여하는 hash 라
+# refresh-stable 함. 새 브랜드 추가 시 Amazon 사이트에서 "Inspect" 로 확인 후 등록.
+BRAND_FILTER_IDS: dict[str, str] = {
+    "COSRX":            "241477",
+    "Beauty of Joseon": "591445",
+    "Dr. Jart+":        "452045",
+    "PURITO":           "312482",
+    "I'm from":         "654399",
+}
+
+
 # 아마존 크롤링 함수
 
 driver = webdriver.Chrome()
-wait = WebDriverWait(driver, 3)
+wait = WebDriverWait(driver, WAIT_TIMEOUT_SEC)
 
 
 # Amazon 로그인 자격증명 (.env 의 CRAWLER_* 사용 — env-prefix 규칙)
@@ -171,7 +218,7 @@ def click_next_item_page():
     Returns:
         bool: "다음 페이지" 버튼 클릭 성공 여부 (성공 시 True, 실패 시 False).
     """
-    wait_time = random.uniform(0.05, 0.15)
+    wait_time = random.uniform(*SHORT_JITTER_RANGE)
     time.sleep(wait_time)
     try:
         # Next page 버튼 기다리기
@@ -200,7 +247,7 @@ def click_next_review_page():
     """
     try:
         # Next page 버튼 기다리기
-        time.sleep(0.2)
+        time.sleep(SCROLL_PAUSE_SEC)
         next_page_button = wait.until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".a-pagination .a-last a"))
         )
@@ -274,10 +321,10 @@ def open_amazon_keyword(keyword="skin+care"):
         # 아마존 검색 페이지 열기
         driver.get("https://www.amazon.com")
         driver.implicitly_wait(5)  # 페이지 로딩 대기
-        wait_time = random.uniform(0.05, 0.15)
+        wait_time = random.uniform(*SHORT_JITTER_RANGE)
         time.sleep(wait_time)
 
-        wait_time = random.uniform(0.05, 0.15)
+        wait_time = random.uniform(*SHORT_JITTER_RANGE)
         time.sleep(wait_time)
         
         search_box = driver.find_element(By.ID, 'twotabsearchtextbox')
@@ -320,13 +367,18 @@ def check_DrJart():
     Returns:
         bool: Dr. Jart+ 필터 요소 존재 여부 (True / False).
     """
+    # Dr. Jart+ 셀렉터를 BRAND_FILTER_IDS 에서 재사용 (이중 하드코딩 방지).
+    drjart_id = BRAND_FILTER_IDS["Dr. Jart+"]
+    drjart_css = f"{BRAND_FILTER_CSS_PREFIX}{drjart_id}{BRAND_FILTER_CSS_SUFFIX}"
+    # JS querySelector 용은 escape 한 번 더 (Python \\ → JS \).
+    drjart_css_js = drjart_css.replace("\\", "\\\\")
     try:
         # 요소가 로드될 때까지 기다림
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#p_123\\/452045 > span > a > span")))
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, drjart_css)))
 
         # JavaScript를 사용해 해당 요소를 찾음
         element = driver.execute_script(
-            "return document.querySelector('#p_123\\\\/452045 > span > a > span');"
+            f"return document.querySelector('{drjart_css_js}');"
         )
         # 요소 존재 여부 확인
         if element:
@@ -356,19 +408,18 @@ def brand_filter_refresh(brand: str):
     Returns:
         bool: 필터 클릭 및 페이지 리프레시 성공 여부.
     """
-    # brands 필터 — 체크하면 해당 브랜드만 나옴. 브랜드별 체크박스 CSS 셀렉터 하드코딩.
-    brands = ["COSRX","Beauty of Joseon","Dr. Jart+","PURITO","I'm from"]
+    # brands 필터 — 체크하면 해당 브랜드만 나옴. 브랜드별 CSS 셀렉터는 파일 상단
+    # `BRAND_FILTER_IDS` dict 참조 (Amazon UI 갱신 시 한 곳만 수정).
     try:
-        if brand == brands[0]:
-            element_locator = (By.CSS_SELECTOR, "#p_123\\/241477 > span > a > span")  # cosRX
-        elif brand == brands[1]:
-            element_locator = (By.CSS_SELECTOR, "#p_123\\/591445 > span > a > span")
-        elif brand == brands[2]:
-            element_locator = (By.CSS_SELECTOR, "#p_123\\/452045 > span > a > span")
-        elif brand == brands[3]:
-            element_locator = (By.CSS_SELECTOR, "#p_123\\/312482 > span > a > span")
-        elif brand == brands[4]:
-            element_locator = (By.CSS_SELECTOR, "#p_123\\/654399 > span > a > span")
+        brand_id = BRAND_FILTER_IDS.get(brand)
+        if brand_id is None:
+            raise KeyError(
+                f"등록 안 된 브랜드: {brand!r}. `BRAND_FILTER_IDS` 에 추가 필요."
+            )
+        element_locator = (
+            By.CSS_SELECTOR,
+            f"{BRAND_FILTER_CSS_PREFIX}{brand_id}{BRAND_FILTER_CSS_SUFFIX}",
+        )
     
             
         # 클릭할 요소의 CSS 셀렉터
@@ -454,7 +505,7 @@ def cosrx_description_to_json():
         for section in sections:
             try:
                 # 제목 (h4)와 내용 (span) 추출
-                time.sleep(0.2)  # 페이지 로드 안정성을 위해 짧은 대기
+                time.sleep(SCROLL_PAUSE_SEC)  # 페이지 로드 안정성을 위해 짧은 대기
                 title = section.find_element(By.CSS_SELECTOR, "h4").text.strip()
                 content = section.find_element(By.CSS_SELECTOR, ".visualRpdText").text.strip()
                 result[title] = content
@@ -528,7 +579,7 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
     
 
     try:
-        time.sleep(1.5)
+        time.sleep(NEXT_PAGE_LOAD_SEC)
         select_best_sellers()
         time.sleep(1)
 
@@ -553,7 +604,7 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
                 
                 # 새 창 열기
                 driver.execute_script("window.open(arguments[0], '_blank');", link.get_attribute("href"))
-                time.sleep(2)  # 페이지 로딩 대기
+                time.sleep(HEAVY_PAGE_LOAD_SEC)  # 페이지 로딩 대기
 
                 # 새 창으로 전환
                 driver.switch_to.window(driver.window_handles[-1])
@@ -578,7 +629,7 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
                 cnt = 0
                 while cnt < 1000:
                     time.sleep(0.5)
-                    wait_time = random.uniform(0.7,1)
+                    wait_time = random.uniform(*PAGE_LOAD_JITTER_RANGE)
                     time.sleep(wait_time)
 
                     if asin_skip:
@@ -783,7 +834,7 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
                                         try:
                                             
                                             while review_count < max_reviews:
-                                                wait_time = random.uniform(0.7, 1)
+                                                wait_time = random.uniform(*PAGE_LOAD_JITTER_RANGE)
                                                 time.sleep(wait_time)
                                                 try:
                                                     detail_reviews = driver.find_elements(By.CSS_SELECTOR, 'div[class="a-section celwidget"]')
@@ -882,7 +933,7 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
                 print("driver_close1")
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
-                time.sleep(2)  # 페이지 로딩 대기
+                time.sleep(HEAVY_PAGE_LOAD_SEC)  # 페이지 로딩 대기
 
             except Exception as e:
                 print(f"Error processing category {category_name}: {e}")
