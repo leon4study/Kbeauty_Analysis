@@ -169,6 +169,8 @@ data/
   - [12 — 추천 알고리즘 ver.1 → ver.4 진화 + 정량 검증](docs/refactor/12_tiktok_recommendation_evolution.md)
   - [13 — Amazon × TikTok 5 brand matching + 시계열 lag](docs/refactor/13_amazon_tiktok_brand_matching.md)
   - [14 — K-Premium 수치 변천 (8.43 → 4.76 ~ 5.10) 영구 기록](docs/refactor/14_kpremium_number_history.md)
+  - [16 — silver 단계 설계 + historical artifact 보존](docs/refactor/16_silver_artifact_origin.md)
+  - [17 — 2026-05 medallion 마무리 + data legacy + 온보딩 정리 (PR #5~#14 종합)](docs/refactor/17_2026_05_session_cleanup.md)
   - [EXPERIMENTS_PLAYBOOK](docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준
 - **파이프라인 설계 docs**:
   - [pipeline_overview](docs/pipeline_overview.md), [amazon_crawler](docs/amazon_crawler.md), [tiktok_crawler](docs/tiktok_crawler.md)
