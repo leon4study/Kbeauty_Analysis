@@ -82,9 +82,10 @@ from util.repo_paths import BRONZE_TIKTOK, SILVER_TIKTOK
 # bronze 파일명 → search_term 매핑.
 # 새 파일 추가 시 여기에 등록.
 _FILENAME_TO_SEARCH_TERM: dict[str, str] = {
-    "tiktok_search_cleanbeauty.csv": "clean_beauty",
+    "tiktok_search_cleanbeauty_v1.csv": "clean_beauty",
     "tiktok_search_cleanbeauty_v2_0124.csv": "clean_beauty",
-    "tiktokers_raw.csv": None,  # 영상 데이터 아님 — 변환 대상 제외
+    "tiktokers_raw.csv": None,  # 인플루언서 단위 데이터 — 변환 대상 제외
+    "tiktoker_videos_cleaned.xlsx": None,  # xlsx, notebook 04 labeling 입력 — 변환 대상 제외
 }
 
 # silver 고정 컬럼 순서
