@@ -59,9 +59,9 @@ BM25 score(query, document) =
 - *cosine similarity 기반* 이라 BM25 score 매트릭스로 바꾸기 쉬움
 - **권고**: 1 순위 적용 후보. ER% 추천 정밀도 향상 측정 가능 (정량 비교)
 
-### 3. `notebooks/lemmatized_full_pipeline.ipynb` (line 4462)
+### 3. `notebooks/amazon/03_amazon_topic_modeling.ipynb` (옛 `lemmatized_full_pipeline.ipynb` line 4462 의 분리본)
 
-**현재**: `# from sklearn.feature_extraction.text import TfidfVectorizer` — *주석 처리됨*. 과거 시도였으나 현재 LDA 토픽 모델로 대체.
+**현재**: `TfidfVectorizer` import 후 LDA 토픽 모델 보조에 사용. 옛 단일 노트북은 `notebooks/archive/lemmatized_full_pipeline.ipynb` 로 보존됨 (Phase 8 split).
 
 **BM25 적용 시 예상**:
 - 토픽 모델은 BoW (CountVectorizer) 기반이라 BM25 와 직접 비교 불가

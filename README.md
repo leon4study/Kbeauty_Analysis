@@ -67,7 +67,8 @@
        │                              │
        ▼                              ▼
   data/silver/amazon/           data/silver/tiktok/       ← src/pipelines/
-  (전처리 bridge)                (정제 통합본)               build_silver_tiktok.py
+  (전처리 bridge)                (정제 통합본)               build_silver_amazon.py
+                                                              build_silver_tiktok.py
        │                              │
        ▼                              ▼
   notebooks/amazon/             notebooks/tiktok/
@@ -119,18 +120,20 @@ notebooks/
     01_amazon_preprocessing.ipynb
     02_amazon_eda.ipynb
     03_amazon_topic_modeling.ipynb
-  tiktok/                  TikTok 분석 (8 노트북)
-  amazon_tiktok/           Amazon × TikTok 결합 분석 (7 노트북)
+  tiktok/                  TikTok 분석 (7 노트북, 01-07 실행 순서)
+  amazon_tiktok/           Amazon × TikTok 결합 (2 메인 + experiments/ 4)
   archive/                 분할 전 원본 보존 (lemmatized_full_pipeline 등)
 docs/
   refactor/                분석 깊이 영구 기록 (12~16)
   pipeline_overview.md     전체 파이프라인 개요
   amazon_crawler.md, ...   각 모듈 설계 docs
 data/
-  bronze/                  수집 원본 (amazon/ · tiktok/)
+  bronze/                  수집 원본 (amazon/ · tiktok/, README 포함)
   silver/                  정제 통합본 (amazon/ · tiktok/)
+  gold/                    최종 분석 결과 (amazon/lda_topics_overall.csv, tiktok/dashboards/)
   model/                   GraphRAG 인덱스 (LanceDB)
-  archive/                 재현 불가 artifact 보존
+  References/              참고 논문 PDF
+  archive/                 재현 불가 artifact 보존 (legacy intermediate / orphan outputs)
 ```
 
 ---
@@ -139,9 +142,9 @@ data/
 
 - **코드 모듈 카탈로그**: [`src/README.md`](src/README.md)
 - **노트북 카탈로그**:
-  - [`notebooks/amazon/`](notebooks/amazon/) — Amazon 분석 3단계 (01 전처리 → 02 EDA → 03 LDA)
-  - [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md) — TikTok 분석 8 노트북
-  - [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md) — Amazon × TikTok 결합 7 노트북
+  - [`notebooks/amazon/README.md`](notebooks/amazon/README.md) — Amazon 분석 3단계 (01 전처리 → 02 EDA → 03 LDA)
+  - [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md) — TikTok 분석 7 노트북 (01-07)
+  - [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md) — Amazon × TikTok 결합 (2 메인 + 4 experiments)
 - **추천 챗봇 실행**:
   - [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md) — 로컬 Ollama 변형 (비용 0)
   - [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) — OpenAI 변형 (정확도 보강)
