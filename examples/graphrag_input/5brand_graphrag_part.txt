@@ -1,0 +1,870 @@
+[
+  {
+    "brand": "COSRX",
+    "name": "Low pH Good Morning Gel Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Cocamidopropyl Betaine,Sodium Lauroyl Methyl Isethionate,Sodium Chloride,Polysorbate 20,Styrax Japonicus Branch/Fruit/Leaf Extract,Butylene Glycol,Saccharomyces Ferment,Cryptomeria Japonica Leaf Extract,Nelumbo Nucifera Leaf Extract,Pinus Palustris Leaf Extract,Ulmus Davidiana Root Extract,Oenothera Biennis Flower Extract,Pueraria Lobata Root Extract,Melaleuca Alternifolia Leaf Oil,Allantoin,Caprylyl Glycol,Ethylhexylglycerin,Betaine Salicylate,Citric Acid,Ethyl Hexanediol,1,2-Hexanediol,Trisodium Ethylenediamine Disuccinate,Sodium Benzoate,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Reduces Large Pores,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Relief Sun : Rice + Probiotics",
+    "type": "Sunscreen",
+    "ingridients": "Water,Oryza Sativa Extract 30%,Dibutyl Adipate,Propanediol,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Polymethylsilsesquioxane,Ethylhexyl Triazone,Niacinamide,Methylene Bis-Benzotriazolyl Tetramethylbutylphenol,Coco-Caprylate/Caprate,Caprylyl Methicone,Diethylhexyl Butamido Triazone,Glycerin,Butylene Glycol,Oryza Sativa Germ Extract,Camellia Sinensis Leaf Extract,Lactobacillus/Pumpkin Ferment Extract,Bacillus/Soybean Ferment Extract,Saccharum Officinarum Extract,Macrocystis Pyrifera Extract,Cocos Nucifera Fruit Extract,Panax Ginseng Root Extract,Monascus/Rice Ferment,Pentylene Glycol,Behenyl Alcohol,Poly C10-30 Alkyl Acrylate,Polyglyceryl-3 Methylglucose Distearate,Decyl Glucoside,Tromethamine,Carbomer,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,1,2-Hexanediol,Sodium Stearoyl Glutamate,Polyacrylate Crosspolymer-6,Ethylhexylglycerin,Adenosine,Xanthan Gum,Tocopherol,Lactobacillus/Rice Ferment,Aspergillus Ferment,Saccharomyces/Rice Ferment Filtrate",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Every Sun Day Moisturizing Sun SPF 50+ PA++++",
+    "type": "Sunscreen",
+    "ingridients": "Water,Butylene Glycol,Ethylhexyl Methoxycinnamate,Homosalate,Ethylhexyl Salicylate,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Polymethylsilsesquioxane,Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine,Glycerin,Dibutyl Adipate,Dipropylene Glycol,Niacinamide,Polysilicone-15,1,2-Hexanediol,Citrus Aurantium Bergamia Fruit Oil,Citrus Limon Peel Oil,Citrus Aurantium Dulcis Peel Oil,Citrus Aurantifolia Oil,Citrus Aurantium Dulcis Flower Oil,Citrus Nobilis Peel Oil,Lavandula Angustifolia Oil,Rosmarinus Officinalis Leaf Oil,Salvia Sclarea Oil,Pentylene Glycol,Silica,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Hydroxyacetophenone,Isohexadecane,Polysorbate 80,C12-20 Alkyl Glucoside,Acrylates Copolymer,Caprylyl Glycol,Tromethamine,Adenosine,Sorbitan Oleate,Ethylhexylglycerin,Caprylic/Capric Triglyceride,Hydrolyzed Glycosaminoglycans,Phospholipids,Ceramide NP,Cholesterol,Arginine,Phytosterols,C14-22 Alcohols,Disodium EDTA,Limonene,Linalool",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Anti-Aging,Acne Fighting,Brightening,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Every Sun Day??Sun Fluid SPF 50+",
+    "type": "Sunscreen",
+    "ingridients": "Water,Homosalate,Ethylhexyl Methoxycinnamate,Propanediol,Ethylhexyl Salicylate,Alcohol,Octocrylene,Butyl Methoxydibenzoylmethane,Benzotriazolyl Dodecyl P-Cresol,Pentylene Glycol,1,2-Hexanediol,Lavandula Angustifolia Oil,Silica,Dimethicone/Vinyl Dimethicone Crosspolymer,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Styrene/Acrylates Copolymer,Ethylhexylglycerin,Hydroxypropyl Methylcellulose Stearoxy Ether,Polyacrylate Crosspolymer-6,Butylene Glycol,BHA,T-Butyl Alcohol,Tocopherol",
+    "afterUse": "Brightening,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "BB Dis-A-Pore",
+    "type": "Day Moisturizer",
+    "ingridients": "Titanium/Titanium Dioxide 15.97%,Cyclopentasiloxane,Titanium Dioxide,Dimethicone/Vinyl Dimethicone Crosspolymer,Ethylhexyl Methoxycinnamate,Isododecane,Ethylhexyl Salicylate,Lauryl Peg-10 Tris(Trimethylsiloxy)Silylethyl Dimethicone,Dimethicone,Niacinamide,Methylpropanediol,Butylene Glycol Dicaprylate/Dicaprate,Ci 77492,Synthetic Fluorphlogopite,Disteardimonium Hectorite,Glycerin,Magnesium Sulfate,Isopropyl Palmitate,Hdi/Trimethylol Hexyllactone Crosspolymer,Triethoxycaprylylsilane,Dipentaerythrityl Hexahydroxystearate,Polyglyceryl-3 Diisostearate,Aluminum Hydroxide,Ci 77491,Caprylyl Glycol,Ci 77499,Glyceryl Caprylate,Trihydroxystearin,Ethylhexylglycerin,Pinus Sylvestris Leaf Oil,Citrus Aurantium Bergamia Fruit Oil,Silica,Adenosine,BHA,Tocopherol,Butylene Glycol,Alcohol,1,2-Hexanediol,Lecithin,Pistacia Lentiscus Gum,Hibiscus Esculentus Fruit Extract,Repagermanium",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Mugwort Gel Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Artemisia Princeps Extract,Water,Sodium C14-16 Olefin Sulfonate,Lauryl Hydroxysultaine,Glycerin,1,2-Hexanediol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Caprylyl Glycol,Sodium Methyl Cocoyl Taurate,Sodium Chloride,Tromethamine,Hexadecene,Tetradecene,Sodium Sulfate,Artemisia Vulgaris Oil,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Ocimum Sanctum Leaf Extract,Disodium EDTA,Curcuma Longa Root Extract,Dextrin,Theobroma Cacao Extract,Corallina Officinalis Extract",
+    "afterUse": "Drying,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Dermask??Water Jet Vital Hydra Solution",
+    "type": "Sheet Mask",
+    "ingridients": "Water,Glycerin,Butylene Glycol,Alcohol,Panthenol,Betaine,Xylitylglucoside,Anhydroxylitol,Xylitol,Hydrolyzed Hyaluronic Acid,Algae Extract,Laminaria Japonica Extract,Chlorphenesin,Hydroxyethylcellulose,Disodium EDTA,Xanthan Gum,Peg-60 Hydrogenated Castor Oil,Glycyrrhiza Glabra Root Extract,Zingiber Officinale Root Extract,Schisandra Chinensis Fruit Extract,Coptis Japonica Root Extract,Camellia Sinensis Leaf Extract,Caprylyl Glycol,1,2-Hexanediol,Dipotassium Glycyrrhizate,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Carbomer,Arginine,Citrus Grandis Seed Extract,Acorus Calamus Root Extract,Perilla Ocymoides Leaf Extract,Cyclopentasiloxane,Cyclohexasiloxane,Peg-10 Dimethicone/Vinyl Dimethicone Crosspolymer,Pelargonium Graveolens Flower Oil",
+    "afterUse": "Reduces Irritation,Rosacea"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Low pH Rice Face and Body Cleansing Bar",
+    "type": "Bath & Body",
+    "ingridients": "Sodium Cocoyl Isethionate,Zea Mays Starch,Water,Glycerin,Decyl Glucoside,Olea Europaea Fruit Oil,Cocos Nucifera Oil,Xanthan Gum,Citric Acid,Sesamum Indicum Seed Powder,Oryza Sativa Bran Extract,Butylene Glycol,1,2-Hexanediol,Caprylyl Glycol",
+    "afterUse": "Reduces Large Pores,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Cicapair Enzyme Cleansing Foam",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Glycerin,Sodium Cocoyl Isethionate,Glyceryl Stearate,Stearyl Alcohol,Coco-Betaine,Lauramidopropyl Betaine,Sodium Methyl Cocoyl Taurate,Sodium Chloride,Hydroxypropyl Starch Phosphate,Coco-Glucoside,Caprylyl Glycol,Citric Acid,Maltodextrin,Melia Azadirachta Leaf Extract,Disodium EDTA,Caramel,Eryngium Maritimum Callus Culture Filtrate,1,2-Hexanediol,Melia Azadirachta Flower Extract,Achillea Millefolium Oil,Houttuynia Cordata Extract,Ilex Aquifolium Leaf Extract,Butylene Glycol,Quillaja Saponaria Bark Extract,Hedera Helix Extract,Streptococcus Thermophilus Ferment,Aspergillus Ferment,Triticum Aestivum Seed Extract,Dna,Gluconolactone,Panthenol,Ethylhexylglycerin,Moringa Oleifera Seed Extract,Lipase,Protease,Dipropylene Glycol,Calcium Chloride,Hydrogenated Lecithin,Madecassoside,Magnesium Sulfate,Asiatic Acid,Asiaticoside,Madecassic Acid,Centella Asiatica Extract",
+    "afterUse": "Reduces Irritation,Reduces Large Pores,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "CERAMIDIN??LIQUID",
+    "type": "Toner",
+    "ingridients": "Water,Dipropylene Glycol,Alcohol,Betaine,Propanediol,Glycosyl Trehalose,1,2-Hexanediol,Erythritol,Pentylene Glycol,Glycerin,Hydrogenated Starch Hydrolysate,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Triethylhexanoin,Diphenyl Dimethicone,Panthenol,Butylene Glycol,Hydrogenated Lecithin,Centella Asiatica Extract,Elettaria Cardamomum Fruit Extract,Melia Azadirachta Leaf Extract,Theobroma Cacao Seed Extract,Amaranthus Caudatus Seed Extract,Ulmus Davidiana Root Extract,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Corallina Officinalis Extract,Pyracantha Fortuneana Fruit Extract,Carbomer,Cellulose Gum,Sucrose Distearate,Dipotassium Glycyrrhizate,Ethylhexylglycerin,Methylpropanediol,Disodium EDTA,Glyceryl Polymethacrylate,Citrus Aurantium Bergamia Fruit Oil,C12-14 Pareth-12,Polyglyceryl-10 Myristate,Pelargonium Graveolens Flower Oil,Dextrin,Glyceryl Stearate,Sodium Hyaluronate,Salvia Officinalis Oil,Pogostemon Cablin Leaf Oil,Cholesterol,Ceramide EOP,Ceramide AP,Ceramide As,Ceramide Ns",
+    "afterUse": "Redness Reducing,Reduces Irritation,Rosacea"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Ceramidin??Skin Barrier Serum Toner",
+    "type": "Toner",
+    "ingridients": "Water,Dipropylene Glycol,Betaine,Propanediol,Alcohol Denat.,Glycosyl Trehalose,Glycerin,1,2-Hexanediol,Panthenol,Pentylene Glycol,Erythritol,Hydrogenated Starch Hydrolysate,Triethylhexanoin,Diphenyl Dimethicone,Polyglyceryl-10 Myristate,Ceramide NP,Sucrose Distearate,Ethylhexylglycerin,Sodium Hyaluronate,Theobroma Cacao Seed Extract,Pelargonium Graveolens Flower Oil,Olea Europaea Fruit Oil,Citrus Aurantium Bergamia Fruit Oil,C12-14 Pareth-12,Hydrogenated Lecithin,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Carbomer,Glyceryl Polymethacrylate,Glyceryl Stearate,Dextrin,Salvia Officinalis Oil,Citronellol,Disodium EDTA,Ci 19140",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Re:fresh Cleansing Bar",
+    "type": "Face Cleanser",
+    "ingridients": "Sodium Cocoyl Isethionate,Zea Mays Starch,Water,Glycerin,Olea Europaea Fruit Oil,Coconut Acid,Hydroxypropyl Starch Phosphate,Sodium Isethionate,Coco-Betaine,Sodium Cocoyl Apple Amino Acids,Methylpropanediol,Charcoal Powder,Propanediol,Sodium Chloride,Hexylene Glycol,Glyceryl Caprylate,Caprylhydroxamic Acid,Laminaria Japonica Extract,Tetrasodium Glutamate Diacetate",
+    "afterUse": "Drying,Acne Trigger"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Full Fit Propolis Nourishing Magnet Sheet Mask",
+    "type": "Sheet Mask",
+    "ingridients": "Water,Dipropylene Glycol,Glycerin,Glycereth-26,Alcohol,Butylene Glycol,Trehalose,Panthenol,Xanthan Gum,Paeonia Suffruticosa Root Extract,Centella Asiatica Extract,1,2-Hexanediol,Polyglyceryl-10 Laurate,Chamomilla Recutita Flower Extract,Glyceryl Caprylate,Ethylhexylglycerin,Disodium EDTA,Pimpinella Anisum Fruit Extract,Pantolactone,Royal Jelly Extract,Diethylhexyl Sodium Sulfosuccinate,Vanilla Planifolia Fruit Extract,Camellia Sinensis Leaf Extract,Honey Extract,Rosa Centifolia Flower Extract,Pyrus Communis Fruit Extract,Propolis Extract,Cocos Nucifera Oil,Rose Extract,Fragaria Chiloensis Fruit Extract",
+    "afterUse": "Redness Reducing,Reduces Irritation,Rosacea"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Rice Mask",
+    "type": "Wet Mask",
+    "ingridients": "Water,Glycerin,Dipropylene Glycol,Oryza Sativa Powder,Cetearyl Ethylhexanoate,Oryza Sativa Hull Powder,Beeswax,1,2-Hexanediol,Stearic Acid,Butyrospermum Parkii Butter,Betaine,Cetyl Alcohol,Hydrogenated Polydecene,Saccharomyces Ferment Filtrate,Dimethicone,Cyclopentasiloxane,Phenoxyethanol,Sorbitan Stearate,Glyceryl Stearate,Methylpropanediol,Sodium Polyacrylate,Xanthan Gum,Peg-100 Stearate,Allantoin,Parfum,Oryza Sativa Bran Extract,Oryza Sativa Extract,Tocopheryl Acetate,Algae Extract,Eclipta Prostrata Leaf Extract,Avena Sativa Kernel Extract,Cynara Scolymus Leaf Extract,Pteris Multifida Extract,Amaranthus Caudatus Seed Extract,Ulmus Davidiana Root Extract,Butylene Glycol,Magnesium Aluminum Silicate,Ethylhexylglycerin,Disodium EDTA,Hydrogenated Lecithin,Polyquaternium-51,Hydrolyzed Hyaluronic Acid,Beta-Glucan,Hydrogenated Polyisobutene,Squalane,Alcohol,Argania Spinosa Kernel Oil,Isononyl Isononanoate,Polyglyceryl-10 Stearate,Cetearyl Alcohol,Fructooligosaccharides,Polyglyceryl-2 Dipolyhydroxystearate,Lecithin,Inulin Lauryl Carbamate,Disodium Stearoyl Glutamate",
+    "afterUse": "Brightening,May Worsen Oily Skin,Rosacea"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Cica Creamy Foam Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Glycerin,Myristic Acid,Palmitic Acid,Stearic Acid,Lauric Acid,Potassium Hydroxide,Glyceryl Stearate,1,2-Hexanediol,Polyquaternium-7,Ethylhexylglycerin,Citrus Limon Fruit Extract,Citrus Nobilis Oil,Disodium EDTA,Butylene Glycol,Eucalyptus Globulus Leaf Oil,Lavandula Angustifolia Oil,Pinus Palustris Oil,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Sodium Benzoate,Coccinia Indica Fruit Extract,Amber Powder,Solanum Melongena Fruit Extract,Ocimum Sanctum Leaf Extract,Curcuma Longa Root Extract,Centella Asiatica Leaf Extract,Corallina Officinalis Extract,Moringa Oleifera Seed Oil,Hydrogenated Phosphatidylcholine,Caprylic/Capric Triglyceride,Sucrose Stearate,Centella Asiatica Extract,Cetearyl Alcohol,Centella Asiatica Root Extract,Asiatic Acid,Asiaticoside,Madecassic Acid,Madecassoside",
+    "afterUse": "Redness Reducing,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Teatreement??Moisturizer",
+    "type": "General Moisturizer",
+    "ingridients": "Melaleuca Alternifolia Leaf Extract,Glycerin,Ethylhexyl Stearate,Methylpropanediol,Niacinamide,Trehalose,Methyl Trimethicone,Cetearyl Glucoside,Sorbitan Olivate,1,2-Hexanediol,Water,Cetearyl Alcohol,Xanthan Gum,Centella Asiatica Extract,Ficus Carica Fruit Extract,Eclipta Prostrata Leaf Extract,Laminaria Japonica Extract,Gloiopeltis Furcata Extract,Allantoin,Aloe Barbadensis Leaf Extract,Anthemis Nobilis Flower Extract,Butylene Glycol,Camellia Sinensis Leaf Extract,Carthamus Tinctorius Seed Oil,Ethylhexylglycerin,Glycyrrhiza Glabra Rhizome/Root,Hamamelis Virginiana Extract,Melaleuca Alternifolia Leaf Oil,Amaranthus Caudatus Seed Extract,Ulmus Davidiana Root Extract,Cinnamomum Zeylanicum Bark Extract,Pinus Pinaster Bark Extract,Hydrogenated Lecithin,Sodium Polyacryloyldimethyl Taurate,Sorbitan Stearate,Caprylic/Capric Triglyceride,Glycine Soja Sterols,Linoleic Acid,Phospholipids,Disodium EDTA,Fructooligosaccharides,Salicylic Acid,Beta-Glucan,Hydrolyzed Hyaluronic Acid,Capryloyl Glycine,Ceramide NP,Hexylene Glycol,Camphor,Sarcosine,4-Terpineol,Methyl Methacrylate Crosspolymer",
+    "afterUse": "Hydrating,Good For Oily Skin,Redness Reducing,Reduces Large Pores,Acne Fighting,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Mugwort Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Artemisia Princeps Extract,Propanediol,Cyclopentasiloxane,Glycerin,Cetyl Ethylhexanoate,Cyclohexasiloxane,Stearic Acid,Butyrospermum Parkii Butter,Butylene Glycol,Hydrogenated Lecithin,Arachidyl Alcohol,Arachidyl Glucoside,Pinus Palustris Leaf Extract,Ulmus Davidiana Root Extract,Oenothera Biennis Flower Extract,Water,1,2-Hexanediol,Caprylhydroxamic Acid,C14-28 Alkyl Acid,Stearyl Alcohol,Behenyl Alcohol,Polyglyceryl-2 Stearate,Glyceryl Stearate,Panthenol,Dipotassium Glycyrrhizate,Allantoin,Boswellia Serrata Resin Extract,Ammonium Acryloyldimethyltaurate/Vp Copolymer,2-Hydroxyethyl Acrylate,Dimethiconol,Saccharomyces Lysate,Lactobacillus,Disodium EDTA,Polyglutamic Acid,Pueraria Lobata Root Extract,Artemisia Vulgaris Oil",
+    "afterUse": "Reduces Irritation,May Worsen Oily Skin"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Rice Sunscreen",
+    "type": "Sunscreen",
+    "ingridients": "Oryza Sativa Extract,Zinc Oxide,Cyclohexasiloxane,Butyloctyl Salicylate,Propanediol,Propylheptyl Caprylate,Isododecane,Polyglyceryl-3 Polydimethylsiloxyethyl Dimethicone,Methyl Trimethicone,Caprylyl Methicone,Methyl Methacrylate Crosspolymer,Water,Polymethylsilsesquioxane,Disteardimonium Hectorite,Magnesium Sulfate,Triethoxycaprylylsilane,1,2-Hexanediol,Polyglyceryl-2 Dipolyhydroxystearate,Lauryl Polyglyceryl-3 Polydimethylsiloxyethyl Dimethicone,Parfum,Glyceryl Caprylate,Caprylyl Glycol,Ethylhexylglycerin,Sodium Hyaluronate,Tocopherol",
+    "afterUse": "Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Sunny Snail Tone Up Cream",
+    "type": "Sunscreen",
+    "ingridients": "Water,Butylene Glycol,Ethylhexyl Methoxycinnamate,Cyclopentasiloxane,Ci 77891,Glycerin,Ethylhexyl Salicylate,Cetyl Ethylhexanoate,Niacinamide,Octyldodecanol,1,2-Hexanediol,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Triceteareth-4 Phosphate,Glycol Stearate,Cetearyl Alcohol,Glyceryl Stearate,Peg-100 Stearate,Peg-2 Stearate,Potassium Cetyl Phosphate,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Stearic Acid,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Palmitic Acid,Peg-10 Dimethicone,Snail Secretion Filtrate,Sodium Polyacrylate,Aluminum Hydroxide,Synthetic Fluorphlogopite,Isohexadecane,Ethylhexyl Stearate,Caprylyl Glycol,Polysorbate 80,Triethoxycaprylylsilane,Ethylhexylglycerin,Sorbitan Oleate,Disodium EDTA,Trideceth-6,Myristic Acid,Arachidic Acid,Lauric Acid,Oleic Acid",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,May Worsen Oily Skin,Acne Trigger,Irritating,Rosacea"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Ceramidin Cream Mist",
+    "type": "Facial Treatment",
+    "ingridients": "Water,Triethylhexanoin,Hydrogenated Polydecene,Methylpropanediol,Dipropylene Glycol,1,2-Hexanediol,Hydrogenated Lecithin,Butylene Glycol,Trehalose,Cellulose Gum,Ethylhexylglycerin,Polyglyceryl-10 Myristate,Xylitylglucoside,Elaeis Guineensis Oil,Anhydroxylitol,Citrus Aurantium Bergamia Fruit Oil,Pelargonium Graveolens Flower Oil,Xylitol,Ceramide NP,Ulmus Davidiana Root Extract,Amaranthus Caudatus Seed Extract,Sucrose Distearate,Glucose,Salvia Officinalis Oil,Glyceryl Stearate,Hamamelis Virginiana Extract,Pogostemon Cablin Leaf Oil,Rhodiola Sachalinensis Extract,Ceramide As,Cholesterol,Ceramide Ns,Ceramide AP",
+    "afterUse": "Redness Reducing,Anti-Aging"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Oat-in Intense Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Avena Sativa Seed Water,Glycerin,Caprylic Acid,Avena Sativa Kernel Oil,Butylene Glycol,1,2-Hexanediol,Glyceryl Stearate,Polyglyceryl-2 Stearate,Water,Stearyl Alcohol,Arginine,Ethylhexylglycerin,Avena Sativa Kernel Flour,Avena Sativa Kernel Extract",
+    "afterUse": ""
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Ceramidin Lipair",
+    "type": "Lip Moisturizer",
+    "ingridients": "Phytosteryl/Isostearyl/Cetyl/Stearyl/Behenyl Dimer Dilinoleate,Pentaerythrityl Tetraethylhexanoate,Diisostearyl Malate,Hydrogenated Polyisobutene,Ethylhexyl Stearate,Ceresin,Methyl Hydrogenated Rosinate,Tribehenin,Silica Dimethyl Silylate,Polymethylsilsesquioxane,Vp/Hexadecene Copolymer,Ethylene/Propylene/Styrene Copolymer,Butylene/Ethylene/Styrene Copolymer,Ceramide NP,Citrus Aurantium Bergamia Fruit Oil,Dehydroacetic Acid,Hippophae Rhamnoides Oil,Pelargonium Graveolens Flower Oil,Salvia Officinalis Oil,Pogostemon Cablin Leaf Oil,Water,Dipropylene Glycol,Hydrogenated Lecithin,Cetyl-Pg Hydroxyethyl Palmitamide,Propanediol,Glyceryl Stearate,Sodium Hyaluronate Crosspolymer,Ceramide Ns,Hydrolyzed Glycosaminoglycans,Glycerin,Sodium Hyaluronate,Ceramide AP,Ceramide As,Benzyl Glycol,Hydrolyzed Hyaluronic Acid,Cholesterol,Ethylhexylglycerin,Ceramide EOP,Hyaluronic Acid,Raspberry Ketone",
+    "afterUse": "Redness Reducing,Anti-Aging,Brightening,Acne Trigger"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Re:store Cleansing Bar",
+    "type": "Face Cleanser",
+    "ingridients": "Avena Sativa Kernel Meal,Zea Mays Starch,Prunus Amygdalus Dulcis Oil,Glycerin,Coconut Acid,Water,Hydroxypropyl Starch Phosphate,Sodium Isethionate,Coco-Betaine,Sodium Cocoyl Apple Amino Acids,Propanediol,Methylpropanediol,Avena Sativa Meal Extract,Avena Sativa Kernel Oil,Ceramide NP,Avena Sativa Leaf Extract,Butylene Glycol,Sodium Chloride,Octyldodecanol,Hexylene Glycol,Glyceryl Caprylate,Caprylhydroxamic Acid,Hydrogenated Lecithin,1,2-Hexanediol,Tetrasodium Glutamate Diacetate,Caprylyl Glycol",
+    "afterUse": "Redness Reducing,Anti-Aging,Drying,Acne Trigger"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Full Fit Propolis Light Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Propolis Extract,Butylene Glycol,Glycerin,Caprylic/Capric Triglyceride,Helianthus Annuus Seed Oil,1,2-Hexanediol,Honey Extract,Royal Jelly Extract,2-Hydroxyethyl Acrylate,Cassia Obtusifolia Seed Extract,Cetearyl Olivate,Beeswax,Cetearyl Alcohol,Sorbitan Olivate,Allantoin,Arginine,Carbomer,Xanthan Gum",
+    "afterUse": "May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "TEATREEMENT??TONER",
+    "type": "Toner",
+    "ingridients": "Anthemis Nobilis Flower Extract,Camellia Sinensis Leaf Extract,Glycyrrhiza Glabra Rhizome/Root,Hamamelis Virginiana Extract,Sodium Citrate,Cinnamomum Zeylanicum Bark Extract,Pinus Pinaster Bark Extract,Melaleuca Alternifolia Leaf Oil,Ethylhexylglycerin,Citric Acid,Disodium EDTA,Hydrogenated Lecithin,Capryloyl Glycine,Hexylene Glycol,Octyldodeceth-16,Allantoin,Sarcosine,Ceramide NP,Camphor,Carthamus Tinctorius Seed Oil,1,2-Hexanediol,Silica,Glycine Soja Sterols,Linoleic Acid,Phospholipids,4-Terpineol,Methyl Methacrylate Crosspolymer,Salicylic Acid",
+    "afterUse": "Hydrating,Good For Oily Skin,Redness Reducing,Reduces Large Pores,Anti-Aging,Acne Fighting,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Honey Lip Balm",
+    "type": "Lip Moisturizer",
+    "ingridients": "Diisostearyl Malate,Dipentaerythrityl Hexa C5-9 Acid Esters,Honey 10%,Cyclopentasiloxane,Beeswax,Water,Caprylic/Capric Triglyceride,Microcrystalline Wax,Glycerin,Hydrogenated Polydecene,Dimethicone,Dimethicone/Peg-10/15 Crosspolymer,Cetyl Peg/Ppg-10/1 Dimethicone,Peg/Ppg-18/18 Dimethicone,Hdi/Trimethylol Hexyllactone Crosspolymer,1,2-Hexanediol,Caprylyl Glycol",
+    "afterUse": "Scar Healing,May Worsen Oily Skin"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Mugwort Spot Gel",
+    "type": "Facial Treatment",
+    "ingridients": "Artemisia Princeps Extract 90%,Alcohol Denat.,1,2-Hexanediol,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Peg-60 Hydrogenated Castor Oil,Water,Methylpropanediol,Butylene Glycol,Salicylic Acid,Artemisia Vulgaris Oil,Pueraria Lobata Root Extract,Pinus Palustris Leaf Extract,Ulmus Davidiana Root Extract,Oenothera Biennis Flower Extract,Cordyceps Sinensis Extract,Potassium Hydroxide",
+    "afterUse": "Good For Oily Skin,Reduces Large Pores,Acne Fighting,Brightening,Drying,Irritating,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Vital Hydra Solution Biome Eye Cream",
+    "type": "Eye Moisturizer",
+    "ingridients": "Water,Glycerin,Ethylhexyl Palmitate,Propanediol,Streptococcus Thermophilus Ferment,Pentaerythrityl Tetraethylhexanoate,Cetearyl Alcohol,Methyl Trimethicone,Niacinamide,Pentylene Glycol,Bis-Diglyceryl Polyacyladipate-2,Butylene Glycol,1,2-Hexanediol,C12-16 Alcohols,Tranexamic Acid,Cetearyl Olivate,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Arachidyl Alcohol,Hydrogenated Vegetable Oil,Palmitic Acid,Sorbitan Olivate,Dna,Hydrogenated Lecithin,Behenyl Alcohol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Arachidyl Glucoside,Tromethamine,Sodium Hyaluronate,Hydrolyzed Hyaluronic Acid,Ethylhexylglycerin,Aspergillus/Glucose/Soybean/Starch Ferment Filtrate,Dipotassium Glycyrrhizate,Adenosine,Melia Azadirachta Flower Extract,Disodium EDTA,Melia Azadirachta Leaf Extract,Glucose,Hydrolyzed Hibiscus Esculentus Extract,Lupinus Albus Seed Extract,Moringa Oleifera Seed Extract,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Glycine,Proline,Glyceryl Glucoside,Dextrin,Theobroma Cacao Seed Extract,Citrus Aurantium Bergamia Fruit Oil,Fructose,Parfum,Limonene,Corallina Officinalis Extract,Hyaluronic Acid,Linoleic Acid,Tocopherol,Ascorbic Acid",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Cicapair??Tiger Grass Color Correcting Treatment SPF 30",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Centella Asiatica Leaf Water,Isononyl Isononanoate,Caprylic Acid,Isotridecyl Isononanoate,Butylene Glycol,Methyl Methacrylate Crosspolymer,Beeswax,Glycerin,Niacinamide,Polymethylsilsesquioxane,Panthenol,Ci 77491,Ci 77492,Polyglyceryl-4 Diisostearate/Polyhydroxystearate/Sebacate,Aluminum Hydroxide,Disteardimonium Hectorite,Sodium Benzoate,Chromium Oxide Greens,Potassium Sorbate,Fragaria Vesca Leaf Extract,Disodium EDTA,Alcohol,Asiaticoside,Adenosine,Triethoxycaprylylsilane,Lavandula Angustifolia Oil,Asiatic Acid,Madecassic Acid,Rosmarinus Officinalis Leaf Oil,Ceramide Ns,Anthemis Nobilis Flower Oil,Houttuynia Cordata Extract,Centella Asiatica Extract,Gentiana Lutea Root Extract,Artemisia Absinthium Extract,Achillea Millefolium Extract,Arnica Montana Flower Extract,Aniba Rosodora Wood Oil,Madecassoside,Centella Asiatica Meristem Cell Culture,Xanthan Gum,Titanium Dioxide,Zinc Oxide,Methylpropanediol,Bis-Hydroxyethoxypropyl Dimethicone,Butyloctyl Salicylate,Lauryl Polyglyceryl-3 Polydimethylsiloxyethyl Dimethicone,Magnesium Sulfate,Caprylyl Glycol,Synthetic Fluorphlogopite,Glyceryl Caprylate,Zein,Ethylhexylglycerin,Citrus Paradisi Peel Oil,Silica Dimethyl Silylate,Zea Mays Starch,Helianthus Annuus Seed Oil,Hydrogenated Lecithin,Tocopherol,Dipotassium Phosphate,Sodium Chloride,Calcium Stearate,Gossypium Herbaceum Extract,Anastatica Hierochuntica Extract,Pentylene Glycol,Magnesium Aspartate,Zinc Gluconate,Lecithin,Brassica Campestris Sterols,Leuconostoc Ferment Filtrate,Sucrose Laurate,Polyglyceryl-2 Caprate,Phenoxyethanol,Gluconolactone,Lysolecithin,Ceramide NP,Copper Gluconate,Sodium Ascorbyl Phosphate",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating,Rosacea"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Cicapair Tiger Grass Calming Gel Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Butylene Glycol,Glycerin,Niacinamide,Caprylyl Methicone,Pentylene Glycol,1,2-Hexanediol,Eryngium Maritimum Callus Culture Filtrate,Cetearyl Olivate,Houttuynia Cordata Extract,Hydrogenated Polydecene,Ilex Aquifolium Leaf Extract,Sorbitan Olivate,Dimethicone/Vinyl Dimethicone Crosspolymer,Streptococcus Thermophilus Ferment,Achillea Millefolium Oil,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Hydroxyacetophenone,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Carbomer,Tromethamine,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Adenosine,Dna,Lavandula Angustifolia Oil,Disodium EDTA,Silica,Coccinia Indica Fruit Extract,Citrus Aurantium Bergamia Fruit Oil,Hydrolyzed Hibiscus Esculentus Extract,Lupinus Albus Seed Extract,Moringa Oleifera Seed Extract,Panthenol,Hedera Helix Extract,Amber Powder,Solanum Melongena Fruit Extract,Ethylhexylglycerin,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Corallina Officinalis Extract,Moringa Oleifera Seed Oil,Madecassoside,Calcium Chloride,Asiatic Acid,Asiaticoside,Magnesium Sulfate,Madecassic Acid,Centella Asiatica Extract",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Licorice Clear Pad",
+    "type": "Toner",
+    "ingridients": "Glycyrrhiza Uralensis Root Extract,Butylene Glycol,Glycerin,1,2-Hexanediol,Allantoin,Panthenol,Arginine,Polyglyceryl-10 Laurate,Polyglyceryl-10 Myristate,Hydrolyzed Sodium Hyaluronate,Ectoin,Glycyrrhizic Acid,Lactobionic Acid,Asiaticoside,Asiatic Acid,Madecassic Acid,Prunus Armeniaca Kernel Oil,Madecassoside,Pogostemon Cablin Leaf Oil,Juniperus Communis Fruit Oil,Amyris Balsamifera Bark Oil,Citrus Nobilis Peel Oil,Citrus Paradisi Peel Oil,Betaine Salicylate,Piper Nigrum Fruit Oil,Vetiveria Zizanoides Root Oil",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "COSRX",
+    "name": "The Hyaluronic Acid 3 Serum",
+    "type": "Serum",
+    "ingridients": "Water,Butylene Glycol,Propanediol,Glycerin,Sodium Hyaluronate 3%,Pentylene Glycol,1,2-Hexanediol,Diethoxyethyl Succinate,Sodium Polyacryloyldimethyl Taurate,Betaine,Xanthan Gum,Dimethicone,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Sodium PCA,Sodium Lactate,PCA,Glyceryl Acrylate/Acrylic Acid Copolymer,Hydrogenated Lecithin,Ethylhexylglycerin,Serine,Alanine,Glycine,Sodium Phytate,Sorbitan Isostearate,Pvm/Ma Copolymer,Glutamic Acid,Citric Acid,Lysine Hcl,Threonine,Arginine,Sodium Methyl Stearoyl Taurate,Proline,Ceramide NP,Cholesterol,Caprylic/Capric Triglyceride,Phytosphingosine,Stearic Acid,Oleic Acid,Alcohol,Tocopherol,Lactic Acid,Caprylyl Glycol,Caprylhydroxamic Acid",
+    "afterUse": "Hydrating,Redness Reducing,Reduces Large Pores,Anti-Aging,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Beet Purifying Mask",
+    "type": "Wet Mask",
+    "ingridients": "Water,Kaolin,Dipropylene Glycol,Propanediol,Cetyl Alcohol,Cellulose,Caprylic/Capric Triglyceride,1,2-Hexanediol,Arachidyl Alcohol,Glyceryl Stearate,Isononyl Isononanoate,Palmitic Acid,Beta Vulgaris Root Powder,Stearic Acid,Behenyl Alcohol,Arachidyl Glucoside,Bentonite,Cocos Nucifera Shell Powder,Vitis Vinifera Seed Powder,Hydroxyacetophenone,Polyacrylate-13,Xanthan Gum,Hydrogenated Polyisobutene,Potassium Cetyl Phosphate,Ethylhexylglycerin,Parfum,Disodium EDTA,Ci 77491,Polyglyceryl-10 Laurate,Ethylhexyl Palmitate,Myristic Acid,Sorbitan Isostearate,Glucose,Panthenol,Beta Vulgaris Root Extract,Sucrose,Tocopherol,Citric Acid,Gluconolactone",
+    "afterUse": "Reduces Irritation,Brightening,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Advanced Snail Mucin Power Sheet Mask",
+    "type": "Sheet Mask",
+    "ingridients": "Snail Secretion Filtrate,Betaine,Caprylic/Capric Triglyceride,Cetearyl Olivate,Sorbitan Olivate,Sodium Hyaluronate,Cetearyl Alcohol,Stearic Acid,Arginine,Dimethicone,Carbomer,Panthenol,Allantoin,Sodium Polyacrylate,Xanthan Gum,Ethyl Hexanediol,Adenosine,Phenoxyethanol",
+    "afterUse": "Redness Reducing,Reduces Irritation,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "PEPTIDIN??RADIANCE SERUM WITH ENERGY PEPTIDES",
+    "type": "Serum",
+    "ingridients": "Water,Pentylene Glycol,Glycerin,Methyl Gluceth-20,Alcohol,Glyceryl Polymethacrylate,Niacinamide,Polyglycerin-3,Methylpropanediol,Prunus Persica Flower Extract,Prunus Persica Leaf Extract,Algae Extract,Eclipta Prostrata Leaf Extract,Octyldodeceth-16,Polyglyceryl-10 Laurate,Beta-Glucan,Camellia Japonica Flower Extract,Avena Sativa Kernel Extract,Cynara Scolymus Leaf Extract,Pteris Multifida Extract,Rhododendron Ferrugineum Extract,Leucojum Aestivum Bulb Extract,Ethylhexylglycerin,Adenosine,Fructooligosaccharides,Hydrogenated Lecithin,Citrus Aurantium Bergamia Fruit Oil,Polyquaternium-51,Sodium Hyaluronate,Xanthan Gum,Acrylates Copolymer,Tromethamine,Butylene Glycol,Propanediol,1,2-Hexanediol,Hydrolyzed Hyaluronic Acid,Lavandula Angustifolia Oil,Cholesterol,Cyanocobalamin,Caprylyl Glycol,Glycine,Acetyl Glutamine,Dipalmitoyl Hydroxyproline,Sodium Cocoyl Alaninate,Serine,Glutamic Acid,Aspartic Acid,Leucine,Alanine,Lysine,Arginine,Tyrosine,Phenylalanine,Proline,Threonine,Valine,Isoleucine,Histidine,Cysteine,Methionine,Acetyl Hexapeptide-8,Copper Tripeptide-1,Hexapeptide-9,Nonapeptide-1,Palmitoyl Pentapeptide-4,Palmitoyl Tetrapeptide-7,Palmitoyl Tripeptide-1,Tripeptide-1",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,Rosacea"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Ginseng Moist Sun Serum SPF 50+ PA++++",
+    "type": "Sunscreen",
+    "ingridients": "Water,Panax Ginseng Root Extract,Dibutyl Adipate,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine,Alcohol,Acrylates Copolymer,Butyloctyl Salicylate,C12-15 Alkyl Benzoate,Ethylhexyl Triazone,Niacinamide,Phenethyl Benzoate,Panax Ginseng Berry Extract,Panax Ginseng Extract,Panax Ginseng Leaf/Stem Extract,Silica,Methylpropanediol,Olea Europaea Fruit Oil,Amyris Balsamifera Bark Oil,Angelica Archangelica Root Oil,Citrus Aurantium Leaf Oil,Lantana Camara Leaf Water,Ferula Galbaniflua Resin Oil,Jasminum Officinale Oil,Panax Ginseng Root,Avena Sativa Kernel Extract,Isoamyl P-Methoxycinnamate,Polysilicone-15,Polymethylsilsesquioxane,1,2-Hexanediol,Dibutyl Lauroyl Glutamide,Pentylene Glycol,Dibutyl Ethylhexanoyl Glutamide,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Sodium Acrylates Crosspolymer-2,Sodium Polyacryloyldimethyl Taurate,C30-45 Alkyldimethylsilyl Polypropylsilsesquioxane,Hydroxyacetophenone,Adenosine,Glycerin,Butylene Glycol,Ethyl Hexanediol,Tocopherol,Ethylhexylglycerin,Xanthan Gum,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Scar Healing,Acne Fighting,Brightening,Rosacea,Eczema"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Pure Fit Cica Cream Intense",
+    "type": "General Moisturizer",
+    "ingridients": "Centella Asiatica Extract,Centella Asiatica Leaf Extract,Centella Asiatica Root Extract,Butylene Glycol,Cetearyl Alcohol,Helianthus Annuus Seed Oil,Caprylic/Capric Triglyceride,Glycerin,Cetearyl Olivate,1,2-Hexanediol,Sorbitan Olivate,Macadamia Ternifolia Seed Oil,Panthenol,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Ethylhexylglycerin,Beeswax,Arginine,Carbomer,Asiaticoside,Madecassic Acid,Asiatic Acid,Centella Asiatica Oil,Madecassoside,Allantoin,Sodium Hyaluronate,Glycine Soja Oil,Water,Pinus Pinaster Bark Extract",
+    "afterUse": "Redness Reducing,Reduces Irritation,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "PURITO",
+    "name": "From Green Deep Foaming Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Sodium Cocoyl Isethionate,Glycerin,Sodium Methyl Cocoyl Taurate,Butylene Glycol,Coco-Betaine,Potassium Cocoyl Glycinate,Potassium Benzoate,Sodium Chloride,Polyquaternium-67,Potassium Cocoate,Centella Asiatica Extract,Citric Acid,Camellia Sinensis Leaf Extract,Glycyrrhiza Glabra Root Extract,Agrimonia Eupatoria Extract,Disodium EDTA,Houttuynia Cordata Extract,Perilla Frutescens Leaf Extract,Sodium Acetate",
+    "afterUse": "Redness Reducing,Reduces Large Pores,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Matte Sun Stick: Mugwort + Camelia SPF 50 PA++++",
+    "type": "Sunscreen",
+    "ingridients": "Methyl Methacrylate Crosspolymer,Synthetic Wax,Dibutyl Adipate,Coco-Caprylate/Caprate,Isopropyl Palmitate,Caprylyl Methicone,Caprylyl Trimethicone,Ethylhexyl Palmitate,Silica,Vinyl Dimethicone/Methicone Silsesquioxane Crosspolymer,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine,Boron Nitride,Butyloctyl Salicylate,Ethylhexyl Triazone,Microcrystalline Wax,Polysilicone-15,Vinyl Dimethicone,Camellia Japonica Seed Oil,Polyglyceryl-4 Diisostearate/Polyhydroxystearate/Sebacate,Curcuma Longa Root Extract,Melia Azadirachta Flower Extract,Melia Azadirachta Leaf Extract,Corallina Officinalis Extract,Melia Azadirachta Bark Extract,Ocimum Sanctum Leaf Extract,Moringa Oleifera Seed Oil,Coccinia Indica Fruit Extract,Solanum Melongena Fruit Extract,Amber Powder,Water,Aloe Barbadensis Flower Extract,Simmondsia Chinensis Seed Oil,1,2-Hexanediol,Artemisia Capillaris Extract,Camellia Sinensis Seed Oil,Hyaluronic Acid,Panthenol,Butylene Glycol,Propanediol,Bambusa Vulgaris Extract,Camellia Sinensis Leaf Extract,Glycerin,Methylpropanediol,Centella Asiatica Extract,Morinda Citrifolia Extract,Vigna Radiata Seed Extract,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Skin Texture,Anti-Aging,Scar Healing,Brightening,May Worsen Oily Skin,Acne Trigger,Irritating,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Ceramidin??Facial Barrier Mask",
+    "type": "Sheet Mask",
+    "ingridients": "Rosa Damascena Flower Water,Glycerin,Dipropylene Glycol,Hydrogenated Polydecene,Dicaprylyl Carbonate,1,2-Hexanediol,Betaine,Hydroxyacetophenone,Cyclohexasiloxane,Cetearyl Alcohol,Candida Bombicola/Glucose/Methyl Rapeseedate Ferment,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Allantoin,Tromethamine,Ceramide NP,Cocos Nucifera Oil,Macadamia Ternifolia Seed Oil,Eclipta Prostrata Leaf Extract,Laminaria Japonica Extract,Adenosine,Fructooligosaccharides,Disodium EDTA,Melia Azadirachta Flower Extract,Ectoin,Melia Azadirachta Leaf Extract,Polyglyceryl-10 Stearate,Butylene Glycol,Sodium Stearoyl Glutamate,Hydrogenated Lecithin,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Beta-Glucan,Behenyl Alcohol,Pelargonium Graveolens Flower Oil,Hyaluronic Acid,Corallina Officinalis Extract,Streptococcus Thermophilus Ferment,Glyceryl Stearate Se,Hydrolyzed Vegetable Protein,Maltodextrin,Cholesterol,Tocopherol,Salvia Officinalis Oil,Pogostemon Cablin Leaf Oil,Glyceryl Stearate,Citrus Aurantium Bergamia Fruit Oil,Ceramide AP,Ceramide As,Ceramide Ns,Ceramide EOP",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Scar Healing,Brightening,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Honey Mask",
+    "type": "Wet Mask",
+    "ingridients": "Honey,Caprylic/Capric Triglyceride,Peg-7 Glyceryl Cocoate,Disteardimonium Hectorite,Macadamia Ternifolia Seed Oil,Helianthus Annuus Seed Oil,Pentylene Glycol,Microcrystalline Wax,Polysorbate 20,Butyrospermum Parkii Butter,Beeswax,Tocopheryl Acetate,Argania Spinosa Kernel Extract,Corylus Avellana Seed Oil,Simmondsia Chinensis Seed Oil,Snail Secretion Filtrate,Water,Bambusa Vulgaris Water,Nelumbo Nucifera Flower Water,Aloe Barbadensis Leaf Water,Propolis Extract,Beta-Glucan,Bee Venom,Citrus Paradisi Fruit Extract,Sophora Flavescens Extract,Eugenia Caryophyllus Flower Extract,Eucalyptus Globulus Leaf Extract,Punica Granatum Fruit Extract,Bambusa Vulgaris Extract,Butylene Glycol,Glycerin",
+    "afterUse": "Redness Reducing,Scar Healing,Brightening,Drying,May Worsen Oily Skin"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Red Bean Refreshing Pore Mask",
+    "type": "Wet Mask",
+    "ingridients": "Phaseolus Angularis Seed Extract,Glycerin,Kaolin,Caprylic/Capric Triglyceride,1,2-Hexanediol,Phaseolus Angularis Seed Powder,Hectorite,Cetyl Alcohol,Glyceryl Stearate Se,Sorbitan Olivate,Cetearyl Olivate,Ultramarines,Pyrus Communis Fruit Extract,Ethylhexylglycerin,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Hedera Helix Leaf/Stem,Water,Polyisobutene,Pyrus Malus Leaf Extract,Fragaria Chiloensis Fruit Extract,Ci 77491,Caprylyl/Capryl Glucoside,Sorbitan Oleate,Triethoxycaprylylsilane",
+    "afterUse": ""
+  },
+  {
+    "brand": "COSRX",
+    "name": "AC Calming Solution Body Cleanser",
+    "type": "Bath & Body",
+    "ingridients": "Water,Glycerin,Potassium Cocoyl Glycinate,Lauryl Betaine,C12-14 Pareth-12,Lauryl Hydroxysultaine,Disodium Cocoamphodiacetate,1,2-Hexanediol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Sodium Chloride,Parfum,Betaine,Salicylic Acid,Panthenol,Hydroxyacetophenone,Menthol,Disodium EDTA,Ethylhexylglycerin,Butylene Glycol,Mentha Arvensis Leaf Extract,Madecassic Acid,Asiaticoside,Asiatic Acid",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Reduces Large Pores,Acne Fighting,Brightening,Drying,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Ginseng Mask",
+    "type": "Wet Mask",
+    "ingridients": "Glycerin,Eleutherococcus Senticosus Root Extract,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Butylene Glycol,Boswellia Serrata Resin Extract,1,2-Hexanediol,Peg-60 Hydrogenated Castor Oil,Panax Ginseng Seed Oil,Glycyrrhiza Glabra Root Extract,Paeonia Lactiflora Extract,Angelica Gigas Root Extract,Rheum Palmatum Root Extract,Angelica Pubescens Root Extract,Schizonepeta Tenuifolia Extract,Phellodendron Amurense Bark Extract,Ethoxydiglycol,Hydrolyzed Glycosaminoglycans,Hyaluronic Acid,Glyceryl Polyacrylate,Water,Ethylhexylglycerin,Isohexadecane,Polysorbate 80,Parfum",
+    "afterUse": "Good For Oily Skin,Skin Texture,Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Cica Clearing BB Cream",
+    "type": "Sunscreen",
+    "ingridients": "Water,Titanium Dioxide,Ethylhexyl Methoxycinnamate,Cyclopentasiloxane,Butylene Glycol,Ethylhexyl Salicylate,Cyclohexasiloxane,Lauryl Polyglyceryl-3 Polydimethylsiloxyethyl Dimethicone,Niacinamide,Hydrogenated Lard,Zinc Oxide,Mica,Sodium Chloride,Zinc Stearate,Dextrin Palmitate,Disteardimonium Hectorite,Sorbitan Oleate,Centella Asiatica Extract,Madecassic Acid,Asiaticoside,Asiatic Acid,Glycol,Triethoxycaprylylsilane,Aluminum Hydroxide,Allantoin,Panthenol,Glycerin,Caprylhydroxamic Acid,Dimethicone,Adenosine,1,2-Hexanediol,Tocopherol,Ci 77492,Ci 77491,Ci 77499,Ci 77007",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Drying,Acne Trigger,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Centella Blemish Cream",
+    "type": "Facial Treatment",
+    "ingridients": "Centella Asiatica Leaf Water,Butylene Glycol,Glycerin,Helianthus Annuus Seed Oil,Zinc Oxide,Dimethicone,Betaine,1,2-Hexanediol,Viola Tricolor Extract,Elaeis Guineensis Oil,Elaeis Guineensis Kernel Oil,Cetearyl Alcohol,Cetearyl Olivate,Sorbitan Olivate,Centella Asiatica Extract,Zinc PCA,Xanthan Gum,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Melaleuca Alternifolia Leaf Oil,Scutellaria Baicalensis Root Extract 50%",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Trigger"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Licorice Calming Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Glycyrrhiza Uralensis Root Extract 58%,Water,Propanediol,Glycerin,Phenyl Trimethicone,Caprylic/Capric Triglyceride,1,2-Hexanediol,Chlorella Vulgaris Extract,Glycyrrhiza Glabra Root Extract 0.05%,Cynanchum Atratum Extract,Althaea Rosea Flower Extract,Pentylene Glycol,Panthenol,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Vinyl Dimethicone,Dimethicone/Vinyl Dimethicone Crosspolymer,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Glucose,Tromethamine,Butylene Glycol,Dimethiconol,Dipotassium Glycyrrhizate,Fructooligosaccharides,Fructose,Microcrystalline Cellulose,Ethylhexylglycerin,Glyceryl Acrylate/Acrylic Acid Copolymer,Hydrogenated Lecithin,Sorbitan Isostearate,Sodium Phytate,Cellulose Gum,Silica,Cetearyl Olivate,Ceramide NP,Sorbitan Olivate,Tocopherol,Xanthan Gum",
+    "afterUse": "Reduces Irritation,Brightening,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "PEPTIDIN??FIRMING SERUM WITH ENERGY PEPTIDES",
+    "type": "Serum",
+    "ingridients": "Water,Methylpropanediol,Glycerin,1,2-Hexanediol,Caprylic/Capric Triglyceride,Niacinamide,Polyglycerin-3,Borago Officinalis Extract,Algae Extract,Eclipta Prostrata Leaf Extract,Cyclohexasiloxane,Centaurea Cyanus Flower Water,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Avena Sativa Kernel Extract,Cynara Scolymus Leaf Extract,Pteris Multifida Extract,Coccinia Indica Fruit Extract,Aloe Barbadensis Flower Extract,Solanum Melongena Fruit Extract,Ocimum Sanctum Leaf Extract,Nymphaea Alba Flower Extract,Corallina Officinalis Extract,Curcuma Longa Root Extract,Nymphaea Caerulea Flower Water,Ethylhexylglycerin,Adenosine,Fructooligosaccharides,Hydrogenated Lecithin,Citrus Aurantium Bergamia Fruit Oil,Beta-Glucan,Disodium EDTA,Polyquaternium-51,Sodium Hyaluronate,Butylene Glycol,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Xanthan Gum,Carbomer,Tromethamine,Inositol,Propanediol,Hydrolyzed Hyaluronic Acid,Dipropylene Glycol,Sodium Palmitoyl Proline,Lavandula Angustifolia Oil,Cholesterol,Caprylyl Glycol,Cyanocobalamin,Glycine,Acetyl Glutamine,Dipalmitoyl Hydroxyproline,Sodium Cocoyl Alaninate,Serine,Glutamic Acid,Aspartic Acid,Leucine,Alanine,Lysine,Arginine,Tyrosine,Phenylalanine,Proline,Threonine,Valine,Isoleucine,Histidine,Cysteine,Methionine,Acetyl Hexapeptide-8,Copper Tripeptide-1,Hexapeptide-9,Nonapeptide-1,Palmitoyl Pentapeptide-4,Palmitoyl Tetrapeptide-7,Palmitoyl Tripeptide-1,Tripeptide-1",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Cicapair??Tiger Grass Sleepair Intensive Mask",
+    "type": "Wet Mask",
+    "ingridients": "Water,Dipropylene Glycol,Propanediol,Glycerin,Caprylyl Methicone,1,2-Hexanediol,Niacinamide,Trehalose,Vinyl Dimethicone,Butylene Glycol,Eryngium Maritimum Callus Culture Filtrate,Fusidium Coccineum Ferment Filtrate,Cetyl Dimethicone,Houttuynia Cordata Extract,Ilex Aquifolium Leaf Extract,Dimethiconol,Chondrus Crispus Extract,Achillea Millefolium Oil,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Dehydroxanthan Gum,Polyvinyl Alcohol,Saccharum Officinarum Extract,Tromethamine,Caprylyl Glycol,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Polyisobutene,Adenosine,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Disodium EDTA,Caprylyl/Capryl Glucoside,Panthenol,Sorbitan Oleate,Bamboo Vinegar,Glycine Soja Peptide,Streptococcus Thermophilus Ferment,Madecassoside,Ethylhexylglycerin,Coccinia Indica Fruit Extract,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Amber Powder,Solanum Melongena Fruit Extract,Hedera Helix Extract,Dextrin,Theobroma Cacao Seed Extract,Corallina Officinalis Extract,Moringa Oleifera Seed Oil,Asiaticoside,Centella Asiatica Leaf Extract,Asiatic Acid,Madecassic Acid,Calcium Chloride,Centella Asiatica Extract,Magnesium Sulfate",
+    "afterUse": "Hydrating,Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening,Acne Trigger"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Comfy Water Sunblock",
+    "type": "Sunscreen",
+    "ingridients": "Water,Cetyl Ethylhexanoate,Butylene Glycol,Glycerin,Dipropylene Glycol,Zinc Oxide,Silica,Niacinamide,1,2-Hexanediol,Polyglyceryl-3 Methylglucose Distearate,Ci 77891,Sodium Polyacryloyldimethyl Taurate,Cetearyl Olivate,Sorbitan Olivate,Stearic Acid,Madecassoside,Asiaticoside,Madecassic Acid,Asiatic Acid,Lauroyl Lysine,Disodium EDTA,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Adenosine,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,May Worsen Oily Skin,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Every Sun Day Waterproof Sun Milk SPF 50 PA ++++",
+    "type": "Sunscreen",
+    "ingridients": "Water,Dibutyl Adipate,Propanediol,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Polymethylsilsesquioxane,Ethylhexyl Triazone,Niacinamide,Methylene Bis-Benzotriazolyl Tetramethylbutylphenol,Coco-Caprylate/Caprate,Caprylyl Methicone,Diethylhexyl Butamido Triazone,Glycerin,Butylene Glycol,1,2-Hexanediol,Hippophae Rhamnoides Fruit Extract,Daucus Carota Sativa Root Extract,Rosa Canina Fruit Extract,Pyrus Malus Fruit Extract,Aloe Ferox Leaf Extract,Artemisia Capillaris Extract,Prunus Armeniaca Juice,Hydrogenated Lecithin,Pentylene Glycol,Behenyl Alcohol,Poly C10-30 Alkyl Acrylate,Polyglyceryl-3 Methylglucose Distearate,Decyl Glucoside,Tromethamine,Carbomer,Rosin Acrylate,Sodium Stearoyl Glutamate,Polyacrylate Crosspolymer-6,Ethylhexylglycerin,Adenosine,Xanthan Gum,T-Butyl Alcohol,Tocopherol,Ascorbic Acid,Moringa Oleifera Seed Oil,Ceramide NP,Phytosphingosine,Parfum",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "From Green Cleansing Oil",
+    "type": "Face Cleanser",
+    "ingridients": "Olea Europaea Fruit Oil,Caprylic/Capric Triglyceride,Helianthus Annuus Seed Oil,Sorbeth-30 Tetraoleate,Simmondsia Chinensis Seed Oil,Glyceryl Caprylate,Prunus Amygdalus Dulcis Oil,Vitis Vinifera Seed Oil,Ethylhexylglycerin,Tocopherol",
+    "afterUse": "Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Apricot Blossom Peeling Gel",
+    "type": "Exfoliator",
+    "ingridients": "Water,Prunus Mume Flower Water,Cellulose,Propanediol,1,2-Hexanediol,Carbomer,Arginine,Ethylhexylglycerin,Allantoin,Sorbitol,Disodium EDTA,Pyrus Malus Fruit Extract,Camellia Sinensis Leaf Extract,Houttuynia Cordata Extract,Nelumbo Nucifera Flower Extract,Oryza Sativa Extract,Prunus Mume Fruit Extract,Vaccinium Angustifolium Fruit Extract,Butylene Glycol",
+    "afterUse": "Hydrating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Calming Serum: Green Tea + Panthenol (Renewed 2022)",
+    "type": "Serum",
+    "ingridients": "Camellia Sinensis Leaf Water 50.9%,Artemisia Capillaris Extract,Panthenol,Glycerin,Butylene Glycol,Water,1,2-Hexanediol,Methylpropanediol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Coptis Japonica Root Extract,Ethylhexylglycerin,Betaine,Allantoin,Dipotassium Glycyrrhizate,Glyceryl Acrylate/Acrylic Acid Copolymer,Polyquaternium-51,Malt Extract,Punica Granatum Extract,Clitoria Ternatea Flower Extract,Garcinia Mangostana Peel Extract,Sodium Hyaluronate",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Honey Glow Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Octyldodecanol,C12-15 Alkyl Benzoate,Octyldodecyl Olivate,Cyclopentasiloxane,Propylene Glycol Dibenzoate,Glyceryl Stearate,Peg-100 Stearate,Niacinamide,Behenyl Olivate,Cetearyl Alcohol,Butylene Glycol,1,2-Hexanediol,Euphorbia Cerifera Cera,Glycerin,Stearyl Behenate,Polyhydroxystearic Acid,Behenic Acid,Cetyl Stearate,Stearyl Stearate,Honey Extract,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Xanthan Gum,Arginine,Boswellia Serrata Resin Extract,Cinnamomum Cassia Bark Extract,Curcuma Longa Root Extract,Disodium EDTA,Adenosine,Ethylhexylglycerin,Pollen Extract,Levan,Decyl Glucoside,Olea Europaea Leaf Extract,Royal Jelly Extract,Propolis Extract,Phenethyl Alcohol,Ziziphus Jujuba Seed Extract,Centella Asiatica Extract,Bee Venom,Citric Acid,Ascorbic Acid,Madecassoside,Parfum,Limonene,Citral,Butylphenyl Methylpropional,Geraniol",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Acne Fighting,Brightening,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Ginseng Serum",
+    "type": "Serum",
+    "ingridients": "Water,Panax Ginseng Root Extract,Butylene Glycol,Betaine,1,2-Hexanediol,Camellia Sinensis Leaf Extract,Glycerin,Panax Ginseng Seed Oil,Glycyrrhiza Glabra Root Extract,Paeonia Lactiflora Extract,Angelica Gigas Root Extract,Rheum Palmatum Root Extract,Angelica Pubescens Root Extract,Schizonepeta Tenuifolia Extract,Phellodendron Amurense Bark Extract,Hydroxyethylcellulose,Cyclopentasiloxane,Dimethiconol,Bis-Peg-18 Methyl Ether Dimethyl Silane,Ethoxydiglycol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Peg-60 Hydrogenated Castor Oil,Ethylhexylglycerin,Hydrolyzed Glycosaminoglycans,Hyaluronic Acid,Glyceryl Polyacrylate,Adenosine,Disodium EDTA,Parfum",
+    "afterUse": "Good For Oily Skin,Skin Texture,Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "All Care Recovery Cica-Aid",
+    "type": "Facial Treatment",
+    "ingridients": "Cellulose Gum,Poloxamer 407,Asiaticoside,Madecassic Acid,Asiatic Acid",
+    "afterUse": ""
+  },
+  {
+    "brand": "COSRX",
+    "name": "Master Patch Basic",
+    "type": "Facial Treatment",
+    "ingridients": "Cellulose Gum,Hydrogenated Polydecene,Polyisobutene,Styrene/Isoprene Copolymer",
+    "afterUse": ""
+  },
+  {
+    "brand": "COSRX",
+    "name": "Balancium Comfort Cool Ceramide Soothing Gel Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Butylene Glycol,Glycerin,Helianthus Annuus Seed Oil,Squalane,PCA Dimethicone,Phenyl Trimethicone,Polyglyceryl-3 Methylglucose Distearate,Polyglycerin-3,Dipropylene Glycol,Ceramide NP,Betaine,Hydrogenated Lecithin,Hydroxyacetophenone,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Sodium Polyacrylate,Xylitol,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Caprylyl Glycol,Glyceryl Stearate,Polyisobutene,Polyquaternium-51,Ethylhexylglycerin,Caprylic/Capric Triglyceride,Disodium EDTA,1,2-Hexanediol,Caprylyl/Capryl Glucoside,Sorbitan Oleate,Mentha Piperita Leaf Extract,Zingiber Officinale Root Extract,Menthyl Lactate,Ethyl Menthane Carboxamide,Methyl Diisopropyl Propionamide,Leuconostoc/Radish Root Ferment Filtrate,Centella Asiatica Leaf Extract,Anthemis Nobilis Flower Water,Glycyrrhiza Glabra Root Extract,Aloe Barbadensis Leaf Juice,Chamaecyparis Obtusa Water,Citrus Aurantium Bergamia Fruit Oil,Dipotassium Glycyrrhizate,Melaleuca Alternifolia Leaf Oil,Aniba Rosaeodora Wood Oil,Tocopherol,Cetearyl Alcohol,Stearic Acid,Sodium Hyaluronate,Hydrolyzed Hyaluronic Acid,Allantoin,Panthenol,Palmitoyl Pentapeptide-4,Phytosphingosine,Cholesterol,Ceramide Ng,Ceramide Ns,Ceramide AP,Ceramide As,Ceramide EOP",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Scar Healing,Brightening,May Worsen Oily Skin,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Centella Unscented Eye Cream",
+    "type": "Eye Moisturizer",
+    "ingridients": "Centella Asiatica Extract,Water,Hydrogenated Poly(C6-14 Olefin),Butylene Glycol,Glycerin,Cetyl Ethylhexanoate,Caprylic/Capric Triglyceride,Cetyl Alcohol,Dipropylene Glycol,Methyl Trimethicone,1,2-Hexanediol,Dipentaerythrityl Hexa C5-9 Acid Esters,Pentaerythrityl Tetraisostearate,Potassium Cetyl Phosphate,Cetearyl Alcohol,Cetearyl Olivate,Sorbitan Olivate,Caprylyl Glycol,Palmitic Acid,Panthenol,Carbomer,Tromethamine,Stearic Acid,Cetearyl Glucoside,Limnanthes Alba Seed Oil,Argania Spinosa Kernel Oil,Ceramide NP,Macadamia Ternifolia Seed Oil,Adenosine,Disodium EDTA,Sodium Hyaluronate,Butyrospermum Parkii Butter,Glucose,Myristic Acid,Arachidic Acid,Camellia Sinensis Leaf Extract,Madecassoside,Asiaticoside,Madecassic Acid,Asiatic Acid,Palmitoyl Dipeptide-10,Palmitoyl Tetrapeptide-7,Palmitoyl Tripeptide-1,Palmitoyl Hexapeptide-12",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Cicapair Toner",
+    "type": "Toner",
+    "ingridients": "Water,Eryngium Maritimum Callus Culture Filtrate,Dipropylene Glycol,Achillea Millefolium Oil,Houttuynia Cordata Extract,Ilex Aquifolium Leaf Extract,Butylene Glycol,Niacinamide,Pentylene Glycol,1,2-Hexanediol,Erythritol,Chondrus Crispus Extract,C12-14 Pareth-12,Saccharum Officinarum Extract,Streptococcus Thermophilus Ferment,Panthenol,Caprylyl Glycol,Hedera Helix Extract,Ethylhexylglycerin,Carbomer,Lavandula Angustifolia Oil,Adenosine,Glycerin,Dna,Diphenyl Dimethicone,Citrus Aurantium Bergamia Fruit Oil,Triethylhexanoin,Tromethamine,Disodium EDTA,Melia Azadirachta Leaf Extract,Hydrogenated Lecithin,Melia Azadirachta Flower Extract,Madecassoside,Asiatic Acid,Asiaticoside,Madecassic Acid,Calcium Chloride,Centella Asiatica Extract,Magnesium Sulfate",
+    "afterUse": "Hydrating,Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Oat-in Silky Toner",
+    "type": "Toner",
+    "ingridients": "Avena Sativa Seed Water,Butylene Glycol,Glycerin,1,2-Hexanediol,Limnanthes Alba Seed Oil,Water,Polyglyceryl-10 Stearate,Avena Sativa Kernel Extract,Ethylhexylglycerin,Beta-Glucan",
+    "afterUse": ""
+  },
+  {
+    "brand": "COSRX",
+    "name": "Triple Hyaluronic Moisturizing Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Glycerin,Stearic Acid,Myristic Acid,Lauric Acid,Potassium Hydroxide,Palmitic Acid,Potassium Cocoyl Glycinate,Coco-Glucoside,Glyceryl Stearate,Parfum,Polyquaternium-7,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Sodium Cocoyl Isethionate,Arachidic Acid,Disodium EDTA,1,2-Hexanediol,Oleic Acid,Sodium Benzoate,Quillaja Saponaria Bark Extract,Citric Acid,Butylene Glycol,Panthenol,Hyaluronic Acid,Ethylhexylglycerin,Hydrolyzed Hyaluronic Acid,Sodium Hyaluronate",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Scar Healing,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Real Fit Vitamin E Serum E-20",
+    "type": "Serum",
+    "ingridients": "Cetyl Ethylhexanoate,Triethylhexanoin,Tocopherol,Helianthus Annuus Seed Oil,Macadamia Ternifolia Seed Oil,Vitis Vinifera Seed Oil,Simmondsia Chinensis Seed Oil,Adansonia Digitata Seed Oil",
+    "afterUse": "Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Green Plum Refreshing Cleanser",
+    "type": "Face Cleanser",
+    "ingridients": "Water,Prunus Mume Fruit Water,Cocamidopropyl Hydroxysultaine,Phaseolus Radiatus Seed Extract,Sodium Cocoyl Isethionate,Glycerin,Sodium Chloride,Camellia Sinensis Leaf Extract,Houttuynia Cordata Extract,Nelumbo Nucifera Flower Extract,Oryza Sativa Extract,Prunus Mume Fruit Extract,Vaccinium Angustifolium Fruit Extract,Guar Hydroxypropyltrimonium Chloride,Coconut Acid,Ethylhexylglycerin,Caprylyl Glycol,Sodium Isethionate,Citric Acid,Butylene Glycol,1,2-Hexanediol,Punica Granatum Extract,Clitoria Ternatea Flower Extract,Garcinia Mangostana Peel Extract,Propylene Glycol Laurate,Sodium Citrate,Disodium EDTA",
+    "afterUse": "Reduces Large Pores,Drying,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Deep Sea Pure Water Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Sea Water 60%,Dipropylene Glycol,Glycerin,Caprylic/Capric Triglyceride,Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Polysorbate 80,Sorbitan Oleate,Niacinamide,Phenyl Trimethicone,Cetyl Ethylhexanoate,Cetearyl Alcohol,Water,1,2-Hexanediol,Butylene Glycol,Ecklonia Cava Extract,Laminaria Japonica Extract,Caulerpa Lentillifera Extract,Salicornia Herbacea Extract,Citrus Aurantium Bergamia Fruit Oil,Allantoin,Macadamia Ternifolia Seed Oil,Adenosine,Sorbitan Stearate,Glyceryl Stearate,Carbomer,Arginine,Caprylyl Glycol,Ethylhexylglycerin,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,Acne Trigger"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Pear Serum",
+    "type": "Serum",
+    "ingridients": "Pyrus Malus Leaf Extract 83%,Glycerin,Methylpropanediol,Water,Butylene Glycol,Dipropylene Glycol,Glycereth-26,Chondrus Crispus Extract,Saccharum Officinarum Extract,Pyrus Pyrifolia Fruit Extract 0.1%,Sodium Hyaluronate,Theobroma Cacao Seed Extract,Hydroxyethyl Urea,Panthenol,1,2-Hexanediol,Polyglyceryl-10 Laurate,Acrylates Copolymer,Caprylyl Glycol,Tromethamine,Sodium Phytate,Allantoin,Dextrin,Xanthan Gum",
+    "afterUse": "Hydrating,Reduces Irritation"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Dermide Cica Barrier Sleeping Pack (New)",
+    "type": "Overnight Mask",
+    "ingridients": "Water,Centella Asiatica Extract,Caprylic/Capric Triglyceride,Glycerin,Squalane,Simmondsia Chinensis Seed Oil,Cetearyl Alcohol,Potassium Cetyl Phosphate,Helianthus Annuus Seed Oil,Butylene Glycol,Polyglyceryl-3 Methylglucose Distearate,Ceramide AP,1,2-Hexanediol,Madecassoside,Asiaticoside,Madecassic Acid,Asiatic Acid,Panthenol,Ceramide NP,Sodium Hyaluronate,Hydroxyacetophenone,Sodium Carbomer,Hydrogenated Lecithin,Hydroxyethylcellulose,Camellia Sinensis Leaf Extract",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging,Acne Trigger"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "V7 Cleansing Foam",
+    "type": "Face Cleanser",
+    "ingridients": "Myristic Acid,Water,Potassium Hydroxide,Stearic Acid,Propylene Glycol,Potassium Cocoyl Glycinate,Cocamide,EDTA,Lauric Acid,Decyl Glucoside,Sodium Lauroyl Glutamate,Portulaca Oleracea Extract,Citrus Grandis Peel Extract,Piper Methysticum Root,Aloe Barbadensis Leaf Extract,Althaea Rosea Flower Extract,Lavandula Angustifolia Oil,Sodium Hyaluronate,Hydrogenated Lecithin,Sorbitan Olivate,Polyquaternium-7,Tocopheryl Acetate,Disodium EDTA,Niacinamide,Retinol,Biotin,Acetyl Glucosamine,Ascorbyl Glucoside,Azelamide Mea,Panthenol,Polyquaternium-51,Steareth-20,Palmitoyl Tetrapeptide-7,Hesperidin Methyl Chalcone,N-Hydroxysuccinimide,Dipeptide-2,Chrysin,Tocopheryl Linoleate,Palmitoyl Oligopeptide,BHA,Ceramide 3,Squalane,Cholesterol,Parfum,Methylparaben,Phenoxyethanol,Butylparaben",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Scar Healing,Acne Fighting,Brightening,Drying,May Worsen Oily Skin,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Full Fit Propolis Synergy Toner",
+    "type": "Toner",
+    "ingridients": "Propolis Extract,Honey Extract,Butylene Glycol,1,2-Hexanediol,Glycerin,Betaine,Cassia Obtusifolia Seed Extract,Panthenol,Polyglyceryl-10 Laurate,Polyglyceryl-10 Myristate,Ethylhexylglycerin,Sodium Hyaluronate,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Caprylic/Capric Triglyceride",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Honey Glow Serum",
+    "type": "Serum",
+    "ingridients": "Glycerin,Water,Butylene Glycol,Dimethicone,Cyclopentasiloxane,Niacinamide,Peg/Ppg-18/18 Dimethicone,Undecane,Cyclohexasiloxane,Tridecane,1,2-Hexanediol,Sodium Chloride,Dimethicone/Vinyl Dimethicone Crosspolymer,Peg-10 Dimethicone,Disteardimonium Hectorite,Boswellia Serrata Resin Extract,Honey Extract,Adenosine,Cinnamomum Cassia Bark,Curcuma Longa Root Extract,Levan,Decyl Glucoside,Olea Europaea Leaf Extract,Ethylhexylglycerin,Disodium EDTA,Pollen Extract,Phenethyl Alcohol,Ziziphus Jujuba Seed Extract,Centella Asiatica Extract,Royal Jelly Extract,Propolis Extract,Bee Venom,Citric Acid,Ascorbic Acid,Madecassoside,Parfum",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening,Drying,Acne Trigger"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Centella Asiatica Calming Mask",
+    "type": "Sheet Mask",
+    "ingridients": "Water,Centella Asiatica Extract,Glycereth-26,Butylene Glycol,Niacinamide,1,2-Hexanediol,Hydroxyacetophenone,Arginine,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Hydroxyethylcellulose,Carrageenan,Polyglyceryl-4 Caprate,Polyglyceryl-6 Caprylate,Adenosine,Ethylhexylglycerin,Disodium EDTA,Helianthus Annuus Seed Oil,Panthenol,Artemisia Princeps Leaf Extract,Lycium Chinense Fruit Extract,Propanediol,Portulaca Oleracea Extract,Panax Ginseng Root Extract,Camellia Sinensis Leaf Extract,Anthemis Nobilis Flower Oil,Sodium Hyaluronate,Hydrolyzed Hyaluronic Acid,Hyaluronic Acid",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Centella Green Level Eye Cream",
+    "type": "Eye Moisturizer",
+    "ingridients": "Centella Asiatica Extract,Water,Hydrogenated Polybutene,Glycerin,Cetyl Ethylhexanoate,Caprylic/Capric Triglyceride,Cetyl Alcohol,1,2-Hexanediol,Butylene Glycol,Dipropylene Glycol,Methyl Trimethicone,Pentaerythrityl Tetraisostearate,Dipentaerythrityl Hexa C5-9 Acid Esters,Potassium Cetyl Phosphate,Sodium Hyaluronate,Butyrospermum Parkii Butter,Panthenol,Palmitoyl Dipeptide-10,Palmitoyl Tripeptide-1,Palmitoyl Tetrapeptide-7,Palmitoyl Hexapeptide-12,Polyglyceryl-2 Stearate,Asiaticoside,Asiatic Acid,Madecassic Acid,Stearic Acid,Glyceryl Stearate,Stearyl Alcohol,Macadamia Ternifolia Seed Oil,Limnanthes Alba Seed Oil,Argania Spinosa Kernel Oil,Caprylyl Glycol,Cetearyl Olivate,Sorbitan Olivate,Camellia Sinensis Extract,Pancratium Maritimum Extract,Acetyl Glucosamine,Ceramide NP,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Adenosine,Tromethamine,Carbomer,Disodium EDTA,Lavandula Angustifolia Oil,Citrus Aurantium Bergamia Fruit Oil",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging,May Worsen Oily Skin"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Rice Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Oryza Sativa Bran Water,Water,Glycerin,Butylene Glycol,Cetyl Ethylhexanoate,Pentaerythrityl Tetraethylhexanoate,Hydrogenated Polyisobutene,Synthetic Beeswax,Butyrospermum Parkii Butter,Polyglyceryl-3 Methylglucose Distearate,Vinyl Dimethicone,Pentylene Glycol,1,2-Hexanediol,Behenyl Alcohol,Glyceryl Stearate,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Bisabolol,Cetearyl Olivate,Panthenol,Sorbitan Olivate,Caprylyl Glycol,Ethylhexylglycerin,Xanthan Gum,Adenosine,Trisodium Ethylenediamine Disuccinate,Sodium Hyaluronate,Ceramide NP,Hydrolyzed Hyaluronic Acid,Oryza Sativa Bran Oil,Tocopherol,Phytosphingosine,Caprylic/Capric Triglyceride,Hydrogenated Lecithin",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging,Brightening"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Dermaclear??Micro Milk Peel",
+    "type": "Facial Treatment",
+    "ingridients": "Water,Hydrogenated Polydecene,Caprylic/Capric Triglyceride,Squalane,Carthamus Tinctorius Seed Oil,1,2-Hexanediol,Glycerin,Cyclopentasiloxane,Steareth-2,Butylene Glycol,Propanediol,Cyclohexasiloxane,Pyrus Malus Fruit Water,Citrus Aurantium Bergamia Fruit Oil,Ethylhexylglycerin,Protease,Algin,Salicylic Acid,Polyglutamic Acid,Sodium Hyaluronate,Glutathione,Panthenol,Sea Salt,Propylene Glycol,Lactic Acid,Lactobionic Acid,Ascorbic Acid,Citric Acid,Cocos Nucifera Fruit Extract,Hibiscus Sabdariffa Flower Extract,Malic Acid,Tartaric Acid,Theanine,Crataegus Monogyna Flower Extract,Milk Lipids,Potassium Sorbate,Sodium Benzoate,Viola Tricolor Extract",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Acne Fighting,Brightening,Drying,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Pure Cloud Bubble Toner",
+    "type": "Toner",
+    "ingridients": "Water,Dipropylene Glycol,Propanediol,1,2-Hexanediol,Niacinamide,Glycerin,Portulaca Oleracea Extract,Saccharum Officinarum Extract,Solanum Melongena Fruit Extract,Melaleuca Alternifolia Leaf Extract,Citrus Aurantium Dulcis Oil,Citrus Nobilis Peel Oil,Litsea Cubeba Fruit Oil,C12-14 Pareth-12,Panthenol,Sodium Citrate,Adenosine,Citric Acid,Disodium EDTA,Hydrolyzed Hyaluronic Acid,Nephrite Powder,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Reduces Large Pores,Acne Fighting,Brightening,Drying,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Hydrop Sweet Gel Mask",
+    "type": "Wet Mask",
+    "ingridients": "Water,Glucose,Glycerin,Diglycerin,Methyl Gluceth-20,Sucrose,1,2-Hexanediol,Gluconolactone,Betaine,Squalane,Carbomer,Tromethamine,Xylitol,Butylene Glycol,Caprylyl Glycol,Hydroxyacetophenone,Pentylene Glycol,Dipotassium Glycyrrhizate,Disodium EDTA,Hydroxyethylcellulose,Panthenol,Allantoin,Ethylhexylglycerin,Sodium Hyaluronate",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "PURITO",
+    "name": "DermHA-3 Serum",
+    "type": "Serum",
+    "ingridients": "Water,Butylene Glycol,Sodium Hyaluronate,1,2-Hexanediol,Panthenol,Glycerin,Glyceryl Glucoside,Caprylyl Glycol,Pentylene Glycol,Hydroxyethylcellulose,Allantoin,Dipotassium Glycyrrhizate,Disodium EDTA,Malachite Extract,Copper Tripeptide-1,Hydrolyzed Hyaluronic Acid,Hydroxyacetophenone,Ethylhexylglycerin,Madecassoside,Asiaticoside,Asiatic Acid,Madecassic Acid,Sodium Acetylated Hyaluronate",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Green Plum Refreshing Toner : AHA + BHA",
+    "type": "Toner",
+    "ingridients": "Water,Prunus Mume Fruit Water,Dipropylene Glycol,1,2-Hexanediol,Tromethamine,Glycolic Acid,Phaseolus Radiatus Seed Extract,Panax Ginseng Root Extract,Oryza Sativa Bran Water,Portulaca Oleracea Extract,Butylene Glycol,Glycerin,Salicylic Acid,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Fructose,Tocopherol,Glucose,Sodium PCA,Triethylhexanoin,Diphenyl Dimethicone,C12-14 Pareth-12,C12-15 Pareth-12,Ethylhexylglycerin,Hydrogenated Lecithin,Polyglyceryl-10 Oleate,Tetrasodium EDTA",
+    "afterUse": "Good For Oily Skin,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Scar Healing,Acne Fighting,Brightening,Drying,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Plainet Squalane Oil 100",
+    "type": "Oil",
+    "ingridients": "Squalane 100%",
+    "afterUse": ""
+  },
+  {
+    "brand": "COSRX",
+    "name": "Balancium Comfort Ceramide Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Centella Asiatica Leaf Water,Butylene Glycol,Glycerin,Helianthus Annuus Seed Oil,Caprylic/Capric Triglyceride,Cetearyl Alcohol,Betaine,Ceramide Ns,Cetearyl Olivate,Sorbitan Olivate,Ceramide NP,Hydrogenated Lecithin,Sucrose Distearate,Glyceryl Stearate,Dipropylene Glycol,Elaeis Guineensis Oil,Elaeis Guineensis Kernel Oil,Beeswax,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Ethylhexylglycerin,Cyclomethicone,Dimethicone,Panthenol,Niacinamide,Sodium Hyaluronate,Xanthan Gum,Asiaticoside,Asiatic Acid,Madecassic Acid,Cassia Obtusifolia Seed Extract,Citrus Aurantium Bergamia Fruit Oil",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Acne Fighting,Brightening,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Vitamin Tree Water Gel",
+    "type": "General Moisturizer",
+    "ingridients": "Hippophae Rhamnoides Extract,Dipropylene Glycol,Butylene Glycol,Glycerin,Niacinamide,Sodium Polyacryloyldimethyl Taurate,Pentylene Glycol,Cyclopentasiloxane,Hippophae Rhamnoides Fruit Extract,Cyclohexasiloxane,Biosaccharide Gum-1,Sodium Hyaluronate,Panthenol,Dipotassium Glycyrrhizate,Portulaca Oleracea Extract,Hamamelis Virginiana Leaf Extract,Anthemis Nobilis Flower Extract,Saussurea Involucrata Extract,Selaginella Lepidophylla Extract,Rubus Chamaemorus Fruit Extract,Carbomer,Arginine,Allantoin,Bambusa Vulgaris Water,Nelumbo Nucifera Flower Water,Aloe Barbadensis Leaf Water,1,2-Hexanediol,Caprylyl Glycol,Caprylhydroxamic Acid,Boswellia Serrata Resin Extract,Ethylhexylglycerin,Ethyl Ether",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Fig Boosting Essence",
+    "type": "Essence",
+    "ingridients": "Ficus Carica Fruit Extract,Dipropylene Glycol,Glycerin,Propanediol,1,2-Hexanediol,Water,Pentylene Glycol,Polyglyceryl-10 Laurate,Chlorella Vulgaris Extract,Glucose,Panthenol,Butylene Glycol,Ethylhexylglycerin,Diphenyl Dimethicone,Fructooligosaccharides,Fructose,Triethylhexanoin,Sodium Hyaluronate,Xanthan Gum,Disodium EDTA,Glycine Soja Seed Extract,Allantoin,Betaine Salicylate,Hydrogenated Lecithin,Octanediol,Tocopherol",
+    "afterUse": "Reduces Irritation,Reduces Large Pores,Brightening"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Snail Repair Advanced Serum",
+    "type": "Serum",
+    "ingridients": "Snail Secretion Filtrate,Glycerin,Water,Sodium PCA,Pentylene Glycol,Hydroxyethylcellulose,Madecassoside,Centella Asiatica Leaf Extract,1,2-Hexanediol,Ethyl Hexanediol,Hydrolyzed Hyaluronic Acid,Centella Asiatica Extract,Panthenol,Ethylhexylglycerin,Glycosyl Trehalose,Disodium EDTA,Hydrogenated Starch Hydrolysate",
+    "afterUse": "Redness Reducing,Reduces Irritation"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Sea Buckthorn Vital 70 Cream",
+    "type": "Day Moisturizer",
+    "ingridients": "Hippophae Rhamnoides Fruit Extract 70%,Methylpropanediol,Glycerin,Cetyl Ethylhexanoate,Macadamia Ternifolia Seed Oil,Niacinamide,Polyglyceryl-3 Methylglucose Distearate,Cetearyl Alcohol,Phenyl Trimethicone,Portulaca Oleracea Extract,Citrus Unshiu Extract,Sodium Hyaluronate,Butylene Glycol,Adenosine,Panthenol,Citrus Aurantium Dulcis Peel Oil,Sorbitan Stearate,Glyceryl Stearate Se,Methyl Methacrylate Crosspolymer,1,2-Hexanediol,Carbomer,Arginine,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Caprylyl Glycol,Ethylhexylglycerin,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening,Acne Trigger"
+  },
+  {
+    "brand": "COSRX",
+    "name": "AC Collection Blemish Spot Clearing Serum",
+    "type": "Serum",
+    "ingridients": "Propolis Extract,Butylene Glycol,Niacinamide,Panthenol,1,2-Hexanediol,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Ethylhexylglycerin,Glycerin,Polyglyceryl-10 Laurate,Polyglyceryl-10 Myristate,Allantoin,Melaleuca Alternifolia Leaf Oil,Sodium Hyaluronate,Asiaticoside,Asiatic Acid,Madecassic Acid,Helianthus Annuus Seed Oil,Macadamia Ternifolia Seed Oil,Sucrose Distearate,Glyceryl Stearate,Hydrogenated Lecithin,Dipropylene Glycol,Ceramide NP,Oligopeptide-127 Rh-Oligopeptide-1",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Mushroom Collagen Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Tremella Fuciformis Extract 30%,Glycerin,Hydrogenated Polydecene,Pentaerythrityl Tetraethylhexanoate,Caprylic/Capric Triglyceride,Polyglyceryl-3 Methylglucose Distearate,Niacinamide,Vinyl Dimethicone,Diisostearyl Malate,Methyl Trimethicone,Cetearyl Alcohol,Behenyl Alcohol,Cetearyl Olivate,Sorbitan Olivate,Phytosteryl/Isostearyl/Cetyl/Stearyl/Behenyl Dimer Dilinoleate,Dioscorea Japonica Root Extract,Soluble Collagen,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Sodium Stearoyl Glutamate,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Butylene Glycol,Xanthan Gum,Adenosine,Sorbitan Isostearate,Hydrolyzed Corn Starch,Beta-Glucan,Sucrose,Ceramide NP,Mannose,Glucose,1,2-Hexanediol,Hydroxyacetophenone,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Anti-Aging,Acne Fighting,Brightening,Acne Trigger"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Dynasty Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Glycerin,Butylene Glycol,Niacinamide,Dipentaerythrityl Hexa C5-9 Acid Esters,Sodium Hyaluronate,Xanthan Gum,Cyclopentasiloxane,Cyclohexasiloxane,Polyacrylate-13,Polyisobutene,Polysorbate 20,Hydrogenated Lecithin,C14-28 Alkyl Acid,Stearyl Alcohol,Behenyl Alcohol,Dimethicone/Vinyl Dimethicone Crosspolymer,Dimethicone,Adenosine,Glyceryl Stearate Se,Cetearyl Alcohol,Polyglyceryl-3 Methylglucose Distearate,Cetyl Peg/Ppg-10/1 Dimethicone,Stearic Acid,Tocopheryl Acetate,Sodium Polyacrylate,Olea Europaea Fruit Oil,Helianthus Annuus Seed Oil,Centella Asiatica Extract,Hippophae Rhamnoides Oil,Argania Spinosa Kernel Oil,Butyrospermum Parkii Butter,Ceramide NP,Trehalose,Calendula Officinalis Flower Extract,Caprylhydroxamic Acid,1,2-Hexanediol,Raphanus Sativus Leaf Extract,Oryza Sativa Bran Extract,Cucurbitaceae Extract,Orchid Extract,Honey Extract,Panax Ginseng Root Extract,Carthamus Tinctorius Seed Oil,Phytosphingosine,Ceteareth-20,Glyceryl Citrate/Lactate/Linoleate/Oleate,Parfum",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Acne Fighting,Brightening,May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "PURITO",
+    "name": "AHA BHA Refreshing Solution",
+    "type": "Exfoliator",
+    "ingridients": "Salix Alba Bark Water,Butylene Glycol,Dipropylene Glycol,Glycolic Acid 7%,Tromethamine,Water,Salicylic Acid 2%,1,2-Hexanediol,Sodium Citrate,Arginine,Caprylyl Glycol,Citric Acid 0.28%,Hydroxyacetophenone,Pentylene Glycol,Allantoin,Dipotassium Glycyrrhizate,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Acne Fighting,Brightening,Drying,Irritating,Rosacea,Eczema"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Vital Hydra Solution??Biome Water Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Propanediol,Glycerin,Streptococcus Thermophilus Ferment,Phenyl Trimethicone,1,2-Hexanediol,Niacinamide,Butylene Glycol,Neopentyl Glycol Dicaprate,Pentylene Glycol,Raffinose,Dna,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Vinyl Dimethicone,Polymethylsilsesquioxane,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Hydroxyacetophenone,Tromethamine,Dimethiconol,Glyceryl Glucoside,Ethylhexylglycerin,Cellulose Gum,Microcrystalline Cellulose,Adenosine,Sorbitan Isostearate,Disodium EDTA,Malachite Extract,Glycine,Proline,Citrus Aurantium Bergamia Fruit Oil,Parfum,Limonene,Tremella Fuciformis Extract,Hyaluronic Acid,Fructose,Tocopherol,Hydrolyzed Hyaluronic Acid,Sodium Hyaluronate",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Irritating"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Balancium B5 D-Panthenol Ampoule",
+    "type": "Serum",
+    "ingridients": "Water,Panthenol,Dipropylene Glycol,Pentylene Glycol,Glycerin,1,2-Hexanediol,C12-14 Pareth-12,Carbomer,Diphenyl Dimethicone,Triethylhexanoin,Tromethamine,Ethylhexylglycerin,Hydrogenated Lecithin,Butylene Glycol,Hyaluronic Acid,Hydrolyzed Hyaluronic Acid,Sodium Hyaluronate",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Skin Texture,Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Radiance Cleansing Balm",
+    "type": "Makeup Remover",
+    "ingridients": "Cetyl Ethylhexanoate,Caprylic/Capric Triglyceride,Peg-20 Glyceryl Triisostearate,Synthetic Wax,Peg-10 Isostearate,Lactobacillus/Soybean Ferment Extract,Hippophae Rhamnoides Oil,Oryza Sativa Bran Oil,Oryza Sativa Seed Water,Avena Sativa Meal Extract,Coix Lacryma-Jobi Ma-Yuen Seed Extract,Oryza Sativa Extract,Water,Sorbitan Sesquioleate,Glycerin,Propanediol,Butylene Glycol,1,2-Hexanediol,Caprylyl Glycol,Ethylhexylglycerin",
+    "afterUse": "May Worsen Oily Skin,Acne Trigger"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Ginseng Cleansing Oil",
+    "type": "Face Cleanser",
+    "ingridients": "Glycine Soja Oil,Cetyl Ethylhexanoate,Sorbeth-30 Tetraoleate,Olea Europaea Fruit Oil,Sorbitan Sesquioleate,Helianthus Annuus Seed Oil,Tocopherol,Panax Ginseng Seed Oil,Ethylhexylglycerin,Eclipta Prostrata Extract,Eleutherococcus Senticosus Root Extract,Melia Azadirachta Leaf Extract,Melia Azadirachta Flower Extract,Coccinia Indica Fruit Extract,Amber Powder,Moringa Oleifera Seed Oil,Solanum Melongena Fruit Extract,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Corallina Officinalis Extract,Bixa Orellana Seed Oil,Panax Ginseng Root Extract,Butylene Glycol,Water,1,2-Hexanediol",
+    "afterUse": "Anti-Aging,Scar Healing,Brightening,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Oil Free Ultra Moisturizing Lotion with Birch Sap",
+    "type": "General Moisturizer",
+    "ingridients": "Betula Platyphylla Japonica Juice,Butylene Glycol,Glycerin,Dimethicone,Betaine,Cetearyl Alcohol,1,2-Hexanediol,Cetearyl Olivate,Sorbitan Olivate,2-Hydroxyethyl Acrylate,Ethylhexylglycerin,Citrus Limon Peel Oil,Allantoin,Panthenol,Xanthan Gum,Sodium Lactate,Sodium Hyaluronate,Ethyl Hexanediol,Melaleuca Alternifolia Leaf Oil",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Acne Trigger"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Dynasty Cream (2021 Formula)",
+    "type": "General Moisturizer",
+    "ingridients": "Water,Oryza Sativa Bran Water,Glycerin,Panax Ginseng Root Water,Hydrogenated Polydecene,1,2-Hexanediol,Niacinamide,Squalane,Butylene Glycol,Propanediol,Peg-3 Dicaprylate/Caprate,Cetearyl Olivate,Sorbitan Olivate,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Xanthan Gum,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Carthamus Tinctorius Seed Oil,Hydrogenated Coconut Oil,Glyceryl Acrylate/Acrylic Acid Copolymer,Ethylhexylglycerin,Adenosine,Caprylic/Capric Triglyceride,Disodium EDTA,Hyaluronic Acid,Hydrolyzed Hyaluronic Acid,Sodium Hyaluronate,Honey Extract,Ceramide NP,Hydrogenated Lecithin,Coptis Japonica Root Extract,Raphanus Sativus Seed Extract,Lycium Chinense Fruit Extract,Theobroma Cacao Seed Extract,Phellinus Linteus Extract,Dextrin,Scutellaria Baicalensis Root Extract",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Scar Healing,Acne Fighting,Brightening,May Worsen Oily Skin,Acne Trigger,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Daily Soft Touch Sunscreen SPF 50+ PA++++",
+    "type": "Sunscreen",
+    "ingridients": "Water,Propanediol,Dibutyl Adipate,Dicaprylyl Carbonate,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Ethylhexyl Triazone,Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine,Amylopectin,Butylene Glycol,Methylene Bis-Benzotriazolyl Tetramethylbutylphenol,Glycerin,Behenyl Alcohol,Poly C10-30 Alkyl Acrylate,Polyglyceryl-3 Methylglucose Distearate,Sodium Acrylates Crosspolymer-2,Carbomer,Tromethamine,Decyl Glucoside,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Bisabolol,Panthenol,Caprylhydroxamic Acid,Centella Asiatica Extract,Tocopherol,Ceramide NP,Dipropylene Glycol,Cholesterol,Propylene Glycol,Xanthan Gum,Glyceryl Stearate,Ceramide As,Ceramide AP,Ceramide Ns,Hydrogenated Lecithin,Ceramide EOP",
+    "afterUse": "Redness Reducing,Reduces Irritation,Anti-Aging,Scar Healing,Brightening,Irritating"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Vitamin Fruit Serum",
+    "type": "Serum",
+    "ingridients": "Hippophae Rhamnoides Fruit Extract,Methylpropanediol,Ceramide AP,1,2-Hexanediol,Glycerin,Niacinamide,Cyclohexasiloxane,Portulaca Oleracea Extract,Malpighia Glabra Fruit Extract,Laminaria Japonica Extract,Eclipta Prostrata Leaf Extract,Acmella Oleracea Extract,Melia Azadirachta Leaf Extract,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Corallina Officinalis Extract,Hippophae Rhamnoides Oil,Hydrogenated Lecithin,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Xanthan Gum,Tocopheryl Acetate,Adenosine,Carbomer,Fructooligosaccharides,Disodium EDTA,Beta-Glucan,Tromethamine,Hyaluronic Acid,Water,Ascorbic Acid,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Anti-Aging,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "AHA/BHA Refresh Vitamin C Daily Cream",
+    "type": "Day Moisturizer",
+    "ingridients": "Actinidia Chinensis Fruit Extract,Hylocereus Undatus Fruit Extract,Hippophae Rhamnoides Water,Butylene Glycol,Cetyl Ethylhexanoate,Niacinamide,1,2-Hexanediol,Macadamia Ternifolia Seed Oil,Cetearyl Alcohol,Betaine,Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer,Ethylhexylglycerin,Carbomer,Arginine,Panthenol,Cetearyl Olivate,Sorbitan Olivate,Allantoin,Adenosine,Sodium Hyaluronate,Alpha-Arbutin,Menthyl Lactate,Mentha Haplocalix Extract,Tocopherol,Lactobionic Acid,Citrus Aurantium Bergamia Fruit Oil,Betaine Salicylate,Ascorbyl Glucoside,Glycolic Acid,Water",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Reduces Large Pores,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Acne Trigger,Irritating,Rosacea"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Centella Green Level Unscented Sun SPF50+ PA++++",
+    "type": "Sunscreen",
+    "ingridients": "Water,Butylene Glycol,Glycerin,Dicaprylyl Carbonate,Dibutyl Adipate,Diethylamino Hydroxybenzoyl Hexyl Benzoate,Hydrogenated Polyisobutene,1,2-Hexanediol,Niacinamide,Ethylhexyl Triazone,Polyglyceryl-3 Methylglucose Distearate,Silica,Cetearyl Olivate,Cetearyl Alcohol,Centella Asiatica Extract,Hyaluronic Acid,Tocopherol,Sorbitan Olivate,Glyceryl Stearate Se,Methyl Glucose Sesquistearate,Sorbitan Stearate,Lavandula Angustifolia Oil,Disodium EDTA,Adenosine,Anthemis Nobilis Flower Oil,Caprylyl Glycol,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Acne Trigger,Irritating,Eczema"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Bubble Toner: Green Plum + AHA",
+    "type": "Toner",
+    "ingridients": "Water,Prunus Mume Fruit Water,Glycolic Acid,Dipropylene Glycol,1,2-Hexanediol,Pentylene Glycol,Chlorella Vulgaris Extract,Portulaca Oleracea Extract,Chondrus Crispus Extract,Saccharum Officinarum Extract,Oryza Sativa Bran Water,Honey Extract,Panax Ginseng Root Extract,Polygonum Cuspidatum Root Extract,Glycerin,Propanediol,Tromethamine,Sodium PCA,Glucose,C12-14 Pareth-12,Butylene Glycol,Fructooligosaccharides,Fructose,Caprylyl Glycol,Ethylhexylglycerin,Sodium Phytate,Tocopherol,Ethyl Hexanediol",
+    "afterUse": "Hydrating,Good For Oily Skin,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Brightening,Drying,Irritating,Rosacea"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Fermented Complex 94 Boosting Essence",
+    "type": "Essence",
+    "ingridients": "Butylene Glycol,Lactobacillus/Rice Ferment,Camellia Sinensis Leaf Extract,Taraxacum Officinale Extract,Morus Alba Bark Extract,Niacinamide,1,2-Hexanediol,Bifida Ferment Lysate,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Allantoin,Viscum Album Leaf Extract,Arginine,Caprylyl Glycol,Nelumbo Nucifera Flower Extract,Portulaca Oleracea Extract,Sodium Hyaluronate,Adenosine,Perilla Ocymoides Seed Extract,Glycerin,Saccharomyces/Viscum Album Ferment Extract,Saccharomyces/Imperata Cylindrica Root Ferment Extract,Lactobacillus/Soybean Ferment Extract,Dipotassium Glycyrrhizate,Disodium EDTA",
+    "afterUse": "Hydrating,Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Triple C Lightning Liquid",
+    "type": "Serum",
+    "ingridients": "Aronia Melanocarpa Fruit Extract,Ascorbic Acid,Butylene Glycol,Sodium Lactate,Glycyrrhiza Glabra Root Extract,Ceramide Ns,Pullulan,Sodium Hyaluronate,Cassia Obtusifolia Seed Extract,Allantoin",
+    "afterUse": "Redness Reducing,Skin Texture,Anti-Aging,Dark Spots,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Beet Energy Ampoule",
+    "type": "Serum",
+    "ingridients": "Beta Vulgaris Root Extract,Glycerin,Squalane,Propanediol,1,2-Hexanediol,Niacinamide,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Xanthan Gum,Panthenol,Adenosine,Allantoin,Carnosine",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "Dr. Jart+",
+    "name": "Vital Hydra Solution Biome Essence",
+    "type": "Essence",
+    "ingridients": "Water,Glycerin,Streptococcus Thermophilus Ferment,Glycereth-26,Propanediol,1,2-Hexanediol,Dipropylene Glycol,Niacinamide,Butylene Glycol,Betaine,Dna,Xanthan Gum,Panthenol,Ethylhexylglycerin,Adenosine,Sodium Citrate,Disodium EDTA,Citric Acid,Glycine,Proline,Glyceryl Glucoside,Sodium Hyaluronate,Leucine,Saccharide Isomerate,Hyaluronic Acid,Hydrolyzed Hyaluronic Acid,Xylitylglucoside,Anhydroxylitol,Xylitol,Glucose",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Drying,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Oat-In Calming Gel Cream",
+    "type": "General Moisturizer",
+    "ingridients": "Avena Sativa Seed Water 77.05%,Butylene Glycol,Glycerin,2,3-Butanediol,1,2-Hexanediol,Water,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Squalane,Hydroxyacetophenone,Carbomer,Dipotassium Glycyrrhizate,Panthenol,Tromethamine,Ethylhexylglycerin,Inulin Lauryl Carbamate,Sodium Surfactin,Beta-Glucan",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Red Bean Water Gel",
+    "type": "General Moisturizer",
+    "ingridients": "Phaseolus Angularis Seed Extract,Water,Butylene Glycol,Glycerin,1,2-Hexanediol,Methyl Trimethicone,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Tromethamine,Glyceryl Glucoside,C12-14 Pareth-12,Maltodextrin,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Dimethicone/Vinyl Dimethicone Crosspolymer,Dimethicone Crosspolymer,Ethylhexylglycerin,Betaine,Panthenol,Allantoin,Dipotassium Glycyrrhizate,Polyquaternium-51,Xanthan Gum,Disodium EDTA,Glyceryl Acrylate/Acrylic Acid Copolymer,Dioscorea Japonica Root Extract,Glucose,Sodium Citrate,Beta-Glucan,Hydrolyzed Corn Starch,Citric Acid,Sucrose,Caprylyl Glycol,Helianthus Annuus Seed Oil,Tocopherol,Cyanocobalamin,Glycine,Serine,Glutamic Acid,Magnesium Ascorbyl Phosphate,Aspartic Acid,Leucine,Acetyl Hexapeptide-8,Alanine,Lysine,Arginine,Tyrosine,Phenylalanine,Proline,Threonine,Valine,Isoleucine,Histidine,Cysteine,Methionine,Sh-Oligopeptide-1,Sh-Oligopeptide-2,Sh-Polypeptide-1",
+    "afterUse": "Redness Reducing,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Scar Healing,Brightening,Drying,Irritating"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Rice Serum",
+    "type": "Serum",
+    "ingridients": "Aspergillus/Rice Germ Ferment Extract Filtrate 73%,Propanediol,Glycerin,Methylpropanediol,Cyclopentasiloxane,Niacinamide,Caprylyl Methicone,Water,Cyclohexasiloxane,1,2-Hexanediol,Squalane,Betaine,C12-14 Pareth-12,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Panthenol,C30-45 Alkyl Cetearyl Dimethicone Crosspolymer,Ethylhexylglycerin,Allantoin,Xanthan Gum,Dipotassium Glycyrrhizate,Adenosine,Disodium EDTA,Pentylene Glycol,Hydrolyzed Hyaluronic Acid,Alpha-Glucan Oligosaccharide,Sodium Hyaluronate,Madecassoside,Portulaca Oleracea Extract,Hydroxypropyl Cyclodextrin,Glutathione",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Beet Refresh Pad",
+    "type": "Facial Treatment",
+    "ingridients": "Water,Beta Vulgaris Root Extract,Glycerin,Dipropylene Glycol,Propanediol,Niacinamide,Erythritol,1,2-Hexanediol,Hydroxyacetophenone,Caprylyl Glycol,Daucus Carota Sativa Root Extract,Pyrus Malus Fruit Extract,Polyglyceryl-10 Laurate,Allantoin,Xanthan Gum,Adenosine,Arginine,Carbomer,Sodium Hyaluronate,Glyceryl Acrylate/Acrylic Acid Copolymer,Melia Azadirachta Leaf Extract,Pvm/Ma Copolymer,Melia Azadirachta Flower Extract,Hydrolyzed Gardenia Florida Extract,Dipotassium Glycyrrhizate,Betaine,Citric Acid,Betaine Salicylate,Maltodextrin,Panthenol,Ethylhexylglycerin,Coccinia Indica Fruit Extract,Corallina Officinalis Extract,Pantolactone,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Reduces Large Pores,Acne Fighting,Brightening,Drying,Irritating"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Glow Serum: Propolis + Niacinamide",
+    "type": "Serum",
+    "ingridients": "Propolis Extract,Dipropylene Glycol,Glycerin,Butylene Glycol,Water,Niacinamide,1,2-Hexanediol,Melia Azadirachta Flower Extract,Melia Azadirachta Leaf Extract,Sodium Hyaluronate,Curcuma Longa Root Extract,Ocimum Sanctum Leaf Extract,Theobroma Cacao Seed Extract,Melaleuca Alternifolia Leaf Extract,Centella Asiatica Extract,Corallina Officinalis Extract,Lotus Corniculatus Seed Extract,Calophyllum Inophyllum Seed Oil,Betaine Salicylate,Sodium Polyacryloyldimethyl Taurate,Tromethamine,Polyglyceryl-10 Laurate,Caprylyl Glycol,Ethylhexylglycerin,Dextrin,Pentylene Glycol,Octanediol,Tocopherol,Xanthan Gum,Carbomer",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Reduces Large Pores,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Centella Unscented Serum",
+    "type": "Serum",
+    "ingridients": "Centella Asiatica Extract 49%,Water,Glycerin,Dipropylene Glycol,Niacinamide,Butylene Glycol,1,2-Hexanediol,Glycereth-26,Ceramide NP,Sodium Hyaluronate,Asiaticoside,Asiatic Acid,Madecassic Acid,Palmitoyl Hexapeptide-12,Palmitoyl Tripeptide-1,Palmitoyl Tetrapeptide-7,Palmitoyl Dipeptide-10,Carbomer,Arginine,Sclerotium Gum,Hydrolyzed Jojoba Esters,Caprylyl Glycol,Polyglyceryl-10 Myristate,Panthenol,Polyglyceryl-10 Laurate,Hydrogenated Lecithin,Camellia Sinensis Leaf Extract,Pancratium Maritimum Extract,Dipotassium Glycyrrhizate,Disodium EDTA,Adenosine",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Anti-Aging,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Rice Toner",
+    "type": "Toner",
+    "ingridients": "Oryza Sativa Extract 77.78%,Methylpropanediol,Triethylhexanoin,Hydrogenated Polybutene,Niacinamide,Pentylene Glycol,Portulaca Oleracea Extract,Oryza Sativa Bran Extract,Ulmus Davidiana Root Extract,Amaranthus Caudatus Seed Extract,Hydrogenated Lecithin,Water,Polyglyceryl-10 Myristate,Butylene Glycol,Adenosine,Cellulose Gum,Ethylhexylglycerin,1,2-Hexanediol",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Centella Water Alcohol-Free Toner",
+    "type": "Toner",
+    "ingridients": "Water,Centella Asiatica Leaf Water,Butylene Glycol,1,2-Hexanediol,Betaine,Panthenol,Allantoin,Ethyl Hexanediol,Sodium Hyaluronate",
+    "afterUse": "Redness Reducing,Reduces Irritation"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Revive Eye Serum : Ginseng + Retinal",
+    "type": "Eye Moisturizer",
+    "ingridients": "Water,Panax Ginseng Root Extract,Glycerin,Dipropylene Glycol,Caprylic Acid,1,2-Hexanediol,Pentaerythrityl Tetraethylhexanoate,Niacinamide,Butylene Glycol Dicaprylate/Dicaprate,Cetearyl Alcohol,Sorbitan Olivate,Cetearyl Olivate,Butylene Glycol,Hydrogenated Lecithin,Tromethamine,Carbomer,Glyceryl Stearate,Macadamia Ternifolia Seed Oil,Adenosine,Theobroma Cacao Extract,Dextrin,Cholesterol,Polyglyceryl-10 Oleate,Retinal,Brassica Campestris Sterols,Phytosteryl/Behenyl/Octyldodecyl Lauroyl Glutamate,Silica,Sodium Hyaluronate,Tocopherol,Aluminum/Magnesium Hydroxide Stearate,Potassium Cetyl Phosphate,Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate,Ceramide NP,Palmitoyl Tripeptide-1,Disodium EDTA,Ethylhexylglycerin",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Reduces Large Pores,Anti-Aging,Dark Spots,Scar Healing,Acne Fighting,Brightening,Drying,Acne Trigger,Irritating,Eczema"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Glow Deep Serum: Rice + Arbutin",
+    "type": "Serum",
+    "ingridients": "Oryza Sativa Bran Water 68.6%,Water,Glycerin,Butylene Glycol,1,2-Hexanediol,Dipropylene Glycol,Alpha-Arbutin 2%,Niacinamide,Methyl Gluceth-20,Panthenol,Polyglycerin-3,Trehalose,Glyceryl Glucoside,Hydrolyzed Jojoba Esters,2-Hydroxyethyl Acrylate,Ethylhexylglycerin,Hydroxyethylcellulose,Xanthan Gum,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Arginine,Disodium EDTA,Coptis Japonica Root Extract,Sorbitan Isostearate,Glucose,Coix Lacryma-Jobi Ma-Yuen Seed Extract,Glycine Soja Seed Extract,Hordeum Distichon Extract,Oryza Sativa Extract,Sesamum Indicum Seed Extract,Triticum Vulgare Seed Extract,Vigna Radiata Seed Extract,Zea Mays Kernel Extract",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Scar Healing,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Propolis Synergy Toner",
+    "type": "Toner",
+    "ingridients": "Propolis Extract,Honey Extract,Butylene Glycol,1,2-Hexanediol,Glycerin,Betaine,Cassia Obtusifolia Seed Extract,Panthenol,Polyglyceryl-10 Laurate,Polyglyceryl-10 Myristate,Ethylhexylglycerin,Sodium Hyaluronate,2-Hydroxyethyl Acrylate,Caprylic Acid",
+    "afterUse": "Reduces Irritation"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Repair Serum: Ginseng + Snail Mucin",
+    "type": "Serum",
+    "ingridients": "Panax Ginseng Root Water,Butylene Glycol,1,2-Hexanediol,Snail Secretion Filtrate,Dipropylene Glycol,Water,Niacinamide,Glycerin,Propanediol,Trehalose,Xanthan Gum,Glycereth-25 PCA Isostearate,Glyceryl Acrylate/Acrylic Acid Copolymer,Ethylhexylglycerin,Carbomer,Adenosine,Theobroma Cacao Seed Extract,Tricholoma Matsutake Extract,Tromethamine,Rhododendron Chrysanthum Leaf Extract,Disodium EDTA,Hydrolyzed Cicer Seed Extract,Hyaluronic Acid,Hydrolyzed Hyaluronic Acid,Dextrin,Sodium Hyaluronate,Phellinus Linteus Extract,Cornus Officinalis Fruit Extract,Glycyrrhiza Glabra Root Extract,Akebia Quinata Extract,Panax Ginseng Root Extract",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Scar Healing,Acne Fighting,Brightening,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Pure Hyaluronic Acid 90 Serum",
+    "type": "Serum",
+    "ingridients": "Sodium Hyaluronate 90%,Glycerin,Water,1,2-Hexanediol,Niacinamide,Aloe Barbadensis Leaf Extract,Tuber Magnatum Extract,Camellia Sinensis Leaf Extract,Pyrus Malus Fruit Extract,Sodium Polyacrylate,Adenosine,Disodium EDTA,Tocopheryl Acetate,Ascorbic Acid,Lactobacillus/Kelp Ferment Filtrate,Chlorella Ferment",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Dark Spots,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Calming Serum: Green Tea + Panthenol",
+    "type": "Serum",
+    "ingridients": "Camellia Sinensis Leaf Water,Water,Methylpropanediol,Glycerin,Butylene Glycol,Centella Asiatica Extract,Panthenol,Pentylene Glycol,1,2-Hexanediol,Chondrus Crispus Extract,Saccharum Officinarum Extract,Artemisia Vulgaris Extract,Melia Azadirachta Leaf Extract,Sodium Hyaluronate,Melia Azadirachta Flower Extract,Theobroma Cacao Seed Extract,Propolis Extract,Diethoxyethyl Succinate,Betaine,Octanediol,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Allantoin,Sodium Polyacryloyldimethyl Taurate,Tromethamine,Ethylhexylglycerin,Dipotassium Glycyrrhizate,Polyquaternium-51,Glyceryl Acrylate/Acrylic Acid Copolymer,Sodium Phytate,Dextrin,Tocopherol",
+    "afterUse": "Hydrating,Redness Reducing,Reduces Irritation,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Advanced Snail Radiance Dual Essence",
+    "type": "Essence",
+    "ingridients": "Snail Secretion Filtrate,Butylene Glycol,Niacinamide,1,2-Hexanediol,Betaine,Panthenol,Water,Glycerin,Limnanthes Alba Seed Oil,Helianthus Annuus Seed Oil,Allantoin,Carbomer,Macadamia Ternifolia Seed Oil,Sodium Polyacrylate,Sodium Hyaluronate,Inulin Lauryl Carbamate,Arginine,Argania Spinosa Kernel Oil,Xanthan Gum,Sodium Surfactin,Ethylhexylglycerin,Glutathione",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Pear Soothing Pad",
+    "type": "Facial Treatment",
+    "ingridients": "Pyrus Pyrifolia Fruit Extract 75%,Water,Butylene Glycol,Methylpropanediol,1,2-Hexanediol,Glycerin,Propanediol,Hydroxyacetophenone,Sodium Citrate,Citric Acid,Panthenol,Ethylhexylglycerin,Disodium EDTA,Xanthan Gum,Sodium Hyaluronate,Hyaluronic Acid,Hydrolyzed Hyaluronic Acid,Allantoin,Arbutin",
+    "afterUse": "Good For Oily Skin,Reduces Irritation,Skin Texture,Reduces Large Pores,Anti-Aging,Scar Healing,Brightening,Drying,Irritating"
+  },
+  {
+    "brand": "PURITO",
+    "name": "Pure Vitamin C Serum",
+    "type": "Serum",
+    "ingridients": "Sodium Hyaluronate,Ascorbic Acid 5%,1,2-Hexanediol,Niacinamide,Arginine,Nelumbo Nucifera Flower Extract,Magnolia Liliflora Bud Extract,Lilium Tigrinum Extract,Paeonia Lactiflora Root Extract,Tuber Magnatum Extract,Pyrus Malus Fruit Extract,Panax Ginseng Root Extract,Brassica Oleracea Italica Extract,Ananas Sativus Fruit Extract,Curcuma Longa Root Extract,Sodium Polyacrylate,Adenosine,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Skin Texture,Anti-Aging,Dark Spots,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "I'm from",
+    "name": "Mushroom Collagen Ampoule",
+    "type": "Serum",
+    "ingridients": "Water,Tremella Fuciformis Extract 20%,Glycerin,Butylene Glycol,Methylpropanediol,Niacinamide,1,2-Hexanediol,Limnanthes Alba Seed Oil,Macadamia Ternifolia Seed Oil,Chlorella Vulgaris Extract,Butyrospermum Parkii Butter,Soluble Collagen,Pentylene Glycol,Squalane,Hydrogenated Lecithin,Hydrogenated Polydecene,Triisostearin,Ammonium Acryloyldimethyltaurate/Vp Copolymer,Propanediol,Glucose,Panthenol,Fructooligosaccharides,Fructose,Ceramide NP,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Polyglyceryl-10 Laurate,Polyglyceryl-3 Methylglucose Distearate,Tromethamine,Ethylhexylglycerin,Adenosine,Dipotassium Glycyrrhizate,Caprylic/Capric Triglyceride,Glyceryl Acrylate/Acrylic Acid Copolymer,Sodium Phytate,Trehalose,Sodium Ascorbyl Phosphate,Beta-Glucan,Tocopherol,Sodium Stearoyl Glutamate,Xanthan Gum",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Skin Texture,Anti-Aging,Dark Spots,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "Beauty of Joseon",
+    "name": "Ginseng Essence Water",
+    "type": "Essence",
+    "ingridients": "Panax Ginseng Root Water,Butylene Glycol,Glycerin,Propanediol,Niacinamide,1,2-Hexanediol,Water,Hydroxyacetophenone,Glyceryl Glucoside,Xanthan Gum,Panthenol,Dipotassium Glycyrrhizate,Allantoin,Adenosine,Panax Ginseng Callus Culture Extract,Theobroma Cacao Extract,Dextrin,Glucose,Panax Ginseng Root Extract,Panax Ginseng Berry Extract,Lactobacillus,Sodium Hyaluronate,Ethylhexylglycerin,Disodium EDTA",
+    "afterUse": "Good For Oily Skin,Redness Reducing,Reduces Irritation,Acne Fighting,Brightening"
+  },
+  {
+    "brand": "COSRX",
+    "name": "Advanced Snail 96 Mucin Power Essence",
+    "type": "Essence",
+    "ingridients": "Snail Secretion Filtrate,Betaine,Butylene Glycol,1,2-Hexanediol,Sodium Polyacrylate,Phenoxyethanol,Sodium Hyaluronate,Allantoin,Ethyl Hexanediol,Carbomer,Panthenol,Arginine",
+    "afterUse": "Redness Reducing"
+  }
+]

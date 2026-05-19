@@ -12,19 +12,25 @@ K-Beauty 5 브랜드 (COSRX · PURITO · Beauty of Joseon · I'm From · Dr.Jart
 
 ---
 
-## 빠른 실행 (4 단계)
+## 빠른 실행 (5 단계)
 
 ```bash
 # 1. Python 의존성 설치
 uv sync   # 또는: pip install -e .
 
 # 2. .env 셋업 — OpenAI API key 필요
-cp .env.example .env   # GRAPHRAG_API_KEY 에 실제 OpenAI key 채우기
+cp .env.example .env
+# .env 안에서 OpenAI 섹션 주석 해제 + LLM_API_KEY / EMBED_API_KEY 에 sk-... 채우기
+# GRAPHRAG_API_KEY=sk-... 도 동일 키로
 
-# 3. GraphRAG 인덱싱 (~수 분 ~ 수십 분, OpenAI API 비용 발생)
+# 3. 인덱싱 input 준비 (git 에 포함된 sample 사용)
+cp examples/graphrag_input/brand_50_sample.txt \
+   src/rag_chatbot/cosmetic_rag_chat/indexing/input/
+
+# 4. GraphRAG 인덱싱 (~수 분 ~ 수십 분, OpenAI API 비용 $5~10)
 graphrag index --root ./src/rag_chatbot/cosmetic_rag_chat/indexing
 
-# 4. 챗봇 실행
+# 5. 챗봇 실행
 python -m src.rag_chatbot.cosmetic_rag_chat.main --method local
 ```
 
@@ -70,12 +76,12 @@ cp .env.example .env
 
 K-Beauty 5 브랜드 데이터를 GraphRAG 로 인덱싱한 결과 (LanceDB) 가 챗봇 응답의 근거.
 
-**입력 데이터**: `data/model/graphrag_t_2/input/5brand_graphrag_part.txt` (git 에 포함, ollama 변형과 공유)
+**입력 데이터**: `examples/graphrag_input/brand_50_sample.txt` (git 포함, 44K).
 
 인덱싱 전에 입력 파일을 `indexing/input/` 에 복사:
 
 ```bash
-cp data/model/graphrag_t_2/input/5brand_graphrag_part.txt \
+cp examples/graphrag_input/brand_50_sample.txt \
    src/rag_chatbot/cosmetic_rag_chat/indexing/input/
 ```
 
