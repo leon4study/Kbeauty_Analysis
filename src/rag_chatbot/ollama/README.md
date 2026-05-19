@@ -12,7 +12,7 @@ K-Beauty 5 브랜드 (COSRX · PURITO · Beauty of Joseon · I'm From · Dr.Jart
 
 ---
 
-## 빠른 실행 (5 단계)
+## 빠른 실행 (6 단계)
 
 ```bash
 # 1. Python 의존성 설치 (uv 권장)
@@ -20,17 +20,21 @@ uv sync
 # pip 사용 시: pip install -e .
 
 # 2. Ollama 설치 (https://ollama.com) + 모델 다운로드
-ollama pull gemma2
-ollama pull nomic-embed-text
+ollama pull gemma2              # LLM, 약 5GB
+ollama pull nomic-embed-text    # 임베딩, 약 280MB
 
-# 3. Ollama 데몬 시작 (별도 터미널 또는 자동 시작)
+# 3. Ollama 데몬 시작 (이미 떠있으면 skip)
 ollama serve
 
-# 4. .env 셋업 + GraphRAG 인덱싱 (~수 시간, 한 번만)
-cp .env.example .env   # 필요한 키 채우기
+# 4. .env 셋업 (.env.example 의 Ollama default 가 이미 권장값)
+cp .env.example .env
+
+# 5. 인덱싱 input 준비 + GraphRAG 인덱싱 (~수 시간, 한 번만)
+mkdir -p data/model/graphrag_t_2/input
+cp examples/graphrag_input/5brand_graphrag_part.txt data/model/graphrag_t_2/input/
 graphrag index --root ./data/model/graphrag_t_2
 
-# 5. 챗봇 실행
+# 6. 챗봇 실행
 python -m src.rag_chatbot.ollama.gradio_rag_ch7
 ```
 
@@ -77,7 +81,13 @@ ollama serve
 
 K-Beauty 5 브랜드 제품·성분·효과 데이터를 GraphRAG 로 인덱싱한 결과 (LanceDB) 가 챗봇 응답의 근거.
 
-**입력 데이터**: `data/model/graphrag_t_2/input/5brand_graphrag_part.txt` (git 에 포함)
+**입력 데이터**: `examples/graphrag_input/5brand_graphrag_part.txt` (git 포함, 100K).
+인덱싱 전에 `data/model/graphrag_t_2/input/` 으로 복사:
+
+```bash
+mkdir -p data/model/graphrag_t_2/input
+cp examples/graphrag_input/5brand_graphrag_part.txt data/model/graphrag_t_2/input/
+```
 
 **인덱싱 실행**:
 
@@ -101,12 +111,9 @@ graphrag index --root ./data/model/graphrag_t_2
 cp .env.example .env
 ```
 
-필수 변수 (Ollama 만 사용 시):
-- `GRAPHRAG_API_KEY=dummy` (Ollama 는 키 검증 안 함, 임의 값 OK)
-- `LLM_MODEL=gemma2`
-- `EMBED_MODEL=nomic-embed-text`
+`.env.example` 의 default 가 이미 Ollama 권장값 (`gemma2` + `nomic-embed-text` + `dummy` API key) — 그대로 cp 만 해도 동작.
 
-자세한 prefix 규칙: [`.env.example`](../../../.env.example)
+자세한 prefix 규칙 + OpenAI 변형 전환 방법: [`.env.example`](../../../.env.example)
 
 ---
 

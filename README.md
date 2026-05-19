@@ -33,8 +33,25 @@
 - OpenAI (gpt-3.5-turbo) — 정확도
 
 → 실행 방법:
-- 로컬 Ollama 변형 → [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md)
-- OpenAI 변형 → [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md)
+- 로컬 Ollama 변형 → [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md) (비용 0, 인덱싱 수 시간)
+- OpenAI 변형 → [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) (API 비용 $5~10, 인덱싱 수 분)
+
+### Fresh clone 빠른 시작 (Ollama)
+
+```bash
+git clone <repo>
+cd Kbeauty_Analysis
+pip install -e .
+ollama pull gemma2 && ollama pull nomic-embed-text
+ollama serve &
+cp .env.example .env
+mkdir -p data/model/graphrag_t_2/input
+cp examples/graphrag_input/5brand_graphrag_part.txt data/model/graphrag_t_2/input/
+graphrag index --root ./data/model/graphrag_t_2   # 수 시간 소요
+python -m src.rag_chatbot.ollama.gradio_rag_ch7
+```
+
+→ `http://127.0.0.1:7860` 에서 챗봇 사용. 인덱싱 데이터는 `examples/graphrag_input/` 에 git 포함.
 
 ---
 
