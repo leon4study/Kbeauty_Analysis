@@ -90,8 +90,9 @@ src/                                   (project_code 사라짐)
 ├── rag_chatbot/
 ├── tiktok_crawler/
 ├── tiktok_recommendation/
-├── team_folder/                       (다음 정리 대상)
 └── util/
+                                       (team_folder/ 는 후속 정리에서
+                                        data/archive/team_folder/ 로 이동 — archive 성격 명확화)
 
 notebooks/lemmatized_full_pipeline.ipynb   (project_code 에서 승격)
 
