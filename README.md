@@ -171,6 +171,7 @@ data/
   - [14 — K-Premium 수치 변천 (8.43 → 4.76 ~ 5.10) 영구 기록](docs/refactor/14_kpremium_number_history.md)
   - [16 — silver 단계 설계 + historical artifact 보존](docs/refactor/16_silver_artifact_origin.md)
   - [17 — 2026-05 medallion 마무리 + data legacy + 온보딩 정리 (PR #5~#14 종합)](docs/refactor/17_2026_05_session_cleanup.md)
+  - [18 — H1+H2 리팩터링: for-loop 벡터화 + Selenium 상수 정리](docs/refactor/18_vectorization_and_constants.md)
   - [EXPERIMENTS_PLAYBOOK](docs/refactor/EXPERIMENTS_PLAYBOOK.md) — 변종 정리 표준
 - **파이프라인 설계 docs**:
   - [pipeline_overview](docs/pipeline_overview.md), [amazon_crawler](docs/amazon_crawler.md), [tiktok_crawler](docs/tiktok_crawler.md)

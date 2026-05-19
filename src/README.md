@@ -147,6 +147,7 @@ python -m src.rag_chatbot.cosmetic_rag_chat.main --search-type local
 | --- | --- |
 | `repo_paths.py` | `.git` 디렉토리 기준으로 저장소 root 자동 감지. 노트북 / 스크립트 어디서 실행해도 `BRONZE_AMAZON`, `SILVER_AMAZON`, `BRONZE_TIKTOK`, `SILVER_TIKTOK`, `GOLD_AMAZON`, `GOLD_TIKTOK` 절대경로 사용 가능. legacy `AMAZON`/`TIKTOK` 도 유지 (마이그레이션 진행 중) |
 | `data_io.py` | 자주 쓰는 데이터 로드 함수 (`load_keyword_dfs()` 등) + `AMAZON_BRANDS` 5 브랜드 슬러그 상수 |
+| `tiktok_metrics.py` | TikTok raw 데이터 벡터화 헬퍼 — `parse_metric_with_unit` (K/M/B 단위), `parse_relative_date` (mixed-format), `extract_hashtags_and_mentions`, `bucket_influencer_size` (mega/mekro/middle/micro/nano), `format_year_month`. 3 노트북에서 중복 정의됐던 함수들을 통합 + 벡터화 (50배+ 빠름) |
 | `negation.py` | Amazon 리뷰의 *"not sticky"*, *"alcohol-free"*, *"non-comedogenic"* 같은 부정 표현을 NLP 정규화하는 4 단계 파이프라인 (NLTK + PMI bigram + 도메인 lexicon + SpaCy 의존구문분석) |
 | `slack.py` | Slack incoming webhook 알림 (`send_msg(msg)`). 장시간 크롤러 / 배치 작업 완료 또는 에러 시 채널에 메시지 전송 |
 

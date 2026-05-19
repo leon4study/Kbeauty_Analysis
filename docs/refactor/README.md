@@ -34,6 +34,7 @@
 | [15_ollama_graphrag_compatibility.md](15_ollama_graphrag_compatibility.md) | Ollama × GraphRAG 호환성 — entity extraction / 임베딩 차원 / JSON mode 3 issue + 운영 옵션 A/B/C | `1e236b1` |
 | [16_silver_artifact_origin.md](16_silver_artifact_origin.md) | silver 단계 설계 결정 + historical artifact 보존 이유 (raw 재현 불가) | `6bc440f` |
 | [17_2026_05_session_cleanup.md](17_2026_05_session_cleanup.md) | 2026-05 medallion 마무리 + data legacy + bronze 네이밍 + team_folder + 온보딩 (PR #5~#14 종합) | (이번 정리) |
+| [18_vectorization_and_constants.md](18_vectorization_and_constants.md) | H1+H2 — 노트북 for-loop 벡터화 (util 추출) + main.py 상수 정리. `np.select` / `explode` / dict-lookup 패턴 학습 노트 | `3fa1972` |
 | [EXPERIMENTS_PLAYBOOK.md](EXPERIMENTS_PLAYBOOK.md) | **변종 정리 표준 — 폴더 우선, 통폐합 패턴, 결정 트리** | (이번 정리) |
 
 ## 정리 원칙 (이 repo에 적용된 것)
