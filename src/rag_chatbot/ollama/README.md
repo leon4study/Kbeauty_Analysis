@@ -150,7 +150,7 @@ Running on local URL: http://127.0.0.1:7860
 | 파일 | 역할 |
 | --- | --- |
 | `gradio_rag_ch7.py` | **메인 챗봇** (실행 entry point) |
-| `OllamaLLM.py` | LlamaIndex 용 Custom Ollama LLM wrapper (httpx 직접 사용) |
+| `_experimental/OllamaLLM.py` | (미완성) LlamaIndex 용 Custom Ollama LLM wrapper (httpx 직접 사용) — 누락 import 3 개 + callers 0. 자세히 [`_experimental/README.md`](_experimental/README.md) |
 | `check_db.ipynb` | LanceDB 검증 도구 (테이블 / entity 미리보기, 디버깅용) |
 | `gradio_rag_ch8.ipynb` | LanceDB graph 데이터 깊이 활용 실험 (별도 진화 가지) |
 
