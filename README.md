@@ -176,6 +176,8 @@ data/
 - **파이프라인 설계 docs**:
   - [pipeline_overview](docs/pipeline_overview.md), [amazon_crawler](docs/amazon_crawler.md), [tiktok_crawler](docs/tiktok_crawler.md)
   - [etl_pipeline](docs/etl_pipeline.md), [db_schema](docs/db_schema.md), [slack_alert](docs/slack_alert.md)
+- **RAG 챗봇 평가**:
+  - [rag_evaluation_framework](docs/rag_evaluation_framework.md) — 5 차원 metric (retrieval / generation / 실용 / 도메인 / 일관성) + RAGAS 활용
 
 ---
 
