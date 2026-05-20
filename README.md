@@ -178,6 +178,7 @@ data/
   - [etl_pipeline](docs/etl_pipeline.md), [db_schema](docs/db_schema.md), [slack_alert](docs/slack_alert.md)
 - **RAG 챗봇 평가**:
   - [rag_evaluation_framework](docs/rag_evaluation_framework.md) — 5 차원 metric (retrieval / generation / 실용 / 도메인 / 일관성) + RAGAS 활용
+  - [lightrag_comparison_design](docs/lightrag_comparison_design.md) — LightRAG vs GraphRAG 비교 설계 (E0 smoke test 통과 후)
   - [rag_evaluation_results](docs/rag_evaluation_results.md) — provider 비교 표 (OpenAI / Groq / Gemini), 비용/latency/faithfulness trade-off
   - [examples/graphrag_configs/](examples/graphrag_configs/) — provider 별 settings.yaml 템플릿 (Groq / Gemini 무료 변형)
   - [tests/rag_eval/](tests/rag_eval/) — golden 10 질문 + evaluate.py 평가 하네스
