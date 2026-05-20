@@ -554,11 +554,40 @@ def click_BeautyPersonalCareDepartment():
     category_Department.click()
 
 def _scrape_item_details(asin: str, category_name: str, cnt: int) -> dict:
-    """현재 driver 탭이 *Amazon 상품 상세 페이지* 라는 가정 하에 메타데이터 추출.
+    """Amazon 상품 상세 페이지 한 건의 메타데이터를 추출.
 
-    원본 ``crawl_amazon`` 안에 inline 으로 들어있던 약 120 줄의 selector 시퀀스
-    를 단일 함수로 분리. nested loop 안에서 실패 시 어떤 selector 가 깨졌는지
-    구분 가능하게 됨.
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    *현재 driver 탭이 Amazon 상품 상세 페이지* 라는 가정 하에:
+    productTitle / brand / price / global_rating_count / ingredients /
+    best_sellers_rank / special_feature / total_star_mean 등 상품 한 건의
+    모든 메타데이터를 CSS selector 시퀀스로 추출. 부재 시 fallback 문자열
+    ("No brand", "No star" 등) 대입.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 monolithic ``crawl_amazon`` 의 nested for-loop 안에서 inline 으로
+      120 줄 펼쳐있었음. 어떤 selector 가 실패했는지 추적 어려움 + 단위 검증
+      불가 (전체 크롤링 안 돌리고는 검증 X).
+    - Amazon UI 가 자주 갱신됨 (CSS selector 깨짐). 한 함수로 격리하면
+      selector 변경 시 *이 함수만 수정* 후 다른 흐름 영향 X.
+    - ``_has_ratings`` 키를 반환 dict 에 포함 → 호출부가 review 수집 여부를
+      *반환값 기반* 으로 판단 가능 (전역 변수 의존 제거).
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    1. ``_process_one_item`` 이 새 탭에서 상품 상세 페이지 연 *직후*.
+    2. ``_scrape_item_reviews`` 호출 *직전* (반환 ``_has_ratings`` 가 review
+       분기 결정).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # _process_one_item 안에서
+        driver.execute_script("window.open(arguments[0], '_blank');", item_url)
+        driver.switch_to.window(driver.window_handles[-1])
+        item_dict = _scrape_item_details(ASIN, "Skin Care", cnt)
+        if item_dict["_has_ratings"]:
+            reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
 
     Args:
         asin: 상품 ASIN (호출부에서 이미 추출 — 재추출 안 함).
@@ -566,12 +595,18 @@ def _scrape_item_details(asin: str, category_name: str, cnt: int) -> dict:
         cnt: 현재 카테고리 내 누적 순서 (1-based, best-seller 정렬 기준).
 
     Returns:
-        ``load_items`` 가 받는 schema dict. 부가로 ``_has_ratings`` 키 포함 —
-        호출부가 review 수집 여부 판단용 (downstream 저장 직전 drop).
+        ``load_items`` 가 받는 schema dict + 부가 ``_has_ratings`` 키.
+        ``_has_ratings`` 는 schema 외 control-flow 용 — ``_save_single_item``
+        이 저장 직전 drop.
 
     Note:
-        실패한 selector 는 fallback 문자열 (``"No brand"``, ``"No star"`` 등)
-        대입 — 원본 동작 보존. price 만 number 변환 시 NaN 처리.
+        실패한 selector 는 fallback 문자열 대입 (원본 동작 보존).
+        price 만 number 변환 시 NaN 처리 (downstream 안전).
+
+    Related:
+        - ``_scrape_item_reviews`` — 이 함수 결과 ``_has_ratings`` 에 따라 호출.
+        - ``_save_single_item`` — 이 함수 결과 dict 를 MySQL 에 저장.
+        - ``get_description`` — 이 함수가 호출하는 description scraper.
     """
     # 상품 페이지 완전 로드 대기 (productTitle = key 식별자).
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "productTitle")))
@@ -714,18 +749,58 @@ def _scrape_item_details(asin: str, category_name: str, cnt: int) -> dict:
 
 
 def _scrape_item_reviews(asin: str, title: str, max_reviews: int = 20000) -> list[dict]:
-    """현재 driver 탭이 *Amazon 상품 상세 페이지* 라는 가정 하에 review pagination.
+    """Amazon 상품 상세 페이지의 review 들을 pagination 으로 모두 추출.
 
-    "See all reviews" 링크 클릭 → "Most recent" 정렬 → review 페이지 순회.
-    원본 ``crawl_amazon`` 안의 review 수집 80 줄을 단일 함수로 분리.
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    *현재 driver 탭이 상품 상세 페이지* 라는 가정 하에:
+    1. "See all reviews" 링크 클릭 → review 전용 페이지로 이동
+    2. "Most recent" 정렬 (``set_sort_by_most_recent_with_scroll``)
+    3. ``while review_count < max_reviews`` 페이지네이션 — review 하나씩 추출
+       후 ``click_next_review_page`` 로 다음 페이지.
+    각 review 에서 customer_id, customer_name, date, review_title,
+    review_rating, content 6 필드 추출 + ASIN/title 함께 저장.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 안에서 80 줄 nested loop. 디버깅 시 review 한
+      필드만 깨져도 전체 흐름 멈춰서 *어느 단계* 실패한지 알기 어려움.
+    - "See all reviews" 링크 부재 (신상품 / review 0건) 시 graceful fallback
+      (빈 리스트 반환). 원본은 try/except 가 외부에서 잡아 item 자체 skip
+      → 항상 빈 리스트 반환 패턴이 더 안전.
+    - ``max_reviews`` 파라미터로 *재현 가능한 부분 수집* (테스트 / 빠른 검증
+      용). 옛 코드는 20000 hardcoded.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``_scrape_item_details`` 직후, 반환 ``_has_ratings`` 가 True 일 때만.
+    - 호출 전 driver 가 상품 상세 페이지에 있어야 함 ("See all reviews"
+      링크 이 페이지에 존재).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        item_dict = _scrape_item_details(ASIN, category, cnt)
+        if item_dict["_has_ratings"]:
+            reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+        else:
+            reviews_list = [placeholder_no_review_dict]
 
     Args:
-        asin: 상품 ASIN (review_num key 생성용).
-        title: 상품 제목 (review row 에 함께 저장).
-        max_reviews: 최대 수집 review 수. 기본 20,000.
+        asin: 상품 ASIN (review_num key 생성용: ``ASIN + "__" + idx``).
+        title: 상품 제목 (review row 에 함께 저장 — denormalized).
+        max_reviews: 최대 수집 review 수. default 20,000.
 
     Returns:
         review dict list. 실패 / "See all reviews" 링크 부재 시 빈 리스트.
+
+    Note:
+        review pagination 시 ``random.uniform(*PAGE_LOAD_JITTER_RANGE)`` jitter
+        — anti-bot 회피. 너무 빠른 클릭 패턴은 봇으로 의심받음.
+
+    Related:
+        - ``set_sort_by_most_recent_with_scroll`` — "Most recent" 정렬 호출.
+        - ``click_next_review_page`` — 다음 review 페이지 이동.
+        - ``_save_single_item`` — 이 함수 결과를 MySQL 에 저장.
     """
     reviews_list: list[dict] = []
     try:
@@ -833,13 +908,53 @@ def _scrape_item_reviews(asin: str, title: str, max_reviews: int = 20000) -> lis
 def _save_single_item(item_dict: dict, reviews_list: list[dict]) -> None:
     """단일 item + 그 review 들을 MySQL 에 upsert.
 
-    원본의 DataFrame 변환 + load_items / load_reviews 흐름 (~30 줄) 을 분리.
-    ``detail_dict`` 가 nested 라 json_normalize 후 JSON 문자열로 평탄화.
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ``item_dict`` (1개) → ``pd.json_normalize`` 후 ``detail_dict.X`` 평탄화 →
+    JSON 문자열 변환 → ``load_items`` 호출.
+    ``reviews_list`` (0~N개) → ``pd.json_normalize`` → ``load_reviews`` 호출.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 안의 DataFrame 변환 + MySQL load 로직 ~30 줄. 매
+      iteration 마다 호출되는데, 호출부 (item for-loop) 와 의미적으로 별개
+      (스크래핑 vs 적재). 책임 분리.
+    - ``detail_dict`` 가 nested 라 평탄화 / 재중첩 처리 까다로움. 단일 함수로
+      격리하면 schema 변경 시 영향 범위 명확.
+    - 단일 item 즉시 적재 (batch X) — 크롤링 중간 중단 시에도 그 시점까지
+      수집한 것은 DB 에 남음. 옛 코드 의도 보존.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``_scrape_item_details`` + ``_scrape_item_reviews`` 둘 다 끝난 뒤,
+      탭 닫기 *직전*.
+    - ``_process_one_item`` 가 매 item 마다 호출.
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        item_dict = _scrape_item_details(ASIN, category, cnt)
+        reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+        _save_single_item(item_dict, reviews_list)
+        driver.close()  # 적재 끝났으면 탭 닫기
 
     Args:
-        item_dict: ``_scrape_item_details`` 반환 dict.
-        reviews_list: ``_scrape_item_reviews`` 반환 list. 빈 리스트면 호출부에서
-            "No content" placeholder 1 row 채워서 넘김 (review_id FK 보장).
+        item_dict: ``_scrape_item_details`` 반환 dict (``_has_ratings`` 포함).
+        reviews_list: ``_scrape_item_reviews`` 반환 list. 빈 리스트면 호출부
+            에서 "No content" placeholder 1 row 채워서 넘김 (review_id FK 보장).
+
+    Returns:
+        None — 결과는 MySQL 에 직접 적재.
+
+    Note:
+        - ``detail_dict.X`` 컬럼들 (json_normalize 결과) → 다시 nested dict 로
+          묶음 → JSON 문자열로 변환 (MySQL TEXT 컬럼 저장용).
+        - ``price`` / ``total_star_mean`` 은 ``pd.to_numeric(errors="coerce")``
+          로 NaN 허용.
+        - ``_has_ratings`` 는 schema 외이므로 저장 전 drop.
+
+    Related:
+        - ``load_items`` / ``load_reviews`` — items.py / reviews.py 의 적재 함수.
+        - ``my_sql_client`` — 모듈 상단의 MySqlClient instance.
     """
     item_df = pd.json_normalize([item_dict])
 
@@ -877,24 +992,65 @@ def _process_one_item(
 ) -> int:
     """단일 search-result row 처리 — 탭 열기 → 스크래핑 → 저장 → 탭 닫기.
 
-    원본 ``crawl_amazon`` 안 nested for-loop body (~280 줄) 를 분리. 각 item
-    처리가 독립 함수가 되면서 예외 격리 + 단위 검증 가능.
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Amazon 검색 결과 페이지의 단일 ``<div role="listitem">`` element 를
+    받아 그 상품에 대해:
+    1. ASIN 중복 / sponsored 체크 (skip 조건)
+    2. 새 탭에서 상세 페이지 열기
+    3. ``_scrape_item_details`` + ``_scrape_item_reviews``
+    4. ``_save_single_item`` 으로 MySQL 적재
+    5. 탭 닫기 (예외 시에도 보장)
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 의 가장 안쪽 for-loop body 가 ~280 줄. 한 item 처리
+      가 함수 안에 격리되면 *예외 격리* (한 item 실패해도 다음 item 계속)
+      가 명확해짐.
+    - 탭 무한 누적 방지 — 예외 시에도 close 보장 (except 안에서도 close 시도).
+    - ``cnt`` 를 반환값으로 (전역 mutable 회피) — 함수 호출이 끝나면 그 결과로
+      외부 cnt 갱신. 부작용 추적 용이.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``crawl_amazon`` 의 카테고리 페이지 paginate 안 ``for idx, item in
+      enumerate(items)`` 루프 마다.
+    - 호출 전 driver 는 *카테고리 검색결과 페이지* (탭 idx 1) 에 있어야 함.
+    - 호출 후 driver 는 동일 페이지로 복귀 (탭 close 보장).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        ASIN_list = get_asin_from_sql() if asin_skip else []
+        items = driver.find_elements(By.CSS_SELECTOR, "[role='listitem']")
+        for idx, item in enumerate(items):
+            cnt = _process_one_item(
+                item, idx, ASIN_list, cnt, category_name, sponsored_filter,
+            )
 
     Args:
         item: search 결과 row WebElement (``role="listitem"``).
-        idx: 현재 페이지 내 idx (디버깅 출력용).
-        ASIN_list: 누적 ASIN 리스트 (이 호출에서 새 ASIN 추가됨, mutable).
+        idx: 현재 페이지 내 idx (디버깅 출력용, 수집 동작에 영향 X).
+        ASIN_list: 누적 ASIN 리스트 (mutable — 이 호출에서 새 ASIN append).
+            ``asin_skip=True`` 시 ``get_asin_from_sql()`` 결과로 초기화됨.
         cnt: 현재 카테고리 누적 수집 count.
-        category_name: 현재 카테고리명.
-        sponsored_filter: True 면 sponsored item skip *should be*. 단 원본 동작
-            은 ``pass`` 였어서 *계속 수집함* — 의도된 버그인지 불명, 그대로 보존.
+        category_name: 현재 카테고리명 (item 저장 시 함께 기록).
+        sponsored_filter: True 면 sponsored item skip *should be*.
+            단 원본 동작이 ``pass`` (계속 수집) 라 보존.
 
     Returns:
-        새로 갱신된 cnt (이 item 처리됐으면 +1, ASIN duplicate 면 그대로).
+        새로 갱신된 cnt. item 처리됐으면 +1, ASIN duplicate 면 그대로.
 
     Note:
-        탭 정리 (실패 시에도 close) 책임. crawl_amazon 의 메인 흐름에서 탭이
-        무한 누적되지 않도록.
+        - ``sponsored_filter`` 가 True 여도 sponsored item 이 계속 수집됨.
+          *원본 버그 가능성* 이지만 의도된 동작인지 불명 → 보존 + TODO 주석.
+        - 예외 시 ``driver.close()`` 시도 — 실패해도 swallow (탭이 이미 닫혔거나
+          driver state 망가졌어도 main loop 계속).
+
+    Related:
+        - ``_scrape_item_details`` / ``_scrape_item_reviews`` / ``_save_single_item``
+          — 이 함수가 orchestrate 하는 3 단계.
+        - ``is_sponsored`` — sponsored 체크.
+        - ``crawl_amazon`` — 이 함수의 호출부.
     """
     print(f"index: {idx}")
     try:
