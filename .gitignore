@@ -211,6 +211,7 @@ env.bak/
 venv.bak/
 .yaml
 *.yaml
+!tests/rag_eval/golden_questions.yaml
 *.env
 
 # Spyder project settings

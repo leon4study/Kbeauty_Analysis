@@ -1,0 +1,165 @@
+# K-Beauty 챗봇 평가용 골든 질문 세트
+#
+# 각 질문은 챗봇이 *합리적으로 답해야 할* 시나리오. 정답은 한 가지가 아닐 수
+# 있으므로, expected_products / expected_brands 는 *합리적 추천 후보군* 이고
+# must_not_contain 은 *절대 어기면 안 되는 조건* (알러지 회피 등).
+#
+# 평가 시:
+# - expected_* 매칭: "응답이 합리적 후보군 중 N개 포함" → recall 계산
+# - must_not_contain: "응답에 절대 X 성분 포함되면 안 됨" → strict 페널티
+# - ground_truth: RAGAS faithfulness / context recall 계산용
+#
+# 도메인 5 브랜드: COSRX / PURITO / Beauty of Joseon / I'm From / Dr.Jart+
+
+version: 1
+questions:
+  # ─── 피부 타입 × 제품 타입 (5 케이스) ─────────────────────────────────────
+
+  - id: q01
+    category: skin_type
+    question: "건성 피부에 맞는 보습 크림 추천해줘"
+    expected_products:
+      - "COSRX Advanced Snail 92 All In One Cream"
+      - "Beauty of Joseon Dynasty Cream"
+      - "I'm From Mugwort Cream"
+    expected_brands: ["COSRX", "Beauty of Joseon", "I'm From"]
+    must_not_contain: []
+    ground_truth: |
+      건성 피부엔 hyaluronic acid, ceramide, snail mucin 같은 보습 성분이 풍부한
+      크림이 적합. 알코올·향료 free 제품이 더 안전. K-Beauty 5 브랜드 중 COSRX
+      Snail 92 (snail mucin), Beauty of Joseon Dynasty Cream (전통 한방 성분),
+      I'm From Mugwort Cream (쑥 추출물) 이 대표적.
+
+  - id: q02
+    category: skin_type
+    question: "지성 피부 + 모공 케어 토너 알려줘"
+    expected_products:
+      - "COSRX AHA/BHA Clarifying Treatment Toner"
+      - "PURITO Wonder Releaf Centella Toner"
+    expected_brands: ["COSRX", "PURITO"]
+    must_not_contain: []
+    ground_truth: |
+      지성 피부의 모공 케어엔 BHA (salicylic acid) 가 효과적. AHA/BHA 함께 들어간
+      토너가 각질 제거 + 모공 정리 동시에. PURITO 의 centella asiatica 도
+      진정 + 모공 관리에 좋음.
+
+  - id: q03
+    category: skin_type
+    question: "민감 피부에 맞는 클렌저 추천"
+    expected_products:
+      - "COSRX Low pH Good Morning Gel Cleanser"
+      - "PURITO Defence Barrier Ph Cleanser"
+    expected_brands: ["COSRX", "PURITO"]
+    must_not_contain: ["sulfate", "alcohol denat"]
+    ground_truth: |
+      민감 피부엔 약산성 (pH 5~6) 저자극 클렌저가 필수. SLS (sulfate),
+      알코올 free 가 핵심. COSRX Low pH Good Morning 이 가장 유명한 저자극
+      옵션. PURITO Defence Barrier 도 ph balance 강조.
+
+  - id: q04
+    category: skin_type
+    question: "복합 피부에 쓸 만한 세럼 있어?"
+    expected_products:
+      - "COSRX Advanced Snail 96 Mucin Power Essence"
+      - "Beauty of Joseon Glow Serum"
+      - "I'm From Vitamin Tree Serum"
+    expected_brands: ["COSRX", "Beauty of Joseon", "I'm From"]
+    must_not_contain: []
+    ground_truth: |
+      복합 피부는 T-zone 유분 + 볼 건조 동시 관리 필요. niacinamide,
+      hyaluronic acid 가 양쪽 모두 케어. COSRX snail essence 가 균형 잡힌
+      대표 제품.
+
+  - id: q05
+    category: skin_type
+    question: "여드름 자주 나는데 도움 되는 제품?"
+    expected_products:
+      - "COSRX Acne Pimple Master Patch"
+      - "COSRX AHA/BHA Clarifying Treatment Toner"
+      - "PURITO Centella Green Level Eye Cream"
+    expected_brands: ["COSRX", "PURITO"]
+    must_not_contain: ["mineral oil", "comedogenic"]
+    ground_truth: |
+      여드름 관리엔 salicylic acid (BHA), tea tree, centella asiatica 같은
+      진정 성분이 효과적. COSRX 의 acne patch + AHA/BHA toner 조합이 가장
+      유명. PURITO centella 라인도 추천.
+
+  # ─── 알러지 / 회피 조건 (3 케이스) ─────────────────────────────────────────
+
+  - id: q06
+    category: allergy_avoidance
+    question: "파라벤 알러지 있는데 안전한 클렌저 알려줘"
+    expected_products:
+      - "COSRX Low pH Good Morning Gel Cleanser"
+      - "PURITO Defence Barrier Ph Cleanser"
+    expected_brands: ["COSRX", "PURITO", "Beauty of Joseon"]
+    must_not_contain: ["paraben", "methylparaben", "propylparaben"]
+    ground_truth: |
+      파라벤 (methylparaben, propylparaben 등) 회피가 핵심. K-Beauty 인디
+      브랜드 대다수가 paraben-free 표방. 라벨에 명시된 제품 우선 추천 +
+      절대 paraben 함유 제품 추천하면 안 됨.
+
+  - id: q07
+    category: allergy_avoidance
+    question: "알코올 free 토너 추천해줘"
+    expected_products:
+      - "PURITO Wonder Releaf Centella Toner"
+      - "Beauty of Joseon Ginseng Essence Water"
+    expected_brands: ["PURITO", "Beauty of Joseon"]
+    must_not_contain: ["alcohol denat", "ethanol", "denatured alcohol"]
+    ground_truth: |
+      "alcohol-free" 는 보통 *denatured alcohol* / *SD alcohol* 회피.
+      Cetyl alcohol 같은 fatty alcohol 은 OK (보습 성분). 토너 중에 일반
+      알코올 안 들어간 진정 제품 추천.
+
+  - id: q08
+    category: allergy_avoidance
+    question: "향료 (fragrance) 알러지 있는데 안전한 보습제 알려줘"
+    expected_products:
+      - "PURITO Centella Unscented Recovery Cream"
+      - "Dr. Jart+ Ceramidin Cream"
+    expected_brands: ["PURITO", "Dr. Jart+"]
+    must_not_contain: ["fragrance", "parfum", "essential oil"]
+    ground_truth: |
+      향료 알러지엔 fragrance, parfum, perfume 명시 회피. "unscented" 또는
+      "fragrance-free" 라벨 제품 우선. PURITO 의 unscented 라인이 가장 명확.
+      Dr. Jart+ Ceramidin 도 무향 옵션.
+
+  # ─── 복합 조건 (multi-hop 질의, 2 케이스) ─────────────────────────────
+
+  - id: q09
+    category: multi_condition
+    question: "건성 피부 + 알코올 free + 보습 효과 좋은 크림"
+    expected_products:
+      - "Beauty of Joseon Dynasty Cream"
+      - "I'm From Mugwort Cream"
+      - "Dr. Jart+ Ceramidin Cream"
+    expected_brands: ["Beauty of Joseon", "I'm From", "Dr. Jart+"]
+    must_not_contain: ["alcohol denat", "ethanol", "sd alcohol"]
+    ground_truth: |
+      건성 + 알코올 회피 + 보습 = 3 조건 모두 만족. Ceramidin (ceramide),
+      Mugwort (쑥), Dynasty (전통 한방) 가 알코올 없이 보습력 강함.
+      multi-hop 질의 (피부 타입 + 알러지 + 효과) 가 GraphRAG 의 강점.
+
+  - id: q10
+    category: multi_condition
+    question: "민감 피부 + 히알루론산 함유 + 무향 세럼 있어?"
+    expected_products:
+      - "PURITO Wonder Releaf Centella Serum"
+      - "I'm From Hyaluronic Acid Serum"
+    expected_brands: ["PURITO", "I'm From"]
+    must_not_contain: ["fragrance", "parfum", "alcohol denat"]
+    ground_truth: |
+      민감 + 히알루론산 + 무향 = 3 조건. 히알루론산 (hyaluronic acid /
+      sodium hyaluronate) 명시 + fragrance free + 진정 성분 (centella) 추가
+      이면 더 좋음. multi-hop 질의 대표 케이스.
+
+# 평가 모드 설정
+evaluation:
+  # RAGAS 사용 시 judge LLM (별도 변형, bias 회피).
+  # 예: 평가 대상이 OpenAI/Groq 이면 judge 는 Gemini.
+  judge_provider: gemini
+  # 같은 질문 반복 횟수 (consistency 측정용)
+  repeat_count: 3
+  # latency p50/p95 측정 위한 warm-up 호출
+  warmup: 1
