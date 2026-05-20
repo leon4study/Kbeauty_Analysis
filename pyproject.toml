@@ -13,6 +13,10 @@ dependencies = [
     "numpy>=1.24",
     "python-dotenv>=1.0",
     "pyyaml>=6.0",
+    # 무료 LLM provider (Groq + Gemini) — src/util/llm_provider.py
+    # gradio 가 transitive 로 가져오지만 src/util/llm_provider 가 직접 의존이라
+    # 명시적 등록 (gradio 떼낼 때 끊김 방지).
+    "httpx>=0.24",
     # GraphRAG 추천 챗봇 (ollama + cosmetic_rag_chat 둘 다)
     "gradio>=4.0",
     "lancedb>=0.5",
