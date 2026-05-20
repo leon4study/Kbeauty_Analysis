@@ -52,9 +52,13 @@ crawler = [
     "pymysql>=1.1",
     "requests>=2.31",
 ]
+# RAG 챗봇 평가 (tests/rag_eval/) — judge LLM + RAGAS metric 계산
+eval = [
+    "ragas>=0.1",
+]
 # 모든 의존성 한 번에
 all = [
-    "kbeauty-analysis[analysis,crawler]",
+    "kbeauty-analysis[analysis,crawler,eval]",
 ]
 
 [tool.setuptools.packages.find]
