@@ -1,0 +1,124 @@
+# GraphRAG settings 템플릿 — Groq (OpenAI-compatible endpoint)
+#
+# Groq 의 무료 한도: llama-3.3-70b-versatile 약 1k RPM. GraphRAG 인덱싱에
+# 충분. Groq 가 OpenAI API spec 그대로 호환해서 settings.yaml 변경 거의 없음
+# (api_base / api_key 만 바꾸면 됨).
+#
+# 사용법:
+# 1. 이 파일을 본인 인덱싱 디렉토리로 복사
+#    mkdir -p data/model/groq_t_1/{input,prompts,cache,output}
+#    cp examples/graphrag_configs/groq_settings.yaml data/model/groq_t_1/settings.yaml
+# 2. examples/graphrag_input/5brand_graphrag_part.txt 를 input/ 으로 복사
+# 3. .env 에 GROQ_API_KEY 등록 (https://console.groq.com)
+# 4. 인덱싱 실행 (수 분 ~ 수십 분)
+#    GRAPHRAG_API_KEY=$GROQ_API_KEY \
+#      graphrag index --root ./data/model/groq_t_1
+
+encoding_model: cl100k_base
+skip_workflows: []
+llm:
+  # Groq 도 OpenAI 의 GRAPHRAG_API_KEY env var 그대로 읽음 — Groq key 만 채우면 됨.
+  api_key: ${GRAPHRAG_API_KEY}
+  type: openai_chat
+  # Groq 의 강한 무료 모델. 8b-instant 도 가능 (한도 더 큼, 품질 살짝 ↓).
+  model: llama-3.3-70b-versatile
+  model_supports_json: true
+  # Groq 의 OpenAI-compatible base URL.
+  api_base: https://api.groq.com/openai/v1
+  # Rate limit 발생 시 GraphRAG 자동 retry. Groq 응답 빠르니 stagger 줄여도 OK.
+  # tokens_per_minute: 14400      # llama-3.3-70b 기준 free tier 한도
+  # requests_per_minute: 60       # 보수적 default
+
+parallelization:
+  stagger: 0.3
+
+async_mode: threaded
+
+embeddings:
+  async_mode: threaded
+  llm:
+    # 주의: Groq 는 *chat completions 만* 제공. embeddings 미지원!
+    # 임베딩은 별도 (OpenAI / HuggingFace 로컬) 사용.
+    #
+    # 옵션 A (권장 — 단순): OpenAI text-embedding-3-small ($5/인덱싱)
+    api_key: ${OPENAI_API_KEY}
+    type: openai_embedding
+    model: text-embedding-3-small
+    api_base: https://api.openai.com/v1
+    #
+    # 옵션 B (완전 무료): HuggingFace sentence-transformers 로컬
+    # → GraphRAG 가 직접 지원 안 함. main.py 안에서 LlamaIndex embedding 으로
+    #   처리 (cosmetic_rag_chat/main.py 의 setup_llm_and_embedder 참조).
+    #   인덱싱 자체는 OpenAI 임베딩 필요 → 비용 회피 어려움.
+
+chunks:
+  size: 1000
+  overlap: 100
+  group_by_columns: [id]
+
+input:
+  type: file
+  file_type: text
+  base_dir: "input"
+  file_encoding: utf-8
+  file_pattern: ".*\\.txt$"
+
+cache:
+  type: file
+  base_dir: "cache"
+
+storage:
+  type: file
+  base_dir: "output/${timestamp}/artifacts"
+
+reporting:
+  type: file
+  base_dir: "output/${timestamp}/reports"
+
+entity_extraction:
+  prompt: "prompts/entity_extraction.txt"
+  entity_types: [brand, type, ingredient, effect]
+  max_gleanings: 1
+
+summarize_descriptions:
+  prompt: "prompts/summarize_descriptions.txt"
+  max_length: 500
+
+claim_extraction:
+  prompt: "prompts/claim_extraction.txt"
+  description: "Any claims or facts that could be relevant to information discovery."
+  max_gleanings: 1
+
+community_reports:
+  prompt: "prompts/community_report.txt"
+  max_length: 2000
+  max_input_length: 8000
+
+cluster_graph:
+  max_cluster_size: 10
+
+embed_graph:
+  enabled: false
+
+umap:
+  enabled: false
+
+snapshots:
+  graphml: false
+  raw_entities: false
+  top_level_nodes: false
+
+local_search:
+  # default 유지 — text_unit_prop / community_prop / top_k_* 등
+
+global_search:
+  # default 유지
+
+# 챗봇 query 시 사용할 경로. 인덱싱 완료 후 timestamp 디렉토리명으로 갱신 필요.
+# 예: data/model/groq_t_1/output/20260520-153000/artifacts
+config_path: "data/model/groq_t_1/settings.yaml"
+data_path: "data/model/groq_t_1/output/<TIMESTAMP>/artifacts"
+root_path: "data/model/groq_t_1"
+response_type: "single paragraph"
+method: "local"
+community_level: 2

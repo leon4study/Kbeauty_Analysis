@@ -1,0 +1,119 @@
+# GraphRAG settings 템플릿 — Google Gemini (OpenAI-compatible beta)
+#
+# Gemini 의 무료 한도: gemini-flash-lite-latest 약 15 RPM, 1.5M TPM/일.
+# GraphRAG 인덱싱은 RPM 한도 안에서 batched 호출 가능 (parallelization.stagger).
+#
+# Gemini 는 v1beta 에서 OpenAI-compatible endpoint 제공:
+# https://generativelanguage.googleapis.com/v1beta/openai/
+#
+# 사용법:
+# 1. 이 파일을 본인 인덱싱 디렉토리로 복사
+#    mkdir -p data/model/gemini_t_1/{input,prompts,cache,output}
+#    cp examples/graphrag_configs/gemini_settings.yaml data/model/gemini_t_1/settings.yaml
+# 2. examples/graphrag_input/brand_50_sample.txt 를 input/ 으로 복사
+#    (Gemini RPM 한도 고려해 작은 sample 사용. 5brand_graphrag_part.txt 도 가능)
+# 3. .env 에 GEMINI_API_KEY 등록 (https://aistudio.google.com)
+# 4. 인덱싱 실행
+#    GRAPHRAG_API_KEY=$GEMINI_API_KEY \
+#      graphrag index --root ./data/model/gemini_t_1
+
+encoding_model: cl100k_base
+skip_workflows: []
+llm:
+  api_key: ${GRAPHRAG_API_KEY}   # Gemini key 가 여기 들어감
+  type: openai_chat
+  model: gemini-flash-lite-latest
+  model_supports_json: true
+  api_base: https://generativelanguage.googleapis.com/v1beta/openai
+  # Gemini 무료 한도 보호 — stagger 늘려 RPM 안전 영역 유지.
+  # 15 RPM = 4초당 1 req. stagger 4.0 으로 보수적 설정.
+  # tokens_per_minute: 1500000
+  # requests_per_minute: 15
+
+parallelization:
+  stagger: 4.0       # Gemini 무료 15 RPM 보호 (4초 간격)
+  num_threads: 1     # 동시 호출 1로 제한
+
+async_mode: threaded
+
+embeddings:
+  async_mode: threaded
+  llm:
+    # Gemini 임베딩 OpenAI-compat 모드: text-embedding-004 사용 (768 차원).
+    # 주의: OpenAI text-embedding-3-small (1536) 과 차원 다름. 챗봇 query 시
+    # 이 인덱싱과 *동일한* Gemini 임베딩 사용 필수.
+    api_key: ${GRAPHRAG_API_KEY}
+    type: openai_embedding
+    model: text-embedding-004
+    api_base: https://generativelanguage.googleapis.com/v1beta/openai
+    # 임베딩은 Gemini 무료 한도 더 큼 (1500 RPM) — stagger 줄여 빠르게.
+
+chunks:
+  size: 1000
+  overlap: 100
+  group_by_columns: [id]
+
+input:
+  type: file
+  file_type: text
+  base_dir: "input"
+  file_encoding: utf-8
+  file_pattern: ".*\\.txt$"
+
+cache:
+  type: file
+  base_dir: "cache"
+
+storage:
+  type: file
+  base_dir: "output/${timestamp}/artifacts"
+
+reporting:
+  type: file
+  base_dir: "output/${timestamp}/reports"
+
+entity_extraction:
+  prompt: "prompts/entity_extraction.txt"
+  entity_types: [brand, type, ingredient, effect]
+  max_gleanings: 1
+
+summarize_descriptions:
+  prompt: "prompts/summarize_descriptions.txt"
+  max_length: 500
+
+claim_extraction:
+  prompt: "prompts/claim_extraction.txt"
+  description: "Any claims or facts that could be relevant to information discovery."
+  max_gleanings: 1
+
+community_reports:
+  prompt: "prompts/community_report.txt"
+  max_length: 2000
+  max_input_length: 8000
+
+cluster_graph:
+  max_cluster_size: 10
+
+embed_graph:
+  enabled: false
+
+umap:
+  enabled: false
+
+snapshots:
+  graphml: false
+  raw_entities: false
+  top_level_nodes: false
+
+local_search:
+  # default 유지
+
+global_search:
+  # default 유지
+
+config_path: "data/model/gemini_t_1/settings.yaml"
+data_path: "data/model/gemini_t_1/output/<TIMESTAMP>/artifacts"
+root_path: "data/model/gemini_t_1"
+response_type: "single paragraph"
+method: "local"
+community_level: 2
