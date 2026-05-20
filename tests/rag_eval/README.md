@@ -52,14 +52,15 @@ python -m tests.rag_eval.evaluate \
 - raw: `tests/rag_eval/results/<provider>_<date>.json` (gitignored)
 - 종합 표: `docs/rag_evaluation_results.md` (PR-D 에서 생성)
 
-## 현재 상태 (PR-C)
+## 현재 상태 (PR-D 완료)
 
 - ✓ Golden 10 질문 (5 브랜드 × 피부 타입 × 알러지 × 복합 조건)
-- ✓ 도메인 metric (product_recall / brand_recall / forbidden_violations)
-- ✓ 평가 파이프라인 + JSON 저장
-- ⏳ Chatbot 직접 호출 — 현재 LLM stub. PR-D 에서 GraphRAG `run_search` 연결
-- ⏳ RAGAS 통합 — 현재 NaN stub. PR-D 에서 실제 구현
-- ⏳ 종합 표 자동 생성 — PR-D
+- ✓ 도메인 metric (product_recall / brand_recall / forbidden_violations) — rule-based
+- ✓ GraphRAG `run_local_search` 실제 호출 (provider 별 settings.yaml 분기)
+- ✓ LLM-as-judge metric (faithfulness, answer_relevancy) — judge LLM=Gemini default
+- ✓ `--summarize` 모드: 여러 result JSON → markdown 비교 표
+- ⏳ 실제 인덱싱 + 평가 실행 (사용자 API key + 인덱싱 필요)
+- ⏳ docs/rag_evaluation_results.md 의 placeholder 표 → 실제 수치 갱신
 
 ## 골든 질문 추가 시
 
