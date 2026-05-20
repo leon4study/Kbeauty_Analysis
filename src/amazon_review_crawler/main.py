@@ -553,6 +553,563 @@ def click_BeautyPersonalCareDepartment():
     # 요소를 클릭하거나 원하는 작업 수행
     category_Department.click()
 
+def _scrape_item_details(asin: str, category_name: str, cnt: int) -> dict:
+    """Amazon 상품 상세 페이지 한 건의 메타데이터를 추출.
+
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    *현재 driver 탭이 Amazon 상품 상세 페이지* 라는 가정 하에:
+    productTitle / brand / price / global_rating_count / ingredients /
+    best_sellers_rank / special_feature / total_star_mean 등 상품 한 건의
+    모든 메타데이터를 CSS selector 시퀀스로 추출. 부재 시 fallback 문자열
+    ("No brand", "No star" 등) 대입.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 monolithic ``crawl_amazon`` 의 nested for-loop 안에서 inline 으로
+      120 줄 펼쳐있었음. 어떤 selector 가 실패했는지 추적 어려움 + 단위 검증
+      불가 (전체 크롤링 안 돌리고는 검증 X).
+    - Amazon UI 가 자주 갱신됨 (CSS selector 깨짐). 한 함수로 격리하면
+      selector 변경 시 *이 함수만 수정* 후 다른 흐름 영향 X.
+    - ``_has_ratings`` 키를 반환 dict 에 포함 → 호출부가 review 수집 여부를
+      *반환값 기반* 으로 판단 가능 (전역 변수 의존 제거).
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    1. ``_process_one_item`` 이 새 탭에서 상품 상세 페이지 연 *직후*.
+    2. ``_scrape_item_reviews`` 호출 *직전* (반환 ``_has_ratings`` 가 review
+       분기 결정).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # _process_one_item 안에서
+        driver.execute_script("window.open(arguments[0], '_blank');", item_url)
+        driver.switch_to.window(driver.window_handles[-1])
+        item_dict = _scrape_item_details(ASIN, "Skin Care", cnt)
+        if item_dict["_has_ratings"]:
+            reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+
+    Args:
+        asin: 상품 ASIN (호출부에서 이미 추출 — 재추출 안 함).
+        category_name: 현재 카테고리명 (수집 결과에 함께 저장).
+        cnt: 현재 카테고리 내 누적 순서 (1-based, best-seller 정렬 기준).
+
+    Returns:
+        ``load_items`` 가 받는 schema dict + 부가 ``_has_ratings`` 키.
+        ``_has_ratings`` 는 schema 외 control-flow 용 — ``_save_single_item``
+        이 저장 직전 drop.
+
+    Note:
+        실패한 selector 는 fallback 문자열 대입 (원본 동작 보존).
+        price 만 number 변환 시 NaN 처리 (downstream 안전).
+
+    Related:
+        - ``_scrape_item_reviews`` — 이 함수 결과 ``_has_ratings`` 에 따라 호출.
+        - ``_save_single_item`` — 이 함수 결과 dict 를 MySQL 에 저장.
+        - ``get_description`` — 이 함수가 호출하는 description scraper.
+    """
+    # 상품 페이지 완전 로드 대기 (productTitle = key 식별자).
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "productTitle")))
+
+    # detail bullets — "Brand: COSRX", "Origin: Korea" 같은 key:value 페어 추출.
+    detail_bullets = driver.find_element(By.ID, "detailBullets_feature_div")
+    product_details = detail_bullets.find_elements(By.CSS_SELECTOR, "li span.a-list-item")
+    detail_dict = {}
+    for detail in product_details:
+        try:
+            key = detail.find_element(By.TAG_NAME, "span").text.split(":")[0].strip()
+            value = detail.text.split(":")[1].strip()
+            detail_dict[key] = value
+        except Exception:
+            # selector 못 찾은 element 는 skip — 다음 detail 시도.
+            continue
+
+    # 기본 메타데이터 (selector 없을 수도 있어 len 체크 + fallback).
+    title = driver.find_element(By.ID, "productTitle").text
+    print(f"Title: {title}")
+    reviews = (
+        driver.find_element(By.ID, "acrCustomerReviewText").text
+        if len(driver.find_elements(By.ID, "acrCustomerReviewText")) > 0
+        else "No ratings"
+    )
+    brand = (
+        driver.find_element(By.CSS_SELECTOR, "tr.po-brand .po-break-word").text
+        if len(driver.find_elements(By.CSS_SELECTOR, "tr.po-brand .po-break-word")) > 0
+        else "No brand"
+    )
+    description = get_description()
+    print(description[:5])
+
+    special_feature = (
+        driver.find_element(By.CSS_SELECTOR, "tr.po-special_feature .po-break-word").text
+        if len(driver.find_elements(By.CSS_SELECTOR, "tr.po-special_feature .po-break-word")) > 0
+        else "No special feature"
+    )
+
+    # 가격 — Amazon 가격 표시가 single / bundle 두 종류라 fallback 체인.
+    is_bundle = False
+    try:
+        price_whole = driver.find_element(
+            By.CSS_SELECTOR, "#corePrice_feature_div span.a-price span.a-price-whole"
+        ).text
+        price_fraction = driver.find_element(
+            By.CSS_SELECTOR, "#corePrice_feature_div span.a-price span.a-price-fraction"
+        ).text
+        price = price_whole + "." + price_fraction
+        print(price, "1")
+    except:
+        # 번들 가격일 가능성 — 별도 selector 시도.
+        try:
+            price = driver.execute_script("""
+                var priceElement = document.querySelector("#corePrice_desktop > div > table > tbody > tr:nth-child(2) > td.a-span12 > span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)");
+                return priceElement ? priceElement.textContent : null;
+            """)
+            if price:
+                is_bundle = True
+                price = price.split("$")[1]
+            else:
+                is_bundle = False
+        except:
+            price = None
+            is_bundle = False
+        print("가격:", price)
+        print("번들 여부:", is_bundle)
+
+    # 평점 + 리뷰 수.
+    total_star = (
+        driver.find_element(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base").text
+        if len(driver.find_elements(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base")) > 0
+        else "No star"
+    )
+    total_rating_counts = (
+        driver.find_element(By.CSS_SELECTOR, "#acrCustomerReviewText").text
+        if len(driver.find_elements(By.CSS_SELECTOR, "#acrCustomerReviewText")) > 0
+        else "No rating"
+    )
+    global_rating_count = (
+        total_rating_counts.strip("()").replace(",", "")
+        if total_rating_counts != "No rating"
+        else "No rating"
+    )
+    print(f"global_rating_count: {global_rating_count}")
+
+    # Ingredients — 필수 정보 (GraphRAG entity extraction 의 입력). 부재 시 None.
+    try:
+        ingredients_elements = driver.find_elements(
+            By.CSS_SELECTOR, "#important-information > div:nth-child(3) > p:nth-child(3)"
+        )
+        if ingredients_elements:
+            ingredients_text = ingredients_elements[0].text.strip()
+        else:
+            ingredients_text = None
+    except Exception as e:
+        print(f"Error occurred while fetching Ingredients: {e}")
+        ingredients_text = None
+    print(f"Ingredients: {ingredients_text}")
+
+    # Best Sellers Rank — detail-bullet-list 안에서 "Best Sellers Rank" 키워드 검색.
+    best_sellers_elements = driver.find_elements(
+        By.CSS_SELECTOR, "ul.detail-bullet-list > li > span.a-list-item"
+    )
+    best_sellers_rank_text = "No result"
+    for element in best_sellers_elements:
+        if "Best Sellers Rank" in element.text:
+            try:
+                best_sellers_rank_text = element.text.split(":")[1].strip()
+                break
+            except Exception:
+                best_sellers_rank_text = "No result"
+                break
+
+    print()
+    print(f"ASIN: {asin}")
+    print(f"Title: {title}")
+    print(f"global_rating_count: {global_rating_count}")
+    print(f"price: {price}")
+    print()
+
+    return {
+        "ASIN": asin,
+        "title": title,
+        "order": cnt,
+        "category": category_name,
+        "brand": brand,
+        "price": price,
+        "global_rating_count": global_rating_count,
+        "description": description,
+        "Special_Feature": special_feature,
+        "total_star_mean": total_star,
+        "detail_dict": detail_dict,
+        "best_sellers_rank_Feature": best_sellers_rank_text,
+        "Ingredients": ingredients_text,
+        "is_bundle": is_bundle,
+        # 호출부가 review 수집 여부 판단 + downstream 저장 직전 drop.
+        "_has_ratings": reviews != "No ratings",
+    }
+
+
+def _scrape_item_reviews(asin: str, title: str, max_reviews: int = 20000) -> list[dict]:
+    """Amazon 상품 상세 페이지의 review 들을 pagination 으로 모두 추출.
+
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    *현재 driver 탭이 상품 상세 페이지* 라는 가정 하에:
+    1. "See all reviews" 링크 클릭 → review 전용 페이지로 이동
+    2. "Most recent" 정렬 (``set_sort_by_most_recent_with_scroll``)
+    3. ``while review_count < max_reviews`` 페이지네이션 — review 하나씩 추출
+       후 ``click_next_review_page`` 로 다음 페이지.
+    각 review 에서 customer_id, customer_name, date, review_title,
+    review_rating, content 6 필드 추출 + ASIN/title 함께 저장.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 안에서 80 줄 nested loop. 디버깅 시 review 한
+      필드만 깨져도 전체 흐름 멈춰서 *어느 단계* 실패한지 알기 어려움.
+    - "See all reviews" 링크 부재 (신상품 / review 0건) 시 graceful fallback
+      (빈 리스트 반환). 원본은 try/except 가 외부에서 잡아 item 자체 skip
+      → 항상 빈 리스트 반환 패턴이 더 안전.
+    - ``max_reviews`` 파라미터로 *재현 가능한 부분 수집* (테스트 / 빠른 검증
+      용). 옛 코드는 20000 hardcoded.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``_scrape_item_details`` 직후, 반환 ``_has_ratings`` 가 True 일 때만.
+    - 호출 전 driver 가 상품 상세 페이지에 있어야 함 ("See all reviews"
+      링크 이 페이지에 존재).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        item_dict = _scrape_item_details(ASIN, category, cnt)
+        if item_dict["_has_ratings"]:
+            reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+        else:
+            reviews_list = [placeholder_no_review_dict]
+
+    Args:
+        asin: 상품 ASIN (review_num key 생성용: ``ASIN + "__" + idx``).
+        title: 상품 제목 (review row 에 함께 저장 — denormalized).
+        max_reviews: 최대 수집 review 수. default 20,000.
+
+    Returns:
+        review dict list. 실패 / "See all reviews" 링크 부재 시 빈 리스트.
+
+    Note:
+        review pagination 시 ``random.uniform(*PAGE_LOAD_JITTER_RANGE)`` jitter
+        — anti-bot 회피. 너무 빠른 클릭 패턴은 봇으로 의심받음.
+
+    Related:
+        - ``set_sort_by_most_recent_with_scroll`` — "Most recent" 정렬 호출.
+        - ``click_next_review_page`` — 다음 review 페이지 이동.
+        - ``_save_single_item`` — 이 함수 결과를 MySQL 에 저장.
+    """
+    reviews_list: list[dict] = []
+    try:
+        more_reviews_link = wait.until(
+            EC.presence_of_element_located((
+                By.CSS_SELECTOR,
+                "#reviews-medley-footer > div.a-row.a-spacing-medium > a[data-hook='see-all-reviews-link-foot']",
+            ))
+        )
+        print("스크롤 이동")
+        time.sleep(0.5)
+        more_reviews_link.click()
+        print("링크 클릭")
+        set_sort_by_most_recent_with_scroll()
+        print("스크롤 실행 완료")
+
+        review_count = 0
+        try:
+            while review_count < max_reviews:
+                wait_time = random.uniform(*PAGE_LOAD_JITTER_RANGE)
+                time.sleep(wait_time)
+                try:
+                    detail_reviews = driver.find_elements(
+                        By.CSS_SELECTOR, 'div[class="a-section celwidget"]'
+                    )
+                except Exception as e:
+                    print(f"뭔가 잘못됐네 단단히 : {e}")
+                    break
+
+                for detail_review in detail_reviews:
+                    try:
+                        time.sleep(0.03)
+                        # review 안의 profile-name 이 보일 때까지 대기 — Amazon 의
+                        # lazy-load 우회.
+                        WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "span.a-profile-name"))
+                        )
+                        review_div_id = detail_review.get_attribute("id")
+                        customer_id = (
+                            review_div_id.split("-")[-1]
+                            if "customer_review" in review_div_id
+                            else "No customer ID"
+                        )
+                        customer_name = (
+                            detail_review.find_element(By.CSS_SELECTOR, "span[class='a-profile-name']").text
+                            if len(detail_review.find_elements(By.CSS_SELECTOR, "span[class='a-profile-name']")) > 0
+                            else "No Name"
+                        )
+                        date = (
+                            detail_review.find_element(By.CSS_SELECTOR, "span[data-hook='review-date']").text
+                            if len(detail_review.find_elements(By.CSS_SELECTOR, "span[data-hook='review-date']")) > 0
+                            else "No date"
+                        )
+                        review_title = (
+                            detail_review.find_element(By.CLASS_NAME, "review-title").text
+                            if len(detail_review.find_elements(By.CLASS_NAME, "review-title")) > 0
+                            else "No title"
+                        )
+                        review_rating_element = detail_review.find_elements(By.CSS_SELECTOR, "span.a-icon-alt")
+                        review_rating = (
+                            driver.execute_script(
+                                "return arguments[0].innerText;", review_rating_element[0]
+                            )
+                            if len(review_rating_element) > 0
+                            else "No review"
+                        )
+                        content = (
+                            detail_review.find_element(By.CSS_SELECTOR, "span[data-hook='review-body']").text
+                            if len(detail_review.find_elements(By.CSS_SELECTOR, "span[data-hook='review-body']")) > 0
+                            else "No content"
+                        )
+
+                        print(
+                            f"Review {review_count} - customer_id: {customer_id}, "
+                            f"customer_name: {customer_name}, review_title: {review_title}, "
+                            f"review_rating: {review_rating}"
+                        )
+                        reviews_list.append({
+                            "review_num": asin + "__" + str(review_count),
+                            "ASIN": asin,
+                            "customer_id": customer_id,
+                            "customer_name": customer_name,
+                            "title": title,
+                            "date": date,
+                            "review_rating": review_rating,
+                            "content": content,
+                        })
+                        review_count += 1
+                    except Exception as e:
+                        print(f"Error extracting review {review_count + 1}: {e}")
+                        continue
+                if review_count >= max_reviews:
+                    break
+                if not click_next_review_page():
+                    break
+        except Exception as e:
+            print(f"Error retrieving reviews: {e}")
+    except Exception as e:
+        # "See all reviews" 링크 자체가 없는 경우 (리뷰 0 인 신상품 등) — 정상 흐름.
+        print(f"see_more_reviews ERROR : {e}")
+
+    return reviews_list
+
+
+def _save_single_item(item_dict: dict, reviews_list: list[dict]) -> None:
+    """단일 item + 그 review 들을 MySQL 에 upsert.
+
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ``item_dict`` (1개) → ``pd.json_normalize`` 후 ``detail_dict.X`` 평탄화 →
+    JSON 문자열 변환 → ``load_items`` 호출.
+    ``reviews_list`` (0~N개) → ``pd.json_normalize`` → ``load_reviews`` 호출.
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 안의 DataFrame 변환 + MySQL load 로직 ~30 줄. 매
+      iteration 마다 호출되는데, 호출부 (item for-loop) 와 의미적으로 별개
+      (스크래핑 vs 적재). 책임 분리.
+    - ``detail_dict`` 가 nested 라 평탄화 / 재중첩 처리 까다로움. 단일 함수로
+      격리하면 schema 변경 시 영향 범위 명확.
+    - 단일 item 즉시 적재 (batch X) — 크롤링 중간 중단 시에도 그 시점까지
+      수집한 것은 DB 에 남음. 옛 코드 의도 보존.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``_scrape_item_details`` + ``_scrape_item_reviews`` 둘 다 끝난 뒤,
+      탭 닫기 *직전*.
+    - ``_process_one_item`` 가 매 item 마다 호출.
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        item_dict = _scrape_item_details(ASIN, category, cnt)
+        reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+        _save_single_item(item_dict, reviews_list)
+        driver.close()  # 적재 끝났으면 탭 닫기
+
+    Args:
+        item_dict: ``_scrape_item_details`` 반환 dict (``_has_ratings`` 포함).
+        reviews_list: ``_scrape_item_reviews`` 반환 list. 빈 리스트면 호출부
+            에서 "No content" placeholder 1 row 채워서 넘김 (review_id FK 보장).
+
+    Returns:
+        None — 결과는 MySQL 에 직접 적재.
+
+    Note:
+        - ``detail_dict.X`` 컬럼들 (json_normalize 결과) → 다시 nested dict 로
+          묶음 → JSON 문자열로 변환 (MySQL TEXT 컬럼 저장용).
+        - ``price`` / ``total_star_mean`` 은 ``pd.to_numeric(errors="coerce")``
+          로 NaN 허용.
+        - ``_has_ratings`` 는 schema 외이므로 저장 전 drop.
+
+    Related:
+        - ``load_items`` / ``load_reviews`` — items.py / reviews.py 의 적재 함수.
+        - ``my_sql_client`` — 모듈 상단의 MySqlClient instance.
+    """
+    item_df = pd.json_normalize([item_dict])
+
+    # detail_dict.X 컬럼들을 다시 nested dict 로 묶음.
+    detail_cols = [col for col in item_df.columns if col.startswith("detail_dict.")]
+    if detail_cols:
+        item_df["detail_dict"] = item_df[detail_cols].apply(
+            lambda row: {col.split(".")[1]: row[col] for col in detail_cols if pd.notnull(row[col])},
+            axis=1,
+        )
+        item_df.drop(columns=detail_cols, inplace=True)
+
+    # JSON 문자열로 변환 (MySQL TEXT 컬럼 저장용).
+    item_df["detail_dict"] = item_df["detail_dict"].apply(json.dumps)
+    # 숫자 컬럼 강제 변환 (NaN 허용).
+    item_df["price"] = pd.to_numeric(item_df["price"], errors="coerce")
+    item_df["total_star_mean"] = pd.to_numeric(item_df["total_star_mean"], errors="coerce")
+
+    # _has_ratings 는 schema 에 없는 control flow 용 컬럼 — drop.
+    if "_has_ratings" in item_df.columns:
+        item_df.drop(columns=["_has_ratings"], inplace=True)
+
+    load_items(df=item_df, my_sql_client=my_sql_client)
+
+    review_df = pd.json_normalize(reviews_list)
+    print()
+    print(review_df.columns)
+    load_reviews(df=review_df, my_sql_client=my_sql_client)
+    print("=" * 50)
+
+
+def _process_one_item(
+    item, idx: int, ASIN_list: list[str], cnt: int,
+    category_name: str, sponsored_filter: bool,
+) -> int:
+    """단일 search-result row 처리 — 탭 열기 → 스크래핑 → 저장 → 탭 닫기.
+
+    무엇 (What)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Amazon 검색 결과 페이지의 단일 ``<div role="listitem">`` element 를
+    받아 그 상품에 대해:
+    1. ASIN 중복 / sponsored 체크 (skip 조건)
+    2. 새 탭에서 상세 페이지 열기
+    3. ``_scrape_item_details`` + ``_scrape_item_reviews``
+    4. ``_save_single_item`` 으로 MySQL 적재
+    5. 탭 닫기 (예외 시에도 보장)
+
+    왜 있는가 (Why)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - 옛 ``crawl_amazon`` 의 가장 안쪽 for-loop body 가 ~280 줄. 한 item 처리
+      가 함수 안에 격리되면 *예외 격리* (한 item 실패해도 다음 item 계속)
+      가 명확해짐.
+    - 탭 무한 누적 방지 — 예외 시에도 close 보장 (except 안에서도 close 시도).
+    - ``cnt`` 를 반환값으로 (전역 mutable 회피) — 함수 호출이 끝나면 그 결과로
+      외부 cnt 갱신. 부작용 추적 용이.
+
+    언제 호출하나 (When)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - ``crawl_amazon`` 의 카테고리 페이지 paginate 안 ``for idx, item in
+      enumerate(items)`` 루프 마다.
+    - 호출 전 driver 는 *카테고리 검색결과 페이지* (탭 idx 1) 에 있어야 함.
+    - 호출 후 driver 는 동일 페이지로 복귀 (탭 close 보장).
+
+    어떻게 쓰는가 (How)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        ASIN_list = get_asin_from_sql() if asin_skip else []
+        items = driver.find_elements(By.CSS_SELECTOR, "[role='listitem']")
+        for idx, item in enumerate(items):
+            cnt = _process_one_item(
+                item, idx, ASIN_list, cnt, category_name, sponsored_filter,
+            )
+
+    Args:
+        item: search 결과 row WebElement (``role="listitem"``).
+        idx: 현재 페이지 내 idx (디버깅 출력용, 수집 동작에 영향 X).
+        ASIN_list: 누적 ASIN 리스트 (mutable — 이 호출에서 새 ASIN append).
+            ``asin_skip=True`` 시 ``get_asin_from_sql()`` 결과로 초기화됨.
+        cnt: 현재 카테고리 누적 수집 count.
+        category_name: 현재 카테고리명 (item 저장 시 함께 기록).
+        sponsored_filter: True 면 sponsored item skip *should be*.
+            단 원본 동작이 ``pass`` (계속 수집) 라 보존.
+
+    Returns:
+        새로 갱신된 cnt. item 처리됐으면 +1, ASIN duplicate 면 그대로.
+
+    Note:
+        - ``sponsored_filter`` 가 True 여도 sponsored item 이 계속 수집됨.
+          *원본 버그 가능성* 이지만 의도된 동작인지 불명 → 보존 + TODO 주석.
+        - 예외 시 ``driver.close()`` 시도 — 실패해도 swallow (탭이 이미 닫혔거나
+          driver state 망가졌어도 main loop 계속).
+
+    Related:
+        - ``_scrape_item_details`` / ``_scrape_item_reviews`` / ``_save_single_item``
+          — 이 함수가 orchestrate 하는 3 단계.
+        - ``is_sponsored`` — sponsored 체크.
+        - ``crawl_amazon`` — 이 함수의 호출부.
+    """
+    print(f"index: {idx}")
+    try:
+        ASIN = item.get_attribute("data-asin")
+        print(f"ASIN: {ASIN}")
+        if ASIN in ASIN_list:
+            print("ASIN PASSED")
+            return cnt
+        if sponsored_filter and is_sponsored(item):
+            # 원본 동작 보존 — `pass` 였어서 sponsored 라도 *계속 수집됨*.
+            # TODO(behavior): sponsored 시 `return cnt` 가 의도?
+            pass
+
+        cnt += 1
+        ASIN_list.append(ASIN)
+
+        # 새 탭에서 상세 페이지 열기.
+        item_link = item.find_element(By.CSS_SELECTOR, "a.a-link-normal")
+        item_url = item_link.get_attribute("href")
+        time.sleep(0.4)
+        driver.execute_script("window.open(arguments[0], '_blank');", item_url)
+        driver.switch_to.window(driver.window_handles[-1])
+
+        # 스크래핑.
+        item_dict = _scrape_item_details(ASIN, category_name, cnt)
+        if item_dict["_has_ratings"]:
+            print(f"{category_name} 리뷰 크롤링")
+            reviews_list = _scrape_item_reviews(ASIN, item_dict["title"])
+        else:
+            print("No ratings")
+            # placeholder — items 테이블에 review FK 없어도 row 1개 유지.
+            reviews_list = [{
+                "review_num": ASIN + "__0",
+                "ASIN": ASIN,
+                "customer_id": "No customer",
+                "customer_name": "No customer",
+                "title": item_dict["title"],
+                "date": "No date",
+                "review_rating": "No review",
+                "content": "No content",
+            }]
+
+        # 저장 + 탭 닫기.
+        _save_single_item(item_dict, reviews_list)
+        driver.close()
+        driver.switch_to.window(driver.window_handles[1])
+        return cnt
+
+    except Exception as e:
+        print(f"Error processing item {idx + 1}: {e}")
+        # 탭 정리 — 실패 시에도 close 해서 무한 탭 누적 방지.
+        try:
+            driver.close()
+            driver.switch_to.window(driver.window_handles[1])
+        except Exception:
+            pass
+        return cnt
+
+
 def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
     """
     Amazon 키워드 검색 → 브랜드 필터 → 카테고리 루프 → 아이템·리뷰 수집의
@@ -563,378 +1120,84 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
             브랜드명(예: ``"I'm from"``)을 직접 넘겨도 됨.
         asin_skip (bool): True 이면 이미 MySQL ``items`` 테이블에 있는 ASIN을
             건너뜀 — 중복 수집 방지. False 이면 전부 재수집.
-        sponsored_filter (bool): True 이면 Sponsored 아이템을 수집 대상에서 제외.
+        sponsored_filter (bool): True 이면 Sponsored 아이템을 *수집 대상에서
+            제외하려는 의도* — 단 현재 ``_process_one_item`` 의 sponsored 분기는
+            원본 동작 보존으로 `pass` 인 상태. 의도된 동작인지 별도 검증 필요.
 
     Returns:
         None — 수집 결과는 MySQL에 직접 적재됨 (``load_items``, ``load_reviews``).
 
     Note:
-        함수 말미에 ``driver.quit()`` 이 호출되어 브라우저가 종료됨.
-        예외 발생 시에도 finally 블록으로 quit 보장.
+        M3 리팩터로 옛 monolithic 398 줄 → 4 헬퍼 + 단축된 본체 ~80 줄.
+        finally 블록으로 driver.quit 보장 (예외 발생 시에도).
     """
     open_amazon_keyword(keyword)
     amazon_login(ID, PW)
-    brands = ["COSRX","Beauty of Joseon","Dr. Jart+","PURITO","I'm from"]
+    brands = ["COSRX", "Beauty of Joseon", "Dr. Jart+", "PURITO", "I'm from"]
     brand_filter_refresh(brands[4])
-    
 
     try:
         time.sleep(NEXT_PAGE_LOAD_SEC)
         select_best_sellers()
         time.sleep(1)
 
-        # 크롤링할 요소 선택 (CSS Selector 사용)
-        # Makeup
-        #Skin Care Products
-        #Hair Care Products
-        #Perfumes & Fragrances
-        #Foot, Hand & Nail Care Products
-        #Beauty Tools & Accessories
-        #Shaving & Hair Removal Products
-        #Personal Care Products
-        #Salon & Spa Equipment 
-        categories = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.a-spacing-micro.s-navigation-indent-2')))
+        # 크롤링 대상 카테고리 list. 사이드바 navigation indent-2 = sub-category 수준.
+        # (Makeup / Skin Care / Hair Care / Personal Care 등)
+        categories = wait.until(EC.presence_of_all_elements_located(
+            (By.CSS_SELECTOR, ".a-spacing-micro.s-navigation-indent-2")
+        ))
 
-        # 각 카테고리 페이지 방문 및 크롤링
         for category in categories:
             try:
-                # 링크 클릭
-                link = category.find_element(By.TAG_NAME, 'a')  # 내부 'a' 태그 찾기
-                category_name = link.text  # 카테고리 이름 저장
-                
-                # 새 창 열기
-                driver.execute_script("window.open(arguments[0], '_blank');", link.get_attribute("href"))
-                time.sleep(HEAVY_PAGE_LOAD_SEC)  # 페이지 로딩 대기
-
-                # 새 창으로 전환
+                link = category.find_element(By.TAG_NAME, "a")
+                category_name = link.text
+                driver.execute_script(
+                    "window.open(arguments[0], '_blank');", link.get_attribute("href")
+                )
+                time.sleep(HEAVY_PAGE_LOAD_SEC)
                 driver.switch_to.window(driver.window_handles[-1])
 
-                # "Showing results from All Departments" 메시지 확인 및 창 닫기 로직
+                # "Showing results from All Departments" 메시지 = 카테고리 필터링이
+                # 실패했다는 의미 (Amazon UI 가 일부 카테고리에서 broad-match fallback).
+                # → skip 후 다음 카테고리로.
                 try:
                     time.sleep(0.5)
                     all_dept_message = driver.find_element(
                         By.CSS_SELECTOR,
-                        '#search > div.s-desktop-width-max.s-desktop-content.s-opposite-dir.s-wide-grid-style.sg-row > div.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16 > div > span.rush-component.s-latency-cf-section > div.s-main-slot.s-result-list.s-search-results.sg-row > div:nth-child(1) > div > div > div > h2 > span'
+                        "#search > div.s-desktop-width-max.s-desktop-content.s-opposite-dir.s-wide-grid-style.sg-row > div.sg-col-20-of-24.s-matching-dir.sg-col-16-of-20.sg-col.sg-col-8-of-12.sg-col-12-of-16 > div > span.rush-component.s-latency-cf-section > div.s-main-slot.s-result-list.s-search-results.sg-row > div:nth-child(1) > div > div > div > h2 > span",
                     )
                     if all_dept_message.text.strip() == "Showing results from All Departments":
                         print("Found 'Showing results from All Departments', closing the tab.")
                         driver.close()
                         driver.switch_to.window(driver.window_handles[0])
                         continue
-                except :
+                except Exception:
                     print("'Showing results from All Departments' 메시지 없음, 계속 진행합니다.")
 
-
-                # ===================================================
+                # 카테고리 페이지 paginate — cnt 1000 도달 또는 다음 페이지 없을 때까지.
                 cnt = 0
                 while cnt < 1000:
                     time.sleep(0.5)
-                    wait_time = random.uniform(*PAGE_LOAD_JITTER_RANGE)
-                    time.sleep(wait_time)
+                    time.sleep(random.uniform(*PAGE_LOAD_JITTER_RANGE))
 
-                    if asin_skip:
-                        ASIN_list = get_asin_from_sql()
-                    else :
-                        ASIN_list = []
-                    
-                    # 모든 리스트 아이템 가져오기
+                    ASIN_list = get_asin_from_sql() if asin_skip else []
                     items = driver.find_elements(By.CSS_SELECTOR, '[role="listitem"]')
                     print("\n", len(items), "\n")
-                    item_list = []
-                    # 리뷰 데이터를 저장할 리스트
-                    reviews_list = []
-                    
-                    # 각 아이템 클릭 및 상세 정보 크롤링
+
                     for idx, item in enumerate(items):
-                        is_bundle = False
-                        print(f"index: {idx}")
-                        try:
-                            ASIN = item.get_attribute("data-asin")
-                            print(f"ASIN: {ASIN}")
-                            if ASIN in ASIN_list:
-                                print("ASIN PASSED")
-                                continue  # 이미 처리된 ASIN은 건너뜀
-                            else:
-                                if sponsored_filter : # sponsored_filter 옵션 켰을 경우, sponsored item인 경우 pass
-                                    if is_sponsored(item) :
-                                        pass
+                        cnt = _process_one_item(
+                            item, idx, ASIN_list, cnt,
+                            category_name, sponsored_filter,
+                        )
 
-                                cnt += 1
-                                ASIN_list.append(ASIN)
-
-                                # 새 탭에서 열기 위해 Shift + Click
-                                item_link = item.find_element(By.CSS_SELECTOR, 'a.a-link-normal')
-                                item_url = item_link.get_attribute("href")
-
-                                time.sleep(0.4)
-                                # 새 탭에서 상세 정보 열기
-                                driver.execute_script("window.open(arguments[0], '_blank');", item_url)
-                                driver.switch_to.window(driver.window_handles[-1])  # 새 탭으로 전환
-
-                                # 상세 정보 크롤링
-                                # 추가 제품 세부 정보
-                                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "productTitle"))) 
-
-                                detail_bullets = driver.find_element(By.ID, "detailBullets_feature_div")
-                                product_details = detail_bullets.find_elements(By.CSS_SELECTOR, "li span.a-list-item")
-                                detail_dict = {}
-                                for detail in product_details:
-                                    try:
-                                        # ':' 기준으로 나누어 key와 value 추출
-                                        key = detail.find_element(By.TAG_NAME, "span").text.split(":")[0].strip()
-                                        value = detail.text.split(":")[1].strip()
-                                        detail_dict[key] = value
-                                    except Exception:
-                                        continue
-
-                                # 상품 제목
-                                title = driver.find_element(By.ID, "productTitle").text
-                                print(f"Title: {title}")
-                                reviews = driver.find_element(By.ID, "acrCustomerReviewText").text if len(driver.find_elements(By.ID, "acrCustomerReviewText")) > 0 else "No ratings"
-                                brand = driver.find_element(By.CSS_SELECTOR, "tr.po-brand .po-break-word").text if len(driver.find_elements(By.CSS_SELECTOR, "tr.po-brand .po-break-word")) > 0 else "No brand"
-
-                                description = get_description() # 일반 아이템들은 이거 써야함
-                                print(description[:5])
-
-                                #description = cosrx_description_to_json()
-                                special_feature = driver.find_element(By.CSS_SELECTOR, "tr.po-special_feature .po-break-word").text if len(driver.find_elements(By.CSS_SELECTOR, "tr.po-special_feature .po-break-word")) > 0 else "No special feature"                                    
-                                
-                                try:
-                                    # a-price-whole과 a-price-fraction에서 각각 가격 찾기 (CSS Selector로 변경)
-                                    #price_whole = driver.find_element(By.CSS_SELECTOR, "#corePrice_feature_div > div > div > div > div > span.a-price.a-text-normal.aok-align-center.reinventPriceAccordionT2 > span:nth-child(2) > span.a-price-whole").text
-                                    #price_fraction = driver.find_element(By.CSS_SELECTOR, "#corePrice_feature_div > div > div > div > div > span.a-price.a-text-normal.aok-align-center.reinventPriceAccordionT2 > span:nth-child(2) > span.a-price-fraction").text
-                                    price_whole = driver.find_element(By.CSS_SELECTOR,"#corePrice_feature_div span.a-price span.a-price-whole").text
-                                    price_fraction = driver.find_element(By.CSS_SELECTOR,"#corePrice_feature_div span.a-price span.a-price-fraction").text
-                                    
-                                    price = price_whole + "." + price_fraction
-                                    print(price,"1")
-                                except:
-                                    # 번들 가격일 가능성 있음
-                                    try : 
-                                        price = driver.execute_script("""
-                                            var priceElement = document.querySelector("#corePrice_desktop > div > table > tbody > tr:nth-child(2) > td.a-span12 > span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)");
-                                            return priceElement ? priceElement.textContent : null;
-                                        """)
-                                        if price:
-                                            is_bundle = True
-                                            price = price.split("$")[1]
-                                        else :
-                                            is_bundle = False
-                                    except : 
-                                        price = None
-                                        is_bundle = False
-
-                                    # 결과 출력
-                                    print("가격:", price)
-                                    print("번들 여부:", is_bundle)
-                                    
-                                total_star = driver.find_element(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base").text if len(driver.find_elements(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base")) > 0 else "No star"
-                                # total_star 설정
-                                total_star = driver.find_element(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base").text if len(driver.find_elements(By.CSS_SELECTOR, ".a-popover-trigger .a-size-small.a-color-base")) > 0 else "No star"
-                                # total_rating_counts 설정
-                                total_rating_counts = driver.find_element(By.CSS_SELECTOR, "#acrCustomerReviewText").text if len(driver.find_elements(By.CSS_SELECTOR, "#acrCustomerReviewText")) > 0 else "No rating"
-                                # global_rating_count 설정
-                                global_rating_count = total_rating_counts.strip("()").replace(",", "") if total_rating_counts != "No rating" else "No rating"
-                                print(f"global_rating_count: {global_rating_count}")
-                                # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                                
-                                
-                                try:
-                                    # Ingredients 요소가 있는지 확인 후 텍스트 추출
-                                    ingredients_elements = driver.find_elements(By.CSS_SELECTOR, "#important-information > div:nth-child(3) > p:nth-child(3)")
-                                    if ingredients_elements:  # 요소가 존재하면 텍스트 추출
-                                        ingredients_text = ingredients_elements[0].text.strip()
-                                    else:  # 요소가 없으면 None으로 설정
-                                        ingredients_text = None
-                                except Exception as e:
-                                    print(f"Error occurred while fetching Ingredients: {e}")
-                                    ingredients_text = None  # 오류 발생 시에도 None으로 설정
-                                    is_bundle = False
-
-
-                                # 결과 출력 (디버깅용)
-                                print(f"Ingredients: {ingredients_text}")
-
-                                # Best Sellers Rank 정보 가져오기
-                                best_sellers_elements = driver.find_elements(By.CSS_SELECTOR, "ul.detail-bullet-list > li > span.a-list-item")
-
-                                best_sellers_rank_text = "No result"  # 기본값 설정
-                                for element in best_sellers_elements:
-                                    if "Best Sellers Rank" in element.text:
-                                        try:
-                                            # Best Sellers Rank가 포함된 텍스트에서 순위 추출
-                                            best_sellers_rank_text = element.text.split(":")[1].strip()
-                                            break  # 원하는 값을 찾으면 루프 종료
-                                        except Exception:
-                                            best_sellers_rank_text = "No result"
-                                            break
-
-                                print()
-                                print(f"index: {idx}")
-                                print(f"ASIN: {ASIN}")
-                                print(f"Title: {title}")
-                                print(f"global_rating_count: {global_rating_count}")
-                                print(f"price: {price}")
-                                print()
-
-                                item_list.append({
-                                    "ASIN": ASIN, "title": title,
-                                    "order": cnt,
-                                    "category": category_name,
-                                    "brand": brand, "price": price,
-                                    "global_rating_count": global_rating_count,
-                                    "description": description,
-                                    "Special_Feature": special_feature,
-                                    "total_star_mean": total_star,
-                                    "detail_dict": detail_dict,
-                                    "best_sellers_rank_Feature": best_sellers_rank_text,
-                                    "Ingredients": ingredients_text,
-                                    "is_bundle": is_bundle
-                                })
-
-                                # rating 이력 있으면 리뷰 정보 가져오기
-                                if reviews == "No ratings":
-                                    print("No ratings")
-                                    reviews_list.append({
-                                        "review_num": ASIN + "__" + str(review_count),
-                                        "ASIN": ASIN,
-                                        "customer_id": "No customer",
-                                        "customer_name": "No customer",
-                                        "title": title,
-                                        "date": "No date",
-                                        "review_rating": "No review",
-                                        "content": "No content"
-                                    })
-                                else:
-                                    print(f"{category_name} 리뷰 크롤링")
-                                    try:
-                                        #more_reviews_link = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[data-hook='see-all-reviews-link-foot']")))
-                                        #actions = ActionChains(driver)
-                                        #actions.move_to_element(more_reviews_link).perform()  # 링크로 스크롤 이동
-
-
-                                        more_reviews_link = wait.until(
-                                        EC.presence_of_element_located(
-                                            (By.CSS_SELECTOR, "#reviews-medley-footer > div.a-row.a-spacing-medium > a[data-hook='see-all-reviews-link-foot']")
-                                            )
-                                        )
-
-                                        print("스크롤 이동")
-
-                                        # 약간의 추가 대기 후 클릭 (화면이 스크롤될 시간이 필요할 수 있음)
-                                        time.sleep(0.5)
-                                        more_reviews_link.click()
-                                        print("링크 클릭")
-                                        
-                                        set_sort_by_most_recent_with_scroll()
-                                        print("스크롤 실행 완료")
-                                        # 리뷰 요소를 모두 가져옵니다
-                                        review_count = 0  # 수집한 리뷰 개수를 관리하는 변수
-                                        max_reviews = 20000  # 최대 수집 리뷰 수
-                                        
-                                        try:
-                                            
-                                            while review_count < max_reviews:
-                                                wait_time = random.uniform(*PAGE_LOAD_JITTER_RANGE)
-                                                time.sleep(wait_time)
-                                                try:
-                                                    detail_reviews = driver.find_elements(By.CSS_SELECTOR, 'div[class="a-section celwidget"]')
-                                                except Exception as e:
-                                                    print(f"뭔가 잘못됐네 단단히 : {e}")
-                                                    break
-                                                
-                                                for detail_review in detail_reviews:
-                                                    try:
-                                                        time.sleep(0.03)
-                                                        # 각 필드를 추출하기 전에 대기 추가
-                                                        WebDriverWait(driver, 10).until(
-                                                            EC.presence_of_element_located((By.CSS_SELECTOR, "span.a-profile-name"))
-                                                        )
-                                                        review_div_id = detail_review.get_attribute("id")
-                                                        customer_id = review_div_id.split("-")[-1] if "customer_review" in review_div_id else "No customer ID"
-                                                        customer_name = detail_review.find_element(By.CSS_SELECTOR, "span[class='a-profile-name']").text if len(detail_review.find_elements(By.CSS_SELECTOR, "span[class='a-profile-name']")) > 0 else "No Name"
-                                                        date = detail_review.find_element(By.CSS_SELECTOR, "span[data-hook='review-date']").text if len(detail_review.find_elements(By.CSS_SELECTOR, "span[data-hook='review-date']")) > 0 else "No date"
-                                                        review_title = detail_review.find_element(By.CLASS_NAME, "review-title").text if len(detail_review.find_elements(By.CLASS_NAME, "review-title")) > 0 else "No title"
-                                                        review_rating_element = detail_review.find_elements(By.CSS_SELECTOR, "span.a-icon-alt")
-                                                        review_rating = (
-                                                            driver.execute_script("return arguments[0].innerText;", review_rating_element[0])
-                                                            if len(review_rating_element) > 0
-                                                            else "No review"
-                                                        )
-                                                        content = detail_review.find_element(By.CSS_SELECTOR, "span[data-hook='review-body']").text if len(detail_review.find_elements(By.CSS_SELECTOR, "span[data-hook='review-body']")) > 0 else "No content"
-                                                        
-                                                        # 디버깅 출력
-                                                        print(f"Review {review_count} - customer_id: {customer_id}, customer_name: {customer_name}, review_title: {review_title}, review_rating: {review_rating}")
-                                                        reviews_list.append({
-                                                            "review_num": ASIN + "__" + str(review_count),
-                                                            "ASIN": ASIN,
-                                                            "customer_id": customer_id,
-                                                            "customer_name": customer_name,
-                                                            "title": title,
-                                                            "date": date,
-                                                            "review_rating": review_rating,
-                                                            "content": content
-                                                        })
-                                                        review_count += 1  # 수집한 리뷰 개수 증가
-                                                    except Exception as e:
-                                                        print(f"Error extracting review {review_count + 1}: {e}")
-                                                        continue
-                                                if review_count >= max_reviews:  # 최대 리뷰 수에 도달하면 종료
-                                                    break
-                                                if not click_next_review_page():  # 다음 페이지로 이동 불가 시 종료
-                                                    break
-                                        except Exception as e:
-                                            print(f"Error retrieving reviews: {e}")
-                                    except Exception as e:
-                                        print(f"see_more_reviews ERROR : {e}")
-                                
-                                # DataFrame 변환
-                                item_df = pd.json_normalize(item_list)
-
-                                # `detail_dict` 관련 컬럼 병합
-                                detail_cols = [col for col in item_df.columns if col.startswith("detail_dict.")]
-                                if detail_cols:
-                                    # `detail_dict` 관련 데이터를 다시 병합
-                                    item_df["detail_dict"] = item_df[detail_cols].apply(
-                                        lambda row: {col.split(".")[1]: row[col] for col in detail_cols if pd.notnull(row[col])},
-                                        axis=1,
-                                    )
-                                    # 변환 완료 후 detail_dict 관련 컬럼 제거
-                                    item_df.drop(columns=detail_cols, inplace=True)
-                                
-                                # detail_dict 열을 JSON 문자열로 변환
-                                item_df["detail_dict"] = item_df["detail_dict"].apply(json.dumps)
-                                # price 및 total_star_mean을 숫자형으로 변환
-                                item_df["price"] = pd.to_numeric(item_df["price"], errors="coerce")
-                                item_df["total_star_mean"] = pd.to_numeric(item_df["total_star_mean"], errors="coerce")
-
-                                # MySQL에 item_df 로드
-                                load_items(df=item_df, my_sql_client=my_sql_client)
-
-                                review_df = pd.json_normalize(reviews_list)
-                                print()
-                                print(review_df.columns)
-
-                                load_reviews(df=review_df, my_sql_client=my_sql_client)
-                                print("=" * 50)
-                                # 새 탭 닫기
-                                driver.close()
-                                driver.switch_to.window(driver.window_handles[1])  # 원래 탭으로 돌아가기
-
-                        except Exception as e:
-                            print(f"Error processing item {idx + 1}: {e}")
-                            driver.close()
-                            driver.switch_to.window(driver.window_handles[1])  # 원래 탭으로 돌아가기
-                            continue
-                    
                     if not click_next_item_page():
                         break
-                # ===================================================
-                # 새 창을 닫고 원래 창으로 돌아가기
+
+                # 카테고리 탭 닫고 메인 검색결과 탭으로 복귀.
                 print("driver_close1")
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
-                time.sleep(HEAVY_PAGE_LOAD_SEC)  # 페이지 로딩 대기
-
+                time.sleep(HEAVY_PAGE_LOAD_SEC)
             except Exception as e:
                 print(f"Error processing category {category_name}: {e}")
 
@@ -942,6 +1205,8 @@ def crawl_amazon(keyword="skin+care", asin_skip=True, sponsored_filter=False):
         print(f"Error occurred: {e}")
     finally:
         driver.quit()
+
+
 
 
 # 함수 실행
