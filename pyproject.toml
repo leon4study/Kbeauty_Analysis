@@ -56,7 +56,13 @@ crawler = [
 eval = [
     "ragas>=0.1",
 ]
-# 모든 의존성 한 번에
+# LightRAG 변형 (src/rag_chatbot/lightrag_variant/)
+# ⚠️ numpy 충돌 (graphrag 와 호환 X) — 별도 venv 권장.
+# 자세히: docs/setup_lightrag_env.md
+lightrag = [
+    "lightrag-hku>=1.4",
+]
+# 모든 의존성 한 번에 (lightrag 는 numpy 충돌로 제외 — 별도 venv)
 all = [
     "kbeauty-analysis[analysis,crawler,eval]",
 ]

@@ -7,7 +7,7 @@ K-Beauty 분석 프로젝트의 코드 구성. 5 module.
 | [amazon_review_crawler/](#amazon_review_crawler) | Amazon 리뷰 수집 | `main.py` |
 | [tiktok_crawler/](#tiktok_crawler) | TikTok 영상 수집 (반자동) | `tiktok_crawling.py` |
 | [pipelines/](#pipelines) | medallion 변환 파이프라인 (bronze → silver) | `build_silver_amazon.py`, `build_silver_tiktok.py` |
-| [rag_chatbot/](#rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 | `ollama/gradio_rag_ch7.py` / `cosmetic_rag_chat/main.py` |
+| [rag_chatbot/](#rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 (메인: `cosmetic_rag_chat/main.py`; 실험: `ollama/`, `lightrag_variant/`) | `cosmetic_rag_chat/main.py` |
 | [util/](#util) | 공통 유틸리티 | `repo_paths.py`, `negation.py` 등 |
 
 ---
@@ -123,6 +123,12 @@ python src/pipelines/build_silver_tiktok.py --overwrite
 # 사전 조건: Ollama 데몬 실행 (localhost:11434), GraphRAG 인덱스 생성
 python -m src.rag_chatbot.ollama.gradio_rag_ch7
 ```
+
+### `lightrag_variant/` — LightRAG 변형 (실험)
+
+GraphRAG 대안으로 *시도해본* LightRAG 변형. Groq Llama 3.3 / Gemini Flash 무료
+한도 안에서 동작. 평가 결과 (`docs/rag_evaluation_results.md`) 보고 메인 채택
+여부 결정 예정. 자세히: [`lightrag_variant/README.md`](rag_chatbot/lightrag_variant/README.md)
 
 ### `cosmetic_rag_chat/` — OpenAI (gpt-3.5-turbo)
 
