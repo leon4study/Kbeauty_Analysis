@@ -119,25 +119,87 @@ def _config_path_for(provider: str) -> Path:
     return REPO_ROOT / "data" / "model" / f"{provider}_t_1" / "settings.yaml"
 
 
-def run_chatbot(question: str, provider: str) -> tuple[str, list[str], float]:
-    """챗봇에 질문 → (응답, retrieved context, latency_sec) 반환.
-
-    Provider 별 ``settings.yaml`` 로드 → GraphRAG ``run_local_search`` 호출.
-    settings.yaml 안의 ``llm.api_base`` / ``embeddings.llm.api_base`` 가
-    provider 마다 다름 (OpenAI / Groq / Gemini).
+def _run_lightrag(question: str, backend: str) -> tuple[str, list[str], float]:
+    """LightRAG 변형 query — provider별 인덱스 로드 + hybrid mode 응답.
 
     Args:
         question: 사용자 질문.
-        provider: "openai" / "groq" / "gemini" / "ollama".
+        backend: ``ollama`` / ``groq`` / ``gemini`` — provider 뒤 prefix.
+
+    Returns:
+        (응답 텍스트, 빈 contexts, latency_sec). LightRAG 는 internal context 를
+        retrieved 형태로 노출 안 함 → contexts=[] (RAGAS faithfulness 는 응답 자체로
+        평가).
+
+    Note:
+        E2 의 lightrag_variant.builder 사용. 인덱스 부재 시 친절한 에러 메시지.
+    """
+    t0 = time.perf_counter()
+    try:
+        import asyncio
+        from rag_chatbot.lightrag_variant.builder import (
+            build_lightrag, query_lightrag, working_dir_for,
+        )
+    except ImportError as e:
+        return (
+            f"[IMPORT_ERROR] lightrag-hku 또는 builder 모듈 부재: {e}\n"
+            f"→ docs/setup_lightrag_env.md 참고 (별도 venv + pip install -e '.[lightrag]')",
+            [], time.perf_counter() - t0,
+        )
+
+    wdir = working_dir_for(backend)
+    if not (wdir / "graph_chunk_entity_relation.graphml").exists():
+        return (
+            f"[CONFIG_MISSING] LightRAG 인덱스 없음: {wdir}\n"
+            f"→ python -m src.rag_chatbot.lightrag_variant.index_kbeauty --provider {backend}",
+            [], time.perf_counter() - t0,
+        )
+
+    async def _run():
+        rag = await build_lightrag(backend)
+        return await query_lightrag(rag, question, mode="hybrid")
+
+    try:
+        response = asyncio.run(_run())
+        latency = time.perf_counter() - t0
+        return str(response), [], latency
+    except Exception as e:
+        import traceback
+        return (
+            f"[EXCEPTION] {type(e).__name__}: {str(e)[:200]}\n"
+            f"{traceback.format_exc()[:500]}",
+            [], time.perf_counter() - t0,
+        )
+
+
+def run_chatbot(question: str, provider: str) -> tuple[str, list[str], float]:
+    """챗봇에 질문 → (응답, retrieved context, latency_sec) 반환.
+
+    Provider 분기:
+    - ``lightrag-*`` (lightrag-ollama / lightrag-groq / lightrag-gemini)
+      → ``_run_lightrag`` (E2 LightRAG 변형).
+    - 그 외 (openai/groq/gemini/ollama) → 기존 GraphRAG ``settings.yaml`` 경로.
+    settings.yaml 안의 ``llm.api_base`` / ``embeddings.llm.api_base`` 가
+    provider 마다 다름.
+
+    Args:
+        question: 사용자 질문.
+        provider: "openai" / "groq" / "gemini" / "ollama" /
+            "lightrag-ollama" / "lightrag-groq" / "lightrag-gemini".
 
     Returns:
         (응답 텍스트, retrieved context 리스트, 응답 시간 sec). 실패 시
         (에러 메시지, [], elapsed).
 
     Note:
-        인덱싱 디렉토리 (``data/model/<provider>_t_1/``) 가 미존재 시 친절한
-        에러 + 안내 메시지 반환. 코드 실패가 아니라 *user-actionable* error.
+        인덱싱 디렉토리 (``data/model/<provider>_t_1/`` 또는
+        ``data/model/lightrag_<backend>/``) 가 미존재 시 친절한 에러 + 안내 메시지.
     """
+    # LightRAG 변형 분기 — 인덱싱 / API 가 GraphRAG 와 완전 다름.
+    if provider.startswith("lightrag-"):
+        backend = provider.replace("lightrag-", "")
+        return _run_lightrag(question, backend)
+
     t0 = time.perf_counter()
 
     config_path = _config_path_for(provider)
@@ -586,8 +648,13 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
         "--provider",
-        choices=["openai", "groq", "gemini", "ollama"],
-        help="단일 provider 평가 실행",
+        choices=[
+            # GraphRAG 변형 (cosmetic_rag_chat 인덱스 활용)
+            "openai", "groq", "gemini", "ollama",
+            # LightRAG 변형 (E2) — 메인 권장 lightrag-groq, fallback lightrag-gemini.
+            "lightrag-groq", "lightrag-gemini",
+        ],
+        help="단일 provider 평가 실행. lightrag-* 는 E2 LightRAG 변형",
     )
     mode.add_argument(
         "--summarize",

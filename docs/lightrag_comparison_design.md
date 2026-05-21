@@ -1,7 +1,8 @@
-# [←](../README.md) LightRAG vs GraphRAG 비교 — 설계 문서
+# [←](../README.md) LightRAG vs GraphRAG 비교 — 시도 기록
 
-K-Beauty 챗봇의 LightRAG 변형 추가 계획. E0 smoke test 통과 후 본격 구현 전
-의 설계 정리. 이 문서가 *청사진* — 코드 변경 0, 결정점 명시.
+GraphRAG 대안으로 LightRAG 를 *시도해본* 작업의 설계 + E0 검증 결과 정리.
+메인 챗봇은 여전히 GraphRAG (`cosmetic_rag_chat`) — 본 LightRAG 변형은 *비교
+실험* 위치. 평가 결과 보고 메인 채택 여부 결정 예정.
 
 ## E0 결과 (이 design 의 근거)
 
@@ -232,6 +233,32 @@ src/rag_chatbot/
 
 **1차 진행**: 옵션 A (variant 별 디렉토리) — 기존 패턴 일치 + 분리 명확.
 사용자가 자기 변형만 골라 사용 가능.
+
+## 6.1 Ollama 의 실제 위치 — 정직한 평가
+
+E0 smoke test 결과로 *"동작은 함"* 이 입증됐지만, *실용 운영* 관점에서 평가:
+
+| 측면 | 결과 |
+|---|---|
+| **인덱싱 시간** | 1KB → 250s. 100KB 비례 시 **~7시간** (Mac M1 CPU 기준). GPU 사용 시 단축 가능하나 검증 안 됨 |
+| **Query 시간** | 30-80s/query (4 mode) — Groq 의 ~5s 대비 **10배+ 느림** |
+| **응답 품질** | E0 정성 확인 OK — 정량 비교는 E3 평가 결과 보고 |
+| **비용** | 0 (완전 로컬) |
+| **프라이버시** | 외부 API 호출 없음 |
+
+→ **메인 권장 X**. *프라이버시 우선* 또는 *외부 API 사용 불가* 환경의 niche 옵션.
+
+옛 GraphRAG + Ollama (docs/refactor/15) 가 entity extraction 단계 fail 였던
+것과 달리 LightRAG 는 *동작* — 이건 가설 ("LightRAG = Ollama-friendly") 검증
+의의 있음. 단 *실용성* 은 별개.
+
+**메인 흐름**: Groq (default) + Gemini (fallback).
+
+**Ollama 변형 보존 이유**:
+- *동작 검증* 자체가 portfolio 가치 (LightRAG 의 plug-and-play 입증)
+- 프라이버시 niche 사용자 / 로컬 운영 가능성 명시
+- E3 평가 결과 보고 폐기 여부 결정 — 정확도가 Groq 와 큰 차이 없으면 *프라이버시
+  옵션* 으로 가치, 30%+ 떨어지면 폐기
 
 ## 7. 예상 결과 (가설)
 
