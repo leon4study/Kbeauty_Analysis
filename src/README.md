@@ -7,7 +7,7 @@ K-Beauty 분석 프로젝트의 코드 구성. 5 module.
 | [amazon_review_crawler/](#amazon_review_crawler) | Amazon 리뷰 수집 | `main.py` |
 | [tiktok_crawler/](#tiktok_crawler) | TikTok 영상 수집 (반자동) | `tiktok_crawling.py` |
 | [pipelines/](#pipelines) | medallion 변환 파이프라인 (bronze → silver) | `build_silver_amazon.py`, `build_silver_tiktok.py` |
-| [rag_chatbot/](#rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 (메인: `cosmetic_rag_chat/main.py`; 실험: `ollama/`, `lightrag_variant/`) | `cosmetic_rag_chat/main.py` |
+| [rag_chatbot/](#rag_chatbot) | 개인 맞춤 화장품 추천 챗봇 (메인: `cosmetic_rag_chat/`, 실험: `lightrag_variant/`, archived: `_experimental/ollama/`) | `cosmetic_rag_chat/main.py` |
 | [util/](#util) | 공통 유틸리티 | `repo_paths.py`, `negation.py` 등 |
 
 ---
@@ -109,39 +109,32 @@ python src/pipelines/build_silver_tiktok.py --overwrite
 - LanceDB 벡터 스토어 (노드 임베딩 검색)
 - Microsoft GraphRAG 프레임워크
 
-**두 변형 — 분리 실행해 정확도·비용 trade-off 비교**:
+**메인 + 실험 변형**:
 
-### `ollama/` — 로컬 LLM (gemma2)
+### `cosmetic_rag_chat/` — **메인** (GraphRAG + OpenAI gpt-3.5-turbo)
 
-비용·프라이버시 이점. Ollama 데몬으로 모델 실행.
+정확도 + 안정성. YAML config 기반 경로 portability.
 
-- 메인: `gradio_rag_ch7.py` — Gradio multimodal UI (멀티턴 + 파일 업로드)
-- 자세히: [`ollama/README.md`](rag_chatbot/ollama/README.md)
+- 메인: `main.py` — argparse 기반 (`--method local|global`)
+- 자세히: [`cosmetic_rag_chat/README.md`](rag_chatbot/cosmetic_rag_chat/README.md)
 
-**사용 방법**:
 ```bash
-# 사전 조건: Ollama 데몬 실행 (localhost:11434), GraphRAG 인덱스 생성
-python -m src.rag_chatbot.ollama.gradio_rag_ch7
+python -m src.rag_chatbot.cosmetic_rag_chat.main --method local
 ```
 
-### `lightrag_variant/` — LightRAG 변형 (실험)
+### `lightrag_variant/` — 실험 (LightRAG + Groq/Gemini 무료)
 
-GraphRAG 대안으로 *시도해본* LightRAG 변형. Groq Llama 3.3 / Gemini Flash 무료
-한도 안에서 동작. 평가 결과 (`docs/rag_evaluation_results.md`) 보고 메인 채택
-여부 결정 예정. 자세히: [`lightrag_variant/README.md`](rag_chatbot/lightrag_variant/README.md)
+GraphRAG 대안으로 *시도해본* LightRAG 변형. 평가 결과 (`docs/rag_evaluation_results.md`)
+보고 메인 채택 여부 결정 예정. 자세히: [`lightrag_variant/README.md`](rag_chatbot/lightrag_variant/README.md)
 
-### `cosmetic_rag_chat/` — OpenAI (gpt-3.5-turbo)
+### `_experimental/ollama/` — archived (옛 Ollama 변형)
 
-정확도 보강용 변형. YAML config 기반 경로 portability.
+GraphRAG + Ollama gemma2 시도 — 호환성 issue + 실용성 ↓ 로 `_experimental/` 격리.
+*동작 검증 흔적* 으로 보존. 자세히: [`_experimental/ollama/README.md`](rag_chatbot/_experimental/ollama/README.md)
+및 [`../docs/refactor/15_ollama_graphrag_compatibility.md`](../docs/refactor/15_ollama_graphrag_compatibility.md).
 
-- 메인: `main.py` — argparse 기반 (`--search-type local|global`)
-
-**사용 방법**:
-```bash
-python -m src.rag_chatbot.cosmetic_rag_chat.main --search-type local
-```
-
-**의존성**: Microsoft GraphRAG · LanceDB · LlamaIndex · Gradio · Ollama (로컬 변형 시) · OpenAI API key (OpenAI 변형 시)
+**의존성**: Microsoft GraphRAG · LanceDB · LlamaIndex · Gradio · OpenAI API key
+(LightRAG 변형은 별도 venv + Groq/Gemini key)
 
 ---
 

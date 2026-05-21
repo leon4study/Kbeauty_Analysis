@@ -27,7 +27,7 @@ File: src/util/llm_provider.py
 어디에 쓰이는가 (Where)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - ``src/rag_chatbot/cosmetic_rag_chat/main.py`` — 챗봇 query LLM 호출
-- ``src/rag_chatbot/ollama/gradio_rag_ch7.py`` — Ollama 변형 폴백
+- ``src/rag_chatbot/_experimental/ollama/gradio_rag_ch7.py`` — Ollama 변형 폴백
 - ``tests/rag_eval/evaluate.py`` — judge LLM 호출 (예정)
 
 GraphRAG 인덱싱과는 별개 — 인덱싱은 ``settings.yaml`` 의 ``api_base`` 로

@@ -9,7 +9,7 @@ K-Beauty 5 브랜드 (COSRX · PURITO · Beauty of Joseon · I'm From · Dr.Jart
 
 | 파일 | 사이즈 | 용도 |
 |---|---|---|
-| `5brand_graphrag_part.txt` | 100K | Ollama 변형 (`src/rag_chatbot/ollama/`) 인덱싱 input |
+| `5brand_graphrag_part.txt` | 100K | Ollama 변형 (`src/rag_chatbot/_experimental/ollama/`) 인덱싱 input |
 | `brand_50_sample.txt` | 44K | OpenAI 변형 (`src/rag_chatbot/cosmetic_rag_chat/`) 인덱싱 input |
 
 ## 사용법
