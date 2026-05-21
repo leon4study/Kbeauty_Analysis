@@ -27,28 +27,24 @@
 
 **구조**: Microsoft GraphRAG + LanceDB 벡터 스토어 위에 약 570 개 노드 (브랜드 5 + 제품 타입 46 + 성분 498 + 효과 23) 의 지식 그래프를 구축. 단순 키워드 검색이 아니라 *"민감 피부 + 히알루론산 + 알코올 제외"* 같이 여러 조건이 얽힌 multi-hop 질의가 가능합니다.
 
-**기술 변형 두 가지** (분리 실행해 비교):
+**메인 챗봇**: GraphRAG + OpenAI (gpt-3.5-turbo) — 정확도 + 안정성
+→ [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) (인덱싱 1회 ~$5, query 거의 무료)
 
-- 로컬 Ollama (gemma2) — 비용·프라이버시 이점
-- OpenAI (gpt-3.5-turbo) — 정확도
+**실험 변형** (참고용 — Ollama 호환성 issue 로 메인 X):
+- LightRAG 변형 → [`src/rag_chatbot/lightrag_variant/README.md`](src/rag_chatbot/lightrag_variant/README.md) (Groq/Gemini 무료 한도)
+- Ollama 변형 (archived) → [`src/rag_chatbot/_experimental/ollama/README.md`](src/rag_chatbot/_experimental/ollama/README.md)
 
-→ 실행 방법:
-- 로컬 Ollama 변형 → [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md) (비용 0, 인덱싱 수 시간)
-- OpenAI 변형 → [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) (API 비용 $5~10, 인덱싱 수 분)
-
-### Fresh clone 빠른 시작 (Ollama)
+### Fresh clone 빠른 시작 (메인 — OpenAI)
 
 ```bash
 git clone <repo>
 cd Kbeauty_Analysis
 pip install -e .
-ollama pull gemma2 && ollama pull nomic-embed-text
-ollama serve &
-cp .env.example .env
-mkdir -p data/model/graphrag_t_2/input
-cp examples/graphrag_input/5brand_graphrag_part.txt data/model/graphrag_t_2/input/
-graphrag index --root ./data/model/graphrag_t_2   # 수 시간 소요
-python -m src.rag_chatbot.ollama.gradio_rag_ch7
+cp .env.example .env   # OPENAI_API_KEY 채우기
+cp examples/graphrag_input/brand_50_sample.txt \
+   src/rag_chatbot/cosmetic_rag_chat/indexing/input/
+graphrag index --root ./src/rag_chatbot/cosmetic_rag_chat/indexing   # 수 분
+python -m src.rag_chatbot.cosmetic_rag_chat.main --method local
 ```
 
 → `http://127.0.0.1:7860` 에서 챗봇 사용. 인덱싱 데이터는 `examples/graphrag_input/` 에 git 포함.
@@ -126,10 +122,11 @@ src/
   amazon_review_crawler/   Amazon 리뷰 크롤러 (Selenium + MySQL)
   tiktok_crawler/          TikTok 영상 크롤러 (Selenium 반자동)
   pipelines/               데이터 파이프라인 (bronze → silver 변환)
-  rag_chatbot/             개인 맞춤 추천 챗봇 (GraphRAG)
-    ollama/                로컬 LLM 변형
-    cosmetic_rag_chat/     OpenAI 변형
+  rag_chatbot/             개인 맞춤 추천 챗봇
+    cosmetic_rag_chat/     메인 (GraphRAG + OpenAI)
+    lightrag_variant/      실험 (LightRAG + Groq/Gemini 무료)
     graphrag_viewer/       GraphRAG 결과 네트워크 시각화
+    _experimental/ollama/  archived — 옛 Ollama 변형 (호환성 issue)
   util/                    공통 유틸리티 (경로·부정어 처리·Slack)
 notebooks/
   EDA.ipynb                Amazon 5 brand EDA
@@ -163,8 +160,9 @@ data/
   - [`notebooks/tiktok/README.md`](notebooks/tiktok/README.md) — TikTok 분석 7 노트북 (01-07)
   - [`notebooks/amazon_tiktok/README.md`](notebooks/amazon_tiktok/README.md) — Amazon × TikTok 결합 (2 메인 + 4 experiments)
 - **추천 챗봇 실행**:
-  - [`src/rag_chatbot/ollama/README.md`](src/rag_chatbot/ollama/README.md) — 로컬 Ollama 변형 (비용 0)
-  - [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) — OpenAI 변형 (정확도 보강)
+  - [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) — **메인** (GraphRAG + OpenAI)
+  - [`src/rag_chatbot/lightrag_variant/README.md`](src/rag_chatbot/lightrag_variant/README.md) — 실험 (LightRAG + Groq/Gemini 무료)
+  - [`src/rag_chatbot/_experimental/ollama/README.md`](src/rag_chatbot/_experimental/ollama/README.md) — archived (옛 Ollama 변형)
 - **분석 깊이 docs**:
   - [12 — 추천 알고리즘 ver.1 → ver.4 진화 + 정량 검증](docs/refactor/12_tiktok_recommendation_evolution.md)
   - [13 — Amazon × TikTok 5 brand matching + 시계열 lag](docs/refactor/13_amazon_tiktok_brand_matching.md)

@@ -37,7 +37,7 @@ OpenAI 기반 GraphRAG 화장품 추천 챗봇의 진입점.
 
 관련 파일 (Related)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- src/rag_chatbot/ollama/gradio_rag_ch7.py   ← 로컬 Ollama 변형 (비용 0)
+- src/rag_chatbot/_experimental/ollama/gradio_rag_ch7.py   ← 로컬 Ollama 변형 (비용 0)
 - src/rag_chatbot/cosmetic_rag_chat/settings.yaml ← GraphRAG 설정
 - data/model/graphrag_t_2/output/lancedb    ← GraphRAG 인덱싱 결과 (LanceDB)
 - src/rag_chatbot/cosmetic_rag_chat/README.md ← 실행 방법 문서

@@ -159,6 +159,6 @@ result = evaluate(
 
 - `docs/refactor/15_ollama_graphrag_compatibility.md` — 옛 Ollama 시도 실패 기록 (이 평가의 배경)
 - `src/rag_chatbot/cosmetic_rag_chat/README.md` — OpenAI 변형 setup
-- `src/rag_chatbot/ollama/README.md` — Ollama 변형 setup
+- `src/rag_chatbot/_experimental/ollama/README.md` — Ollama 변형 setup
 - (예정) `docs/rag_evaluation_results.md` — 실제 평가 결과
 - (예정) `tests/rag_eval/` — 골든 질문 + 평가 스크립트
