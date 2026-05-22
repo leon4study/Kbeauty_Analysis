@@ -3,8 +3,78 @@
 `tests/rag_eval/evaluate.py` 로 측정한 K-Beauty 챗봇의 LLM provider 별 비교
 결과. 평가 metric 정의는 [`rag_evaluation_framework.md`](rag_evaluation_framework.md).
 
-> ⚠️ **현재 상태**: 인프라 (golden questions + evaluate.py + provider config 템플릿)
-> 완비. 실제 인덱싱 + 평가 실행은 사용자 API key 발급 + 인덱싱 후 갱신 예정.
+> 📌 **현재 상태 (2026-05-22)**: LightRAG 변형 (E2) 실제 인덱싱 시도 — **무료
+> 한도 (RPM/TPM) 한계 정량 발견**. Groq 4/31 chunks, Gemini 6/31 chunks 부분
+> 인덱싱 후 fail. 본격 평가 (60 query × 6 변형) 는 후속 — 해결책 ([§ 무료
+> 한도 한계 발견 + 해결책](#무료-한도-한계-발견--해결책)) 적용 후 재시도.
+
+## 무료 한도 한계 발견 + 해결책
+
+### 실측 데이터 (2026-05-22)
+
+LightRAG E2 변형으로 K-Beauty 5브랜드 (100KB) 인덱싱 시도. LightRAG default
+concurrency (LLM worker 4) 가 무료 한도 즉시 초과:
+
+| Provider | 무료 한도 | 결과 | 처리 chunk | 실패 원인 |
+|---|---|---|---|---|
+| Groq Llama 3.3 70B | 12k TPM | 부분 fail | **4 / 31** | TPM 초과 (한 chunk ~6k 토큰 × 4 worker = 24k > 12k) |
+| Gemini Flash Lite | 15 RPM | 부분 fail | **6 / 31** | RPM 초과 (4 worker × 빠른 호출 = 즉시 15 RPM 도달) |
+
+→ "*Groq 가 빠르고 Gemini 가 한도 크다*" 가설 검증됐지만, *둘 다 무료
+한도만으론 본격 인덱싱 무리*.
+
+### 해결책 4 옵션 (실용성 순)
+
+#### A. **concurrency = 1~2 + LightRAG cache resume** (⭐ 즉시 적용)
+
+- `builder.py` 의 LightRAG 인스턴스에 `llm_model_max_async=2` 설정 (적용됨)
+- 더 보수적: `=1` 로 완전 직렬
+- LightRAG cache (`llm_response_cache`) 가 chunk-level → 실패 후 재실행 시
+  처리된 chunk 자동 skip
+- **예상 시간**: 100KB / 31 chunks × 4초 (Gemini 15 RPM) × 3 LLM 호출 ≈ 6 분
+- **단점**: 1 회 인덱싱 시간 ~10분 → ~30분 늘어남
+
+#### B. **시간대별 배치 (cron)** (⭐⭐ wrapper script 필요)
+
+```bash
+# crontab -e
+*/5 * * * * cd /path/to/Kbeauty && python -m src.rag_chatbot.lightrag_variant.index_kbeauty --provider gemini
+```
+
+- 5 분마다 인덱싱 시도. cache 살아있으면 *다음 chunk 부터* 처리.
+- 31 chunks × 5분 = ~2.5시간 *무인* 완료.
+- **단점**: 진행 모니터링 어려움. 실패 알림 별도 필요.
+
+#### C. **Multi-key rotation** (⭐⭐⭐ builder 에 round-robin)
+
+- Gemini key 여러 개 발급 (다른 Google 계정 N개)
+- `GEMINI_API_KEYS=key1,key2,key3` 로 받아 round-robin
+- 합산 RPM = 15 × N → 즉시 N배 한도
+- **단점**: 계정 N개 + 약관 회색지대
+
+#### D. **Hybrid provider pinwheel** (⭐⭐⭐⭐ 큰 변경)
+
+- Groq → Gemini → Cerebras → Together → 회전
+- provider 한도 합산 효과
+- **단점**: builder.py 의 LLM dispatch 복잡화. 각 provider API key 필요.
+
+### 결정
+
+**A + B 하이브리드** 권장 — 즉시 A 적용 + 시간 여유 있으면 B 추가. C/D 는 *
+한도 늘리기* 목적 — 본격 운영 시.
+
+### 똑똑한 도메인 패턴
+
+위 시도에서 얻은 일반 인사이트 (다른 무료 API 활용 프로젝트에도 적용 가능):
+
+1. **무료 한도 = 동시성 적이 제일 비싼 자원** — concurrency 1 직렬화 + retry
+   가 가장 안전. 병렬 N worker 는 한도 N배 빠르게 소진.
+2. **Resumable cache 가 핵심** — chunk-level cache 없으면 실패마다 처음부터
+   재시작 → 영원히 못 끝남. LightRAG 의 `llm_response_cache` 가 좋은 사례.
+3. **Provider 별 한도 unit 다름** — Groq=TPM (token), Gemini=RPM (request).
+   Wrapper 가 양쪽 다 보호해야.
+4. **Tier 1 무료 신청 (Gemini)** — 카드 등록만 하면 RPM 4000 (free tier 의
+   270배). 비용 발생 X. 본격 운영 시 권장.
 
 ## 평가 환경
 
