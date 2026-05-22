@@ -104,11 +104,12 @@ _DEFAULT_LLM_MODELS = {
 }
 
 # provider 별 embedding 모델 + 차원.
-# Groq 는 chat 만 제공 → bge-m3 (Ollama) 로 fallback.
+# Groq: chat 만 제공 → bge-m3 (Ollama) 로 fallback.
+# Gemini: OpenAI-compat endpoint 에서 text-embedding-004 가 404 (2026-05 검증).
+#   → 둘 다 로컬 Ollama bge-m3 (1024 dim) 통일. 차원 일관 → 두 인덱스 호환 가능.
 _DEFAULT_EMBED_MODELS = {
-    # Groq 가 embedding 미지원 → 로컬 Ollama bge-m3 사용 (별도 ollama serve + ollama pull bge-m3 필요).
     "groq":   ("bge-m3", 1024),
-    "gemini": ("text-embedding-004", 768),
+    "gemini": ("bge-m3", 1024),
 }
 
 
@@ -133,7 +134,7 @@ async def build_lightrag(provider: ProviderName):
     try:
         from lightrag import LightRAG
         from lightrag.llm.ollama import ollama_embed   # Groq 의 embedding fallback 용
-        from lightrag.llm.openai import openai_complete_if_cache, openai_embed
+        from lightrag.llm.openai import openai_complete_if_cache
         from lightrag.utils import EmbeddingFunc
     except ImportError as e:
         raise ImportError(
@@ -148,14 +149,17 @@ async def build_lightrag(provider: ProviderName):
     embed_model, embed_dim = _DEFAULT_EMBED_MODELS[provider]
 
     # ─── provider 별 LLM func ───
+    # LightRAG 가 ``llm_model_func(prompt, system_prompt=..., ...)`` 으로 호출 — prompt
+    # 가 첫 positional 인자. ``openai_complete_if_cache`` 는 ``(model, prompt, ...)``
+    # 라 첫 인자가 model. 직접 넘기면 prompt 가 model 자리에 들어가 TypeError.
+    # → wrapper 함수로 model + api_key + base_url 명시적 closure.
     if provider == "groq":
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise EnvironmentError(
                 "GROQ_API_KEY 미설정. .env 에 추가: https://console.groq.com 무료 발급."
             )
-        llm_kwargs = {"api_key": api_key, "base_url": _GROQ_BASE}
-        llm_model_func = openai_complete_if_cache
+        base_url = _GROQ_BASE
 
     elif provider == "gemini":
         api_key = os.getenv("GEMINI_API_KEY")
@@ -163,28 +167,37 @@ async def build_lightrag(provider: ProviderName):
             raise EnvironmentError(
                 "GEMINI_API_KEY 미설정. .env 에 추가: https://aistudio.google.com 무료 발급."
             )
-        llm_kwargs = {"api_key": api_key, "base_url": _GEMINI_BASE}
-        llm_model_func = openai_complete_if_cache
+        base_url = _GEMINI_BASE
 
     else:
         raise ValueError(f"알 수 없는 provider: {provider!r} (groq/gemini 중 하나)")
 
-    # ─── provider 별 embedding func ───
-    if provider == "gemini":
-        # Gemini embedding (OpenAI-compat). API key 동일.
-        embed_func_inner = partial(
-            openai_embed,
-            model=embed_model,
-            api_key=os.getenv("GEMINI_API_KEY"),
-            base_url=_GEMINI_BASE,
+    # OpenAI-compat endpoint 공통 wrapper. LightRAG 의 ``llm_model_func`` 시그니처
+    # 에 맞춰 prompt 만 positional, 나머지는 keyword 로 받음.
+    async def llm_model_func(prompt, system_prompt=None, history_messages=None, **kwargs):
+        return await openai_complete_if_cache(
+            llm_model,
+            prompt,
+            system_prompt=system_prompt,
+            history_messages=history_messages or [],
+            api_key=api_key,
+            base_url=base_url,
+            **kwargs,
         )
-    else:
-        # Groq: chat 만 제공 → 로컬 Ollama bge-m3 (1024 dim) 로 embedding fallback.
-        embed_func_inner = partial(
-            ollama_embed,
-            embed_model=embed_model,
-            host="http://localhost:11434",
-        )
+
+    # llm_model_kwargs 는 wrapper 가 다 처리하므로 비움.
+    llm_kwargs: dict = {}
+
+    # ─── embedding func — 모든 provider 가 로컬 Ollama bge-m3 통일 ───
+    # Groq: chat 만 제공 → embedding 외부 필요.
+    # Gemini: OpenAI-compat embedding endpoint 가 bge-m3 / text-embedding-004
+    #   둘 다 404 (2026-05 검증). 로컬 fallback 이 안정적.
+    # 차원 1024 통일 → working_dir 간 호환 가능.
+    embed_func_inner = partial(
+        ollama_embed,
+        embed_model=embed_model,
+        host="http://localhost:11434",
+    )
 
     embedding_func = EmbeddingFunc(
         embedding_dim=embed_dim,
@@ -199,6 +212,11 @@ async def build_lightrag(provider: ProviderName):
         summary_max_tokens=8192,
         llm_model_kwargs=llm_kwargs,
         embedding_func=embedding_func,
+        # 무료 한도 보호 (default 16 worker 면 즉시 초과):
+        # - Gemini Flash Lite: 15 RPM/분 → 2 worker 직렬화
+        # - Groq Llama 3.3 70B: 12k TPM/분 (chunk ~6k 토큰) → 2 worker 직렬화
+        # 인덱싱 시간 늘지만 100KB 입력 기준 여전히 ~30분 내.
+        llm_model_max_async=2,
     )
     await rag.initialize_storages()
     return rag
