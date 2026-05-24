@@ -14,43 +14,6 @@
 
 ---
 
-## 메인 서비스 — 개인 맞춤 화장품 추천 챗봇
-
-분석 결과에서 모은 *제품·성분·효과·피부 타입* 정보를 활용해, 고객이 자기 조건으로 화장품을 추천받을 수 있는 챗봇을 구축했습니다.
-
-**사용 시나리오 예시**:
-
-- *"건성 피부에 맞는 보습 크림 추천해줘"*
-- *"알코올 성분 없는 클렌저 알려줘"*
-- *"파라벤 알러지 있는데 안전한 제품?"*
-- *"민감 피부에 맞는 히알루론산 함유 제품"*
-
-**구조**: Microsoft GraphRAG + LanceDB 벡터 스토어 위에 약 570 개 노드 (브랜드 5 + 제품 타입 46 + 성분 498 + 효과 23) 의 지식 그래프를 구축. 단순 키워드 검색이 아니라 *"민감 피부 + 히알루론산 + 알코올 제외"* 같이 여러 조건이 얽힌 multi-hop 질의가 가능합니다.
-
-**메인 챗봇**: GraphRAG + OpenAI (gpt-3.5-turbo) — 정확도 + 안정성
-→ [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) (인덱싱 1회 ~$5, query 거의 무료)
-
-**실험 변형** (참고용 — Ollama 호환성 issue 로 메인 X):
-- LightRAG 변형 → [`src/rag_chatbot/lightrag_variant/README.md`](src/rag_chatbot/lightrag_variant/README.md) (Groq/Gemini 무료 한도)
-- Ollama 변형 (archived) → [`src/rag_chatbot/_experimental/ollama/README.md`](src/rag_chatbot/_experimental/ollama/README.md)
-
-### Fresh clone 빠른 시작 (메인 — OpenAI)
-
-```bash
-git clone <repo>
-cd Kbeauty_Analysis
-pip install -e .
-cp .env.example .env   # OPENAI_API_KEY 채우기
-cp examples/graphrag_input/brand_50_sample.txt \
-   src/rag_chatbot/cosmetic_rag_chat/indexing/input/
-graphrag index --root ./src/rag_chatbot/cosmetic_rag_chat/indexing   # 수 분
-python -m src.rag_chatbot.cosmetic_rag_chat.main --method local
-```
-
-→ `http://127.0.0.1:7860` 에서 챗봇 사용. 인덱싱 데이터는 `examples/graphrag_input/` 에 git 포함.
-
----
-
 ## 분석 핵심 결과
 
 | 결과 | 수치 | 의미 |
@@ -115,6 +78,45 @@ src/rag_chatbot/ (Ollama / OpenAI 두 변형)
 
 ---
 
+## 메인 서비스 — 개인 맞춤 화장품 추천 챗봇
+
+분석 결과에서 모은 *제품·성분·효과·피부 타입* 정보를 활용해, 고객이 자기 조건으로 화장품을 추천받을 수 있는 챗봇을 구축했습니다.
+
+**사용 시나리오 예시**:
+
+- *"건성 피부에 맞는 보습 크림 추천해줘"*
+- *"알코올 성분 없는 클렌저 알려줘"*
+- *"파라벤 알러지 있는데 안전한 제품?"*
+- *"민감 피부에 맞는 히알루론산 함유 제품"*
+
+**구조**: Microsoft GraphRAG + LanceDB 벡터 스토어 위에 약 570 개 노드 (브랜드 5 + 제품 타입 46 + 성분 498 + 효과 23) 의 지식 그래프를 구축. 단순 키워드 검색이 아니라 *"민감 피부 + 히알루론산 + 알코올 제외"* 같이 여러 조건이 얽힌 multi-hop 질의가 가능합니다.
+
+**메인 챗봇**: GraphRAG + OpenAI (gpt-4o-mini) — 정확도 + 안정성
+→ [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) (인덱싱 1회 ~$0.06, query 거의 무료)
+
+**실험 변형** (PR #32 실측 비교 — 트레이드오프 발견):
+- LightRAG (Gemini Tier 1 무료) → 응답 품질 우세, [`src/rag_chatbot/lightrag_variant/README.md`](src/rag_chatbot/lightrag_variant/README.md)
+- GraphRAG (위 메인) → 안전성 11배 우세 (알러지 회피 등)
+- 비교 결과: [`docs/rag_evaluation_results.md`](docs/rag_evaluation_results.md)
+- Ollama 변형 (archived) → [`src/rag_chatbot/_experimental/ollama/README.md`](src/rag_chatbot/_experimental/ollama/README.md)
+
+### Fresh clone 빠른 시작 (메인 — OpenAI)
+
+```bash
+git clone <repo>
+cd Kbeauty_Analysis
+pip install -e .
+cp .env.example .env   # OPENAI_API_KEY 채우기
+cp examples/graphrag_input/brand_50_sample.txt \
+   src/rag_chatbot/cosmetic_rag_chat/indexing/input/
+graphrag index --root ./src/rag_chatbot/cosmetic_rag_chat/indexing   # 수 분
+python -m src.rag_chatbot.cosmetic_rag_chat.main --method local
+```
+
+→ `http://127.0.0.1:7860` 에서 챗봇 사용. 인덱싱 데이터는 `examples/graphrag_input/` 에 git 포함.
+
+---
+
 ## 프로젝트 구조
 
 ```
@@ -163,7 +165,10 @@ data/
   - [`src/rag_chatbot/cosmetic_rag_chat/README.md`](src/rag_chatbot/cosmetic_rag_chat/README.md) — **메인** (GraphRAG + OpenAI)
   - [`src/rag_chatbot/lightrag_variant/README.md`](src/rag_chatbot/lightrag_variant/README.md) — 실험 (LightRAG + Groq/Gemini 무료)
   - [`src/rag_chatbot/_experimental/ollama/README.md`](src/rag_chatbot/_experimental/ollama/README.md) — archived (옛 Ollama 변형)
-- **분석 깊이 docs**:
+- **분석 기법 설명** (`docs/methods/`):
+  - [PSM + Within-FE](docs/methods/psm_within_fe.md) — TikTok K-Premium 분석의 인과 추정 기법 (selection effect 95% 발견의 *방법론적 기반*). 교과서적 설명 + 본 프로젝트 적용 + 한계
+  - [BM25 — TF-IDF 대체 검토](docs/bm25_for_tfidf_consideration.md) — 미래 보강 옵션. 현재 TF-IDF 사용처 + BM25 적용 시 효과 평가
+- **분석 깊이 docs** (작업 과정 history):
   - [12 — 추천 알고리즘 ver.1 → ver.4 진화 + 정량 검증](docs/refactor/12_tiktok_recommendation_evolution.md)
   - [13 — Amazon × TikTok 5 brand matching + 시계열 lag](docs/refactor/13_amazon_tiktok_brand_matching.md)
   - [14 — K-Premium 수치 변천 (8.43 → 4.76 ~ 5.10) 영구 기록](docs/refactor/14_kpremium_number_history.md)
