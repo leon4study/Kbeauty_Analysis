@@ -87,6 +87,11 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 GOLDEN_PATH = REPO_ROOT / "tests" / "rag_eval" / "golden_questions.yaml"
 RESULTS_DIR = REPO_ROOT / "tests" / "rag_eval" / "results"
 
+# LightRAG storage lock 은 처음 호출되는 event loop 에 bound. 다음 질문에서 새 loop
+# (``asyncio.run()`` 매번 호출) 생기면 "Lock bound to different event loop" 에러.
+# 모듈 레벨 single loop 재사용으로 lock 정합성 유지.
+_LIGHTRAG_LOOP: Any = None
+
 
 def load_golden() -> dict:
     """golden_questions.yaml 로드 + 기본 schema 검증."""
@@ -160,7 +165,13 @@ def _run_lightrag(question: str, backend: str) -> tuple[str, list[str], float]:
         return await query_lightrag(rag, question, mode="hybrid")
 
     try:
-        response = asyncio.run(_run())
+        # LightRAG storage lock 은 첫 호출 event loop 에 bound. 매 질문마다
+        # ``asyncio.run()`` 으로 새 loop 만들면 "Lock bound to different event
+        # loop" 에러. 모듈 레벨 single loop 재사용 으로 lock 정합성 유지.
+        global _LIGHTRAG_LOOP
+        if _LIGHTRAG_LOOP is None:
+            _LIGHTRAG_LOOP = asyncio.new_event_loop()
+        response = _LIGHTRAG_LOOP.run_until_complete(_run())
         latency = time.perf_counter() - t0
         return str(response), [], latency
     except Exception as e:

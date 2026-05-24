@@ -3,10 +3,11 @@ skip_workflows: []
 llm:
   api_key: ${GRAPHRAG_API_KEY}
   type: openai_chat # or azure_openai_chat
-  model: gpt-3.5-turbo
+  model: gpt-4o-mini
   model_supports_json: true # recommended if this is available for your model.
-  # max_tokens: 4000
-  # request_timeout: 180.0
+  max_tokens: 4000
+  request_timeout: 180.0
+  temperature: 0  # 평가 재현성 — judge 점수 흔들림 방지
   api_base: https://api.openai.com/v1
   # api_version: 2024-02-15-preview
   # organization: <organization_id>
@@ -135,10 +136,10 @@ local_search:
   # conversation_history_max_turns: 5
   # top_k_mapped_entities: 10
   # top_k_relationships: 10
-  # llm_temperature: 0 # temperature for sampling
+  llm_temperature: 0  # 평가 재현성 — 동일 질문에 동일 응답
   # llm_top_p: 1 # top-p sampling
   # llm_n: 1 # Number of completions to generate
-  # max_tokens: 12000
+  max_tokens: 12000  # context window 명시 (community report + entities + relationships)
 
 global_search:
   # llm_temperature: 0 # temperature for sampling
