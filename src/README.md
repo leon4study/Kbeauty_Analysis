@@ -162,7 +162,7 @@ df = pd.read_csv(BRONZE_AMAZON / "cosrx_reviews.csv")     # raw
 df_silver = pd.read_csv(SILVER_AMAZON / "amazon_reviews_lemmatized.csv")  # 정제
 
 # Slack 알림
-send_msg("크롤러 완료: 1.2만 건 수집")
+send_msg("크롤러 완료: 약 2만 건 수집")
 ```
 
 **의존성**: NLTK · spaCy · pandas · requests
