@@ -6,7 +6,7 @@
 
 **Amazon - 경쟁사 리뷰 분석으로 진출 빈자리 찾기**
 
-경쟁사 5 곳의 리뷰 1.2만 건을 분석했습니다. 처음 가설 *(브랜드별 키워드 빈도가 다를 것)* 이 Chi-square 검정에서 p > 0.9 로 깨졌고, 그 자리에서 *제품 만족이 키워드보다 사용 경험·피부 타입에 더 의존* 한다는 시장 본질을 잡았습니다. 이 인사이트로 TF-IDF / LDA 토픽 모델까지 들어가 *경쟁사들이 어떤 부분으로 차별화하는지* (Dr.Jart+ 보습 / COSRX 트러블 케어 / PURITO 천연성분) 확인했고, 3-beaty 의 차별화 포인트를 *히알루론산 기반 무자극 보습 + 경쟁사 공통 단점 (Sticky · Irritated) 보완* 으로 정의했습니다.
+경쟁사 5 곳의 리뷰 약 2만 건을 분석했습니다. 처음 가설 *(브랜드별 키워드 빈도가 다를 것)* 이 Chi-square 검정에서 p > 0.9 로 깨졌고, 그 자리에서 *제품 만족이 키워드보다 사용 경험·피부 타입에 더 의존* 한다는 시장 본질을 잡았습니다. 이 인사이트로 TF-IDF / LDA 토픽 모델까지 들어가 *경쟁사들이 어떤 부분으로 차별화하는지* (Dr.Jart+ 보습 / COSRX 트러블 케어 / PURITO 천연성분) 확인했고, 3-beaty 의 차별화 포인트를 *히알루론산 기반 무자극 보습 + 경쟁사 공통 단점 (Sticky · Irritated) 보완* 으로 정의했습니다.
 
 **TikTok - 마케팅 효과 정량 검증**
 
@@ -180,6 +180,7 @@ data/
   - [pipeline_overview](docs/pipeline_overview.md), [amazon_crawler](docs/amazon_crawler.md), [tiktok_crawler](docs/tiktok_crawler.md)
   - [etl_pipeline](docs/etl_pipeline.md), [db_schema](docs/db_schema.md), [slack_alert](docs/slack_alert.md)
 - **RAG 챗봇 평가**:
+  - [rag_llm_eval_knowledge](docs/rag_llm_eval_knowledge.md) — RAG·LLM·평가 벤치마크 일반 지식 정리 (면접 배경지식, 회사 내용 제외)
   - [rag_evaluation_framework](docs/rag_evaluation_framework.md) — 5 차원 metric (retrieval / generation / 실용 / 도메인 / 일관성) + RAGAS 활용
   - [lightrag_comparison_design](docs/lightrag_comparison_design.md) — LightRAG 변형 *시도* 기록 (메인 GraphRAG 와 비교 실험)
   - [setup_lightrag_env](docs/setup_lightrag_env.md) — LightRAG 변형 사용 시 별도 venv 안내
