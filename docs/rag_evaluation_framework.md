@@ -162,3 +162,8 @@ result = evaluate(
 - `src/rag_chatbot/_experimental/ollama/README.md` — Ollama 변형 setup
 - (예정) `docs/rag_evaluation_results.md` — 실제 평가 결과
 - (예정) `tests/rag_eval/` — 골든 질문 + 평가 스크립트
+
+## Anna 정렬 확장 (2026-06-01 추가)
+
+본 framework 의 5 차원을 RAGAS 표준 + NIA 비정형 8지표로 확장하는 실행 카탈로그:
+[`anna_aligned_evaluation_strategy.md`](anna_aligned_evaluation_strategy.md) — Anna(KOLAS 시험기관) 의 LLM·RAG 평가 사업 정렬 + PR 단위 9개 분해 + 한국어 평가셋(Allganize commerce 60Q) 차용 계획.
